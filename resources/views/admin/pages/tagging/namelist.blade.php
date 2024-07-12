@@ -12,13 +12,13 @@
         <form class="d-flex" role="search">
             <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <select id="leaderFilter" class="form-select">
-                <option selected disabled>Filter by</option>
-                <option value="None">None</option>
-                <option value="Barangay">Barangay Leader</option>
+                {{-- <option selected disabled>Filter by</option> --}}
+                <option selected value="Barangay">Barangay Leader</option>
                 <option value="Municipal">Municipal Leader</option>
                 <option value="District">District Leader</option>
                 <option value="Provincial">Provincial Leader</option>
                 <option value="Regional">Regional Leader</option>
+                <option value="None">None</option>
             </select>
         </form>
         
