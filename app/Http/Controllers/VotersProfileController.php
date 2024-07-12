@@ -38,6 +38,7 @@ class VotersProfileController extends Controller
             'barangay' => 'required|exists:barangay,id',
             'precinct' => 'required|exists:precinct,id',
             'leader' => 'required|in:None,Barangay,Municipal,District,Provincial,Regional',
+            'alliances_status' => 'required|in:Green,Yellow,Orange,Red',
         ]);
 
         VotersProfile::create($request->all());
@@ -83,7 +84,7 @@ class VotersProfileController extends Controller
 
     public function namelist(Request $request)
     {
-        $leaders = VotersProfile::all();
+        $leaders = VotersProfile::paginate(50);
 
         return view('admin.pages.tagging.namelist', compact('leaders'));
     }
@@ -91,10 +92,12 @@ class VotersProfileController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $leader = $request->input('leader', 'Barangay'); // Default to 'Barangay' if not provided
+        $leader = $request->input('leader', 'Barangay');
 
         $leaders = VotersProfile::where(function($queryBuilder) use ($leader) {
-            $queryBuilder->where('leader', $leader);
+            if (!empty($leader)) {
+                $queryBuilder->where('leader', $leader);
+            }
         })
         ->where(function($queryBuilder) use ($query) {
             $queryBuilder->where('firstname', 'like', "%$query%")
@@ -103,15 +106,17 @@ class VotersProfileController extends Controller
         ->get();
 
         return view('admin.pages.tagging.leader_table_body', compact('leaders'))->render();
+
     }
 
     public function manageleader(VotersProfile $manageleader)
     {
+        $leaders = VotersProfile::all();
         $successors = Tagging::with(['predecessors', 'successors'])
-        ->where('predecessor', '=', $manageleader->id)->get();
+        ->where('predecessor', '=', $manageleader->id)->paginate(47);
         $subordinates = VotersProfile::where('id', '!=', $manageleader->id)
         ->where('barangay', '=', $manageleader->barangay)->get();
-        return view('admin.pages.partials.addsubordinate', compact('manageleader','subordinates','successors'));
+        return view('admin.pages.partials.addsubordinate', compact('manageleader','subordinates','successors','leaders'));
     }
 
     public function storeSubordinate(Request $request)
@@ -137,7 +142,48 @@ class VotersProfileController extends Controller
         return redirect()->back()->with('success', 'Subordinate added successfully.');
     }
 
+    // public function searchSuccessors(Request $request, VotersProfile $manageleader)
+    // {
+    //     try {
+    //         $query = $request->get('query');
+    //         $successors = Tagging::with(['predecessors', 'successors'])
+    //             ->where('predecessor', '=', $manageleader->id)
+    //             ->whereHas('successors', function($q) use ($query) {
+    //                 $q->where('firstname', 'LIKE', "%{$query}%")
+    //                 ->orWhere('middlename', 'LIKE', "%{$query}%")
+    //                 ->orWhere('lastname', 'LIKE', "%{$query}%");
+    //             })
+    //             ->paginate(47);
 
+    //         return response()->json($successors);
+    //     } catch (\Exception $e) {
+    //         Log::error('Error fetching successors: ' . $e->getMessage());
+    //         return response()->json(['error' => 'Internal Server Error'], 500);
+    //     }
+    // }
+    
+    public function successorDestroy($id)
+    {
+        // Get the successor record to delete
+        $successor = Tagging::find($id);
+
+        if (!$successor) {
+            return redirect()->back()->with('error', 'Successor not found.');
+        }
+
+        // Check if successor value exists as predecessor in other records
+        $conflictingPredecessors = Tagging::where('predecessor', $successor->successor)
+                                          ->where('id', '!=', $successor->id)
+                                          ->exists();
+
+        if ($conflictingPredecessors) {
+            return redirect()->back()->with('error', 'Cannot delete successor because it is used as a predecessor in another record.');
+        }
+
+        // If no conflict, proceed with deletion
+        $successor->delete();
+        return redirect()->back()->with('success', 'Successor removed successfully.');
+    }
 
 
 }

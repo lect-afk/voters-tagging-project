@@ -7,6 +7,16 @@
             @csrf
             @method('PUT')
             <div class="form-group">
+                <label for="alliances_status">Alliances Status</label>
+                <select name="alliances_status" class="form-control" required>
+                    <option disabled selected value="">Select</option>
+                    <option value="Green" {{ $votersProfile->alliances_status == 'Green' ? 'selected' : '' }}>Green</option>
+                    <option value="Yellow" {{ $votersProfile->alliances_status == 'Yellow' ? 'selected' : '' }}>Yellow</option>
+                    <option value="Orange" {{ $votersProfile->alliances_status == 'Orange' ? 'selected' : '' }}>Orange</option>
+                    <option value="Red" {{ $votersProfile->alliances_status == 'Red' ? 'selected' : '' }}>Red</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="firstname">Firstname:</label>
                 <input type="text" name="firstname" class="form-control" value="{{ $votersProfile->firstname }}" required>
             </div>
