@@ -84,7 +84,7 @@ class VotersProfileController extends Controller
 
     public function namelist(Request $request)
     {
-        $leaders = VotersProfile::paginate(50);
+        $leaders = VotersProfile::where('leader', '=', 'Barangay')->paginate(50);
 
         return view('admin.pages.tagging.namelist', compact('leaders'));
     }
