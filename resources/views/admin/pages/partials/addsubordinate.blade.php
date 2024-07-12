@@ -1,58 +1,110 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container">
-        <h1>{{ $manageleader->firstname }} {{ $manageleader->middlename }} {{ $manageleader->lastname }}</h1>
-        <h4>Add Subordinates:</h4>
-        <div class="container mt-3">
-            <form action="{{ route('storeSubordinate') }}" method="POST" class="d-flex align-items-center">
-                @csrf
-                <div class="me-3">
-                    <label for="choose_subordinate" class="form-label">Choose subordinate:</label>
-                    <select name="successor" class="form-select" id="choose_subordinate" name="dropdown_option">
-                        @foreach ($subordinates as $subordinates)
-                            <option value="{{ $subordinates->id }}">{{ $subordinates->firstname }} {{ $subordinates->middlename }} {{ $subordinates->lastname }}</option>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ route('voter_profile.namelist') }}" class="text-decoration-none">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </a>
+                        </h5>
+                        <p class="card-text">Leaders</p>
+                        @foreach ($leaders as $leader)
+                        <a class="d-block" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $leader->id) }}">{{ $leader->firstname }} {{ $leader->middlename }} {{ $leader->lastname }}</a>
                         @endforeach
-                    </select>
+                    </div>
+                </div>
+            </div>
 
-                    <input hidden type="text" name="predecessor" class="form-control" required value="{{ $manageleader->id }}">
-                    <input hidden type="text" name="tier_level" class="form-control" required value="1">
-                    <input hidden type="text" name="team" class="form-control" required value="Sample">
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <h1>{{ $manageleader->firstname }} {{ $manageleader->middlename }} {{ $manageleader->lastname }}</h1>
+                <form class="d-flex" role="search">
+                    <input id="searchInput" class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search">
+                </form>
+                @if ($message = Session::get('success'))
+                    <div class="alert alert-success mt-2">
+                        <p>{{ $message }}</p>
+                    </div>
+                @elseif ($message = Session::get('error'))
+                    <div class="alert alert-danger mt-2">
+                        <p>{{ $message }}</p>
+                    </div>
+                @endif
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach ($successors as $successor)
+                                @php
+                                    $backgroundColor = '#6c757d';
+
+                                    switch ($successor->successors->alliances_status) {
+                                        case 'Green':
+                                            $backgroundColor = '#70e000';
+                                            break;
+                                        case 'Yellow':
+                                            $backgroundColor = '#ffd60a';
+                                            break;
+                                        case 'Orange':
+                                            $backgroundColor = '#fb8500';
+                                            break;
+                                        case 'Red':
+                                            $backgroundColor = '#d00000';
+                                            break;
+                                    }
+                                @endphp
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header d-flex align-items-center justify-content-between">
+                                            <div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div>
+                                            <div class="text-center flex-grow-1">
+                                                <h5 class="card-title mb-0">Precinct No.</h5>
+                                                <h6 class="card-subtitle mb-0 text-muted">{{ $successor->successors->precincts->number }}</h6>
+                                            </div>
+                                            <form action="{{ route('successor.destroy', $successor->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn-close" aria-label="Remove"></button>
+                                            </form>
+                                        </div>
+                                        <div class="card-body">
+                                            <h4>{{ $successor->successors->firstname }} {{ $successor->successors->middlename }} {{ $successor->successors->lastname }}</h4>
+                                            <a href="{{ route('voter_profile.manageleader', $successor->successor) }}" class="btn btn-info">Link a Voter</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                            <div class="col-md-4 mb-4">
+                                <form action="{{ route('storeSubordinate') }}" method="POST" class="d-flex flex-column align-items-center h-100">
+                                    @csrf
+                                    <div class="me-3 align-self-start">
+                                        <label for="choose_subordinate" class="form-label">Choose subordinate:</label>
+                                        <select name="successor" class="form-select" id="choose_subordinate">
+                                            @foreach ($subordinates as $subordinate)
+                                                <option value="{{ $subordinate->id }}">{{ $subordinate->firstname }} {{ $subordinate->middlename }} {{ $subordinate->lastname }}</option>
+                                            @endforeach
+                                        </select>
+
+                                        <input hidden type="text" name="predecessor" class="form-control" required value="{{ $manageleader->id }}">
+                                        <input hidden type="text" name="tier_level" class="form-control" required value="1">
+                                        <input hidden type="text" name="team" class="form-control" required value="Sample">
+                                    </div>
+                                    <div class="align-self-start">
+                                        <button type="submit" class="btn btn-primary mt-4">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <button type="submit" class="btn btn-primary mt-4">Add</button>
+                <div class="pt-3">
+                    {{ $successors->links('admin.pages.partials.pagination') }}
                 </div>
-            </form>
+            </div>
         </div>
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success mt-2">
-                <p>{{ $message }}</p>
-            </div>
-        @elseif ($message = Session::get('error'))
-            <div class="alert alert-danger mt-2">
-                <p>{{ $message }}</p>
-            </div>
-        @endif
-        <table class="table mt-2">
-            <tr>
-                <th>Full Name</th>
-                <th>Precinct No.</th>
-                <th>Actions</th>
-            </tr>
-            @foreach ($successors  as $successors)
-                <tr>
-                    <td>{{ $successors->successors->firstname }} {{ $successors->successors->middlename }} {{ $successors->successors->lastname }}</td>
-                    <td>{{ $successors->successors->precincts->number }}</td>
-                    <td>
-                        <a href="{{ route('voter_profile.manageleader', $successors->successor) }}" class="btn btn-info">Link to Voter</a>
-                        <form action="" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </table>
     </div>
 @endsection

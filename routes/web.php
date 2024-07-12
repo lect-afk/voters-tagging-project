@@ -63,6 +63,10 @@ Route::middleware(['check.user'])->group(function () {
     //Route for Adding Subordinate
     Route::post('/subordinates/store', [VotersProfileController::class, 'storeSubordinate'])->name('storeSubordinate');
 
+    //Remove Successor
+    Route::delete('/successor/{id}', [VotersProfileController::class, 'successorDestroy'])->name('successor.destroy');
+
+
 
 
 });

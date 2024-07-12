@@ -11,7 +11,7 @@ class VotersProfile extends Model
     protected $table = 'voters_profile';
     protected $fillable = [
         'firstname', 'middlename', 'lastname', 
-        'sitio', 'purok', 'barangay', 'precinct','leader'
+        'sitio', 'purok', 'barangay', 'precinct','leader','alliances_status'
     ];
 
     public function sitios()

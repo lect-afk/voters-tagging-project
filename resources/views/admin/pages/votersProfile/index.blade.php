@@ -11,23 +11,34 @@
         @endif
         <table class="table mt-2">
             <tr>
-                <th>Firstname</th>
-                <th>Middlename</th>
-                <th>Lastname</th>
-                <th>Sitio</th>
-                <th>Purok</th>
+                <th>Alliance Status</th>
+                <th>Full Name</th>
                 <th>Barangay</th>
                 <th>Precinct</th>
                 <th>Leader</th>
                 <th>Actions</th>
             </tr>
             @foreach ($voters_profile as $voters_profile)
+                @php
+                    $backgroundColor = '#6c757d'; 
+                    switch ($voters_profile->alliances_status) {
+                        case 'Green':
+                            $backgroundColor = '#70e000'; 
+                            break;
+                        case 'Yellow':
+                            $backgroundColor = '#ffd60a'; 
+                            break;
+                        case 'Orange':
+                            $backgroundColor = '#fb8500'; 
+                            break;
+                        case 'Red':
+                            $backgroundColor = '#d00000'; 
+                            break;
+                    }
+                @endphp
                 <tr>
-                    <td>{{ $voters_profile->firstname }}</td>
-                    <td>{{ $voters_profile->middlename }}</td>
-                    <td>{{ $voters_profile->lastname }}</td>
-                    <td>{{ $voters_profile->sitios->name }}</td>
-                    <td>{{ $voters_profile->puroks->name }}</td>
+                    <td><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
+                    <td>{{ $voters_profile->firstname }} {{ $voters_profile->middlename }} {{ $voters_profile->lastname }}</td>
                     <td>{{ $voters_profile->barangays->name }}</td>
                     <td>{{ $voters_profile->precincts->number }}</td>
                     <td>{{ $voters_profile->leader }}</td>
