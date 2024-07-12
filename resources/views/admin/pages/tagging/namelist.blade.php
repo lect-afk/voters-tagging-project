@@ -18,7 +18,6 @@
                 <option value="District">District Leader</option>
                 <option value="Provincial">Provincial Leader</option>
                 <option value="Regional">Regional Leader</option>
-                <option value="None">None</option>
             </select>
         </form>
         

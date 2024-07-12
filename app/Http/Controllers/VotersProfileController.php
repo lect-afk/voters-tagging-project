@@ -47,7 +47,11 @@ class VotersProfileController extends Controller
 
     public function show(VotersProfile $votersProfile)
     {
-        return view('admin.pages.votersProfile.show', compact('votersProfile'));
+        $voterspath = Tagging::with(['predecessors', 'successors'])
+        ->where('successor', '=', $votersProfile->id)->get();
+        $allvoters = Tagging::with(['predecessors', 'successors'])->get();
+        
+        return view('admin.pages.votersProfile.show', compact('votersProfile','voterspath'));
     }
 
     public function edit(VotersProfile $votersProfile)

@@ -73,7 +73,7 @@
                                         </div>
                                         <div class="card-body">
                                             <h4>{{ $successor->successors->firstname }} {{ $successor->successors->middlename }} {{ $successor->successors->lastname }}</h4>
-                                            <a href="{{ route('voter_profile.manageleader', $successor->successor) }}" class="btn btn-info">Link a Voter</a>
+                                            <a href="{{ route('voter_profile.manageleader', $successor->successor) }}" class="btn btn-info">Check/Add Subordinate</a>
                                         </div>
                                     </div>
                                 </div>
