@@ -20,6 +20,8 @@ mix.js('resources/js/app.js', 'public/js')
     .copy('node_modules/bootstrap/dist/js/bootstrap.bundle.js', 'public/js')
     .copy('node_modules/jquery/dist/jquery.js', 'public/js')
     .copy('node_modules/popper.js/dist/umd/popper.js', 'public/js')
+    // copy files
+    .copy('resources/assets', 'public')
 
 
     

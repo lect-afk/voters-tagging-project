@@ -41,23 +41,46 @@
                 <a href="{{ route('voters_profile.index') }}" class="btn btn-primary mt-2">Back</a>
             </div>
             <!-- Right Side Content -->
+            {{-- <div class="col-md-6">
+                <h2>Voters Tagging Path</h2>
+                <div class="form-group">
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          @foreach ($allvoters as $allvoters)
+                            <li class="breadcrumb-item"><a href="#">{{ $allvoters->predecessors->firstname }}</a></li>
+                          @endforeach
+                          <li class="breadcrumb-item"><a href="#">{{ $votersProfile->firstname }}</a></li>
+                        
+                          @foreach ($voterspath as $voterspath)
+                            <li class="breadcrumb-item"><a href="{{ route('voters_profile.show', $voterspath->predecessors) }}">{{ $voterspath->predecessors->firstname }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('voters_profile.show', $voterspath->successors) }}">{{ $voterspath->successors->firstname }}</a></li>
+                          @endforeach
+                          @foreach ($taggings as $taggings)
+                            <li class="breadcrumb-item"><a href="">{{ $taggings->predecessors->firstname }}</a></li>
+                          @endforeach
+
+                        </ol>
+                    </nav>
+                </div>
+            </div> --}}
             <div class="col-md-6">
                 <h2>Voters Tagging Path</h2>
                 <div class="form-group">
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                          {{-- @foreach ($allvoters as $allvoters)
-                            <li class="breadcrumb-item"><a href="#">{{ $allvoters->predecessors->firstname }}</a></li>
-                          @endforeach
-                          <li class="breadcrumb-item"><a href="#">{{ $votersProfile->firstname }}</a></li> --}}
-                          @foreach ($voterspath as $voterspath)
-                            <li class="breadcrumb-item"><a href="{{ route('voters_profile.show', $voterspath->predecessors) }}">{{ $voterspath->predecessors->firstname }}</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('voters_profile.show', $voterspath->successors) }}">{{ $voterspath->successors->firstname }}</a></li>
-                          @endforeach
+                            @foreach ($hierarchyPath as $tagging)
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('voters_profile.show', $tagging->predecessors->id) }}">
+                                        {{ $tagging->predecessors->firstname }}
+                                    </a>
+                                </li>
+                            @endforeach
+                            <li class="breadcrumb-item active" aria-current="page">{{ $votersProfile->firstname }}</li>
                         </ol>
                     </nav>
                 </div>
             </div>
+            
         </div>
     </div>
 @endsection

@@ -1,23 +1,31 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container">
-        <h1>Voters Profiles</h1>
-        <a href="{{ route('voters_profile.create') }}" class="btn btn-primary">Add Voters Profiles</a>
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Voters Profiles</h1>
+            <a href="{{ route('voters_profile.create') }}" class="button-index">Add Voters Profiles</a>
+        </div>
         @if ($message = Session::get('success'))
-            <div class="alert alert-success mt-2">
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+        @elseif ($message = Session::get('error'))
+            <div class="alert alert-danger">
                 <p>{{ $message }}</p>
             </div>
         @endif
-        <table class="table mt-2">
-            <tr>
-                <th>Alliance Status</th>
-                <th>Full Name</th>
-                <th>Barangay</th>
-                <th>Precinct</th>
-                <th>Leader</th>
-                <th>Actions</th>
-            </tr>
+        <table class="table table-striped table-bordered mt-3">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Alliance Status</th>
+                    <th>Full Name</th>
+                    <th>Barangay</th>
+                    <th>Precinct</th>
+                    <th>Leader</th>
+                    <th style="width: 15%;">Actions</th>
+                </tr>
+            </thead>
             @foreach ($voters_profile as $voters_profile)
                 @php
                     $backgroundColor = '#6c757d'; 
@@ -43,12 +51,18 @@
                     <td>{{ $voters_profile->precincts->number }}</td>
                     <td>{{ $voters_profile->leader }}</td>
                     <td>
-                        <a href="{{ route('voters_profile.show', $voters_profile->id) }}" class="btn btn-info">Show</a>
-                        <a href="{{ route('voters_profile.edit', $voters_profile->id) }}" class="btn btn-primary">Edit</a>
-                        <form action="{{ route('voters_profile.destroy', $voters_profile->id) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('voters_profile.show', $voters_profile->id) }}" class="icon-link" title="Show">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ route('voters_profile.edit', $voters_profile->id) }}" class="icon-link" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{{ route('voters_profile.destroy', $voters_profile->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="icon-link" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>

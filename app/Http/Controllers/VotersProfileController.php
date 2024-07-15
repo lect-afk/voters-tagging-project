@@ -45,13 +45,42 @@ class VotersProfileController extends Controller
         return redirect()->route('voters_profile.index')->with('success', 'Voters Profile created successfully.');
     }
 
+    // Function to get hierarchy path
+    public function getHierarchyPath($votersProfileId)
+    {
+        $path = [];
+        $this->fetchPredecessors($votersProfileId, $path);
+        return array_reverse($path);
+    }
+
+    // Recursive function to fetch predecessors
+    private function fetchPredecessors($successorId, &$path)
+    {
+        $votersPath = Tagging::with(['predecessors', 'successors'])
+            ->where('successor', '=', $successorId)
+            ->first();
+
+        if ($votersPath) {
+            $path[] = $votersPath;
+            if ($votersPath->predecessor) {
+                $this->fetchPredecessors($votersPath->predecessors->id, $path);
+            }
+        }
+    }
+
+    // public function show(VotersProfile $id)
+    // {
+    //     // $voterspath = Tagging::with(['predecessors', 'successors'])
+    //     // ->where('successor', '=', $votersProfile->id)->get();
+    //     // $taggings = Tagging::all();
+    //     $votersProfile = VotersProfile::find($id);
+    //     $hierarchyPath = $this->getHierarchyPath($votersProfile->id);
+    //     return view('admin.pages.votersProfile.show', compact('votersProfile','hierarchyPath'));
+    // }
     public function show(VotersProfile $votersProfile)
     {
-        $voterspath = Tagging::with(['predecessors', 'successors'])
-        ->where('successor', '=', $votersProfile->id)->get();
-        $allvoters = Tagging::with(['predecessors', 'successors'])->get();
-        
-        return view('admin.pages.votersProfile.show', compact('votersProfile','voterspath'));
+        $hierarchyPath = $this->getHierarchyPath($votersProfile->id);
+        return view('admin.pages.votersProfile.show', compact('votersProfile', 'hierarchyPath'));
     }
 
     public function edit(VotersProfile $votersProfile)

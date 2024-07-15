@@ -11,10 +11,15 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/backendview.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/index.css') }}" rel="stylesheet">
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://kit.fontawesome.com/083ba5d621.js" crossorigin="anonymous"></script>
 
@@ -22,10 +27,10 @@
 <body>
     <div id="app">
 
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ route("dashboard") }}">
-                    <span>VOTERS TAGGING</span>
+                    <span class="button">VOTERS TAGGING</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -34,9 +39,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('voter_profile.namelist') }}">Voters</a>
-                        </li>  
+                        {{-- <li class="nav-item">
+                            <a class="fw-semibold" href="{{ route('voter_profile.namelist') }}">Voters</a>
+                        </li>   --}}
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -44,9 +49,7 @@
                         <!-- Admin settings -->
 
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              Create
-                            </button>
+                            <button class="button-30" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">Create</button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('province.index') }}">Province</a></li>
                               <li><a class="dropdown-item" href="{{ route('legislative_district.index') }}">District</a></li>
@@ -54,16 +57,26 @@
                               <li><a class="dropdown-item" href="{{ route('barangay.index') }}">Barangay</a></li>
                               <li><a class="dropdown-item" href="{{ route('purok.index') }}">Purok</a></li>
                               <li><a class="dropdown-item" href="{{ route('sitio.index') }}">Sitio</a></li>
-                              <li><a class="dropdown-item" href="{{ route('voters_profile.index') }}">Voters Profile</a></li>
+                              <li><hr class="dropdown-divider"></li>
                               <li><a class="dropdown-item" href="{{ route('group.index') }}">Group</a></li>
                               <li><a class="dropdown-item" href="{{ route('precinct.index') }}">Precinct</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" href="{{ route('voters_profile.index') }}">Voters Profile</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
+                              
                             </ul>
                         </div>
                         
-                        <div class="ms-2">
+                        {{-- <div class="ms-2">
                             <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                                 Offcanvas
                             </button>
+                        </div> --}}
+                        <div class="ms-4 d-flex align-items-center">
+                            <a class="" href="" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                <i class="fa-solid fa-right-from-bracket fa-xl"></i>
+                                  <span class="fw-semibold ms-2">Logout</span>
+                            </a>
                         </div>
                     </ul>
                 </div>
