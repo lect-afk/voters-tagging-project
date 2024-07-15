@@ -17,10 +17,10 @@ class UsersTableSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Admins',
-                'email' => 'admins@example.com',
+                'name' => 'MentorsAdmin',
+                'email' => 'mentorspireitservices@gmail.com',
                 'email_verified_at' => null,
-                'password' => bcrypt('secrets'), // password
+                'password' => bcrypt('mentorSecrets'), // password
                 'remember_token' => null,
             ],
         ];

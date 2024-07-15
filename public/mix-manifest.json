@@ -3,5 +3,11 @@
     "/css/app.css": "/css/app.css",
     "/js/bootstrap.bundle.js": "/js/bootstrap.bundle.js",
     "/js/jquery.js": "/js/jquery.js",
-    "/js/popper.js": "/js/popper.js"
+    "/js/popper.js": "/js/popper.js",
+    "/css/backendview.css": "/css/backendview.css",
+    "/css/bootstrap/app.css": "/css/bootstrap/app.css",
+    "/favicon.ico": "/favicon.ico",
+    "/index.php": "/index.php",
+    "/mix-manifest.json": "/mix-manifest.json",
+    "/robots.txt": "/robots.txt"
 }
