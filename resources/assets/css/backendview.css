@@ -1,6 +1,16 @@
+/* Hide scrollbar but retain functionality */
+html, body {
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none; /* Webkit-based browsers */
+}
+
 body {
     font-family: 'Montserrat', sans-serif;
-    background-color: #f6f7eb;
+    background-color: #efefd0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -9,22 +19,38 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar, .sidebar {
     font-family: 'Nunito', sans-serif;
-    background-color: #e94f37;
-    color: #f6f7eb;
+    background-color: #004e89;
+    color: #efefd0;
 }
 
 a {
     text-decoration: none;       
-    color: #f6f7eb;             
+    color: #efefd0;             
 }
 
 a:hover {
     color: #393e41;             
 }
 
+.predecessor_link{
+  color: #393e41; 
+}
+
+.predecessor_link:hover{
+  color: #004e89;
+}
+
+.leader_link{
+  color: #393e41; 
+}
+
+.leader_link:hover{
+  color: #004e89;
+}
+
 .nav-item{
     text-decoration: none;       
-    color: #f6f7eb;  
+    color: #efefd0;  
 }
 
 .nav-item:hover{
@@ -33,7 +59,7 @@ a:hover {
 
 .button {
     font-family: 'Poppins', sans-serif;
-    color: #f4d35e; 
+    color: #FCFCFD; 
 }
 
 .button:hover {
@@ -69,6 +95,7 @@ a:hover {
   white-space: nowrap;
   will-change: box-shadow,transform;
   font-size: 18px;
+  /* width: 80px; */
 }
 
 .button-30:focus {
@@ -105,8 +132,8 @@ a:hover {
   }
   
   .dropdown-item:hover {
-    background-color: #e94f37;
-    color: #f6f7eb;
+    background-color: #004e89;
+    color: #efefd0;
   }
   
   .dropdown-item:not(:last-child) {
@@ -136,4 +163,22 @@ a:hover {
   .dropdown-menu.show {
     display: block; /* Show the menu when the class 'show' is added */
   }
+
+  .card {
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    background-color: #004e89;
+    color: #FCFCFD;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 2rem;
+    background-color: #FCFCFD;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 5px;
+}
   

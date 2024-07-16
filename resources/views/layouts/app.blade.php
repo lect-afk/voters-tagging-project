@@ -16,6 +16,20 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+
+    <style>
+        /* Hide scrollbar but retain functionality */
+        html, body {
+            overflow-y: scroll;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none; /* Webkit-based browsers */
+        }
+
+    </style>
 
 </head>
 <body>

@@ -6,6 +6,8 @@
     "/js/popper.js": "/js/popper.js",
     "/css/backendview.css": "/css/backendview.css",
     "/css/bootstrap/app.css": "/css/bootstrap/app.css",
+    "/css/index.css": "/css/index.css",
+    "/css/login.css": "/css/login.css",
     "/favicon.ico": "/favicon.ico",
     "/index.php": "/index.php",
     "/mix-manifest.json": "/mix-manifest.json",

@@ -1,12 +1,23 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container">
-        <h1>Show Group</h1>
-        <div class="form-group">
-            <strong>Name:</strong>
-            {{ $group->name }}
+    <div class="container my-5">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h2>Group Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Name:</strong>
+                    <p class="card-text">{{ $group->name }}</p>
+                </div>
+                <div class="mt-2">
+                    <a class="button-index" href="{{ route('group.index') }}">
+                        <i class="fa-solid fa-arrow-turn-down fa-rotate-90 fa-xl"></i>
+                          <span class="fw-semibold ms-2">Return to Group List</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <a href="{{ route('group.index') }}" class="btn btn-primary mt-2">Back</a>
     </div>
 @endsection

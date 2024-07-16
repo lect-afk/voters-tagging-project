@@ -4,7 +4,10 @@
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>Legislative District</h1>
-            <a href="{{ route('legislative_district.create') }}" class="button-index">Add Legislative District</a>
+            <a href="{{ route('legislative_district.create') }}" class="button-index">
+                <i class="fa-solid fa-circle-plus fa-xl"></i>
+                <span class="fw-semibold ms-2">Add</span>
+            </a>
         </div>
         @if ($message = Session::get('success'))
             <div class="alert alert-success">
@@ -15,7 +18,7 @@
                 <p>{{ $message }}</p>
             </div>
         @endif
-        <table class="table table-striped table-bordered mt-3">
+        <table class="table mt-2 table-light table-hover">
             <thead class="thead-dark">
                 <tr>
                     <th>Name</th>

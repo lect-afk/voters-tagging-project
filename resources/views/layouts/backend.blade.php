@@ -48,8 +48,11 @@
                     <ul class="navbar-nav ms-auto">
                         <!-- Admin settings -->
 
-                        <div class="dropdown">
-                            <button class="button-30" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">Create</button>
+                        <div class="dropdown me-2">
+                            <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-map-location-dot fa-2xs"></i>
+                                <span class="fw-semibold ms-2">LOCATION</span>
+                            </button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('province.index') }}">Province</a></li>
                               <li><a class="dropdown-item" href="{{ route('legislative_district.index') }}">District</a></li>
@@ -57,13 +60,28 @@
                               <li><a class="dropdown-item" href="{{ route('barangay.index') }}">Barangay</a></li>
                               <li><a class="dropdown-item" href="{{ route('purok.index') }}">Purok</a></li>
                               <li><a class="dropdown-item" href="{{ route('sitio.index') }}">Sitio</a></li>
-                              <li><hr class="dropdown-divider"></li>
-                              <li><a class="dropdown-item" href="{{ route('group.index') }}">Group</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown me-2">
+                            <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-plus-minus fa-2xs"></i>
+                                <span class="fw-semibold ms-2">CREATE</span>
+                            </button>
+                            <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('precinct.index') }}">Precinct</a></li>
-                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" href="{{ route('group.index') }}">Group</a></li>
                               <li><a class="dropdown-item" href="{{ route('voters_profile.index') }}">Voters Profile</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="dropdown me-2">
+                            <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-users-gear fa-2xs"></i>
+                                <span class="fw-semibold ms-2">MANAGE</span>
+                            </button>
+                            <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
-                              
                             </ul>
                         </div>
                         
