@@ -1,58 +1,50 @@
+html, body {
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f6f7eb;
+}
+
 .container {
-    max-width: 1200px;
+    max-width: 100%;
 }
 
-.table thead th {
-    background-color: #343a40;
-    color: #ffffff;
+.card {
+    border-radius: 0.5rem;
 }
 
-.table tbody tr:hover {
-    background-color: #f1f1f1;
+.card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
-.btn-sm {
-    padding: .25rem .5rem;
-    font-size: .875rem;
+.card-body {
+    padding: 2rem;
+    background-color: #e94f37;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 5px;
 }
 
-.alert {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: .75rem 1.25rem;
-    border: 1px solid transparent;
-    border-radius: .25rem;
+.form-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #f6f7eb;
 }
 
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
+.form-control {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
 }
 
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+.btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
 }
 
-.d-flex {
-    display: flex ;
+.invalid-feedback {
+    font-size: 0.875rem;
 }
 
-.justify-content-between {
-    justify-content: space-between ;
-}
-
-.align-items-center {
-    align-items: center ;
-}
-
-.d-inline {
-    display: inline ;
-}
-
-.button-index {
+.button-login {
     align-items: center;
     appearance: none;
     background-color: #FCFCFD;
@@ -83,38 +75,16 @@
     font-size: 18px;
   }
   
-  .button-index:focus {
+  .button-login:focus {
     box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
   }
   
-  .button-index:hover {
+  .button-login:hover {
     box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
     transform: translateY(-2px);
   }
   
-  .button-index:active {
+  .button-login:active {
     box-shadow: #D6D6E7 0 3px 7px inset;
     transform: translateY(2px);
   }
-
-  .icon-link {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0 5px;
-    font-size: 1.25rem;
-    transition: color 0.3s ease;
-}
-
-.icon-link{
-    color:#393e41;
-}
-
-.icon-link:hover {
-    color: #004e89;
-}
-
-.icon-link i {
-    pointer-events: none;
-}

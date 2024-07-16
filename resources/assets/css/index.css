@@ -37,19 +37,19 @@
 }
 
 .d-flex {
-    display: flex !important;
+    display: flex ;
 }
 
 .justify-content-between {
-    justify-content: space-between !important;
+    justify-content: space-between ;
 }
 
 .align-items-center {
-    align-items: center !important;
+    align-items: center ;
 }
 
 .d-inline {
-    display: inline !important;
+    display: inline ;
 }
 
 .button-index {
@@ -112,7 +112,7 @@
 }
 
 .icon-link:hover {
-    color: #e94f37;
+    color: #004e89;
 }
 
 .icon-link i {

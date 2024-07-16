@@ -8,14 +8,17 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ route('voter_profile.namelist') }}" class="text-decoration-none">
-                                <i class="fas fa-arrow-left"></i> Back
+                            <a href="{{ route('voter_profile.namelist') }}" class="text-decoration-none leader_link">
+                                <i class="fa-solid fa-arrow-turn-up fa-rotate-270 fa-lg"></i>
+                                <span class="fw-semibold ms-2">Back</span> 
                             </a>
                         </h5>
-                        <p class="card-text">Leaders</p>
-                        @foreach ($leaders as $leader)
-                        <a class="d-block" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $leader->id) }}">{{ $leader->firstname }} {{ $leader->middlename }} {{ $leader->lastname }}</a>
-                        @endforeach
+                        <span class="fw-semibold">Leaders</span> 
+                        <div class="mt-3">
+                            @foreach ($leaders as $leader)
+                                <a class="d-block leader_link" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $leader->id) }}">{{ $leader->firstname }} {{ $leader->middlename }} {{ $leader->lastname }}</a>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,8 +65,8 @@
                                         <div class="card-header d-flex align-items-center justify-content-between">
                                             <div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div>
                                             <div class="text-center flex-grow-1">
-                                                <h5 class="card-title mb-0">Precinct No.</h5>
-                                                <h6 class="card-subtitle mb-0 text-muted">{{ $successor->successors->precincts->number }}</h6>
+                                                <h5 class="card-title mb-0 ">Precinct No.</h5>
+                                                <h6 class="card-subtitle mb-0 fw-semibold">{{ $successor->successors->precincts->number }}</h6>
                                             </div>
                                             <form action="{{ route('successor.destroy', $successor->id) }}" method="POST" style="display:inline;">
                                                 @csrf
@@ -73,7 +76,10 @@
                                         </div>
                                         <div class="card-body">
                                             <h4>{{ $successor->successors->firstname }} {{ $successor->successors->middlename }} {{ $successor->successors->lastname }}</h4>
-                                            <a href="{{ route('voter_profile.manageleader', $successor->successor) }}" class="btn btn-info">Check/Add Subordinate</a>
+                                            <a href="{{ route('voter_profile.manageleader', $successor->successor) }}" class="text-decoration-none leader_link">
+                                                <i class="fa-solid fa-people-arrows fa-lg"></i>
+                                                <span class="fw-semibold ms-2">Manage Subordinates</span> 
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -82,7 +88,7 @@
                                 <form action="{{ route('storeSubordinate') }}" method="POST" class="d-flex flex-column align-items-center h-100">
                                     @csrf
                                     <div class="me-3 align-self-start">
-                                        <label for="choose_subordinate" class="form-label">Choose subordinate:</label>
+                                        <label for="choose_subordinate" class="form-label fw-semibold">Choose subordinate:</label>
                                         <select name="successor" class="form-select" id="choose_subordinate">
                                             @foreach ($subordinates as $subordinate)
                                                 <option value="{{ $subordinate->id }}">{{ $subordinate->firstname }} {{ $subordinate->middlename }} {{ $subordinate->lastname }}</option>
@@ -93,8 +99,11 @@
                                         <input hidden type="text" name="tier_level" class="form-control" required value="1">
                                         <input hidden type="text" name="team" class="form-control" required value="Sample">
                                     </div>
-                                    <div class="align-self-start">
-                                        <button type="submit" class="btn btn-primary mt-4">Add</button>
+                                    <div class="align-self-start mt-2">
+                                        <button type="submit" class="button-index">
+                                            <i class="fa-solid fa-square-plus fa-sm"></i>
+                                            <span class="fw-semibold ms-2">Add Subordinate</span>
+                                        </button>
                                     </div>
                                 </form>
                             </div>

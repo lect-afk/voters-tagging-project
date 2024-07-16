@@ -29,7 +29,7 @@
                     <th>Barangay</th>
                     {{-- <th>Purok</th>
                     <th>Sitio</th> --}}
-                    <th>Actions</th>
+                    <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
             <tbody class="leader-table-body">
