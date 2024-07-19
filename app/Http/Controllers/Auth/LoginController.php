@@ -29,7 +29,7 @@ class LoginController extends Controller
     // protected $redirectTo = '/home';
     protected function authenticated(Request $request, $user)
     {
-        if ($user->name == 'Admins') {
+        if ($user->name == 'MentorsAdmin') {
             return redirect('/dashboard');
         } else {
             return redirect('/');
