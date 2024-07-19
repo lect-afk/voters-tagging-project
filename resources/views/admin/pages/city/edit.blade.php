@@ -7,7 +7,6 @@
                 <h2>Edit City</h2>
             </div>
             <div class="card-body">
-                <h1 class="card-title">Edit City</h1>
                 <form action="{{ route('city.update', $city->id) }}" method="POST">
                     @csrf
                     @method('PUT')
