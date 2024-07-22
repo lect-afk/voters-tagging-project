@@ -16,7 +16,11 @@
                     </div>
                     <div class="form-group">
                         <strong>Middlename:</strong>
-                        {{ $votersProfile->middlename }}
+                        @if ($votersProfile->middlename != null)
+                            {{ $votersProfile->middlename }}
+                        @else
+                            No Middlename
+                        @endif
                     </div>
                     <div class="form-group">
                         <strong>Lastname:</strong>
@@ -24,11 +28,19 @@
                     </div>
                     <div class="form-group">
                         <strong>Sitio:</strong>
-                        {{ $votersProfile->sitios->name }}
+                        @if ($votersProfile->sitio != null)
+                            {{ $votersProfile->sitios->name }}
+                        @else
+                            None
+                        @endif
                     </div>
                     <div class="form-group">
                         <strong>Purok:</strong>
-                        {{ $votersProfile->puroks->name }}
+                        @if ($votersProfile->puroks != null)
+                            {{ $votersProfile->puroks->name }}
+                        @else
+                            None
+                        @endif
                     </div>
                     <div class="form-group">
                         <strong>Barangay:</strong>
@@ -80,8 +92,18 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $votersProfile->firstname }} {{ $votersProfile->middlename }} {{ $votersProfile->lastname }}</h5>
                             <p class="card-text">
-                                Sitio: {{ $votersProfile->sitios->name }} |
-                                Purok: {{ $votersProfile->puroks->name }} |
+                                Sitio:  @if($votersProfile->sitios && $votersProfile->sitios->name)
+                                            {{ $votersProfile->sitios->name }}
+                                        @else
+                                            None
+                                        @endif
+                                        |
+                                Purok:  @if($votersProfile->puroks && $votersProfile->puroks->name)
+                                            {{ $votersProfile->sitios->name }}
+                                        @else
+                                            None
+                                        @endif
+                                        |
                                 Barangay: {{ $votersProfile->barangays->name }}
                             </p>
                         </div>

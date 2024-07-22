@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="middlename">Middlename:</label>
-                        <input type="text" name="middlename" class="form-control" value="{{ $votersProfile->middlename }}" required>
+                        <input type="text" name="middlename" class="form-control" value="{{ $votersProfile->middlename }}">
                     </div>
                     <div class="form-group mb-4">
                         <label for="lastname">Lastname:</label>
@@ -34,7 +34,8 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="sitio">Sitio</label>
-                        <select name="sitio" class="form-control" required>
+                        <select name="sitio" class="form-control">
+                            <option value="">None</option>
                             @foreach ($sitio as $sitio)
                                 <option value="{{ $sitio->id }}" {{ $votersProfile->sitio == $sitio->id ? 'selected' : '' }}>{{ $sitio->name }}</option>
                             @endforeach
@@ -42,7 +43,8 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="purok">Purok</label>
-                        <select name="purok" class="form-control" required>
+                        <select name="purok" class="form-control">
+                            <option value="">None</option>
                             @foreach ($purok as $purok)
                             <option value="{{ $purok->id }}" {{ $votersProfile->purok == $purok->id ? 'selected' : '' }}>{{ $purok->name }}</option>
                             @endforeach
@@ -51,6 +53,7 @@
                     <div class="form-group mb-4">
                         <label for="barangay">Barangay</label>
                         <select name="barangay" class="form-control" required>
+                            <option value="">None</option>
                             @foreach ($barangay as $barangay)
                             <option value="{{ $barangay->id }}" {{ $votersProfile->barangay == $barangay->id ? 'selected' : '' }}>{{ $barangay->name }}</option>
                             @endforeach
@@ -58,7 +61,8 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="precinct">Precinct</label>
-                        <select name="precinct" class="form-control" required>
+                        <select name="precinct" class="form-control">
+                            <option value="">None</option>
                             @foreach ($precinct as $precinct)
                             <option value="{{ $precinct->id }}" {{ $votersProfile->precinct == $precinct->id ? 'selected' : '' }}>{{ $precinct->number }}</option>
                             @endforeach
@@ -68,6 +72,7 @@
                         <label for="leader">Leader</label>
                         <select name="leader" class="form-control" required>
                             <option value="None" {{ $votersProfile->leader == 'None' ? 'selected' : '' }}>None</option>
+                            <option value="Purok" {{ $votersProfile->leader == 'Purok' ? 'selected' : '' }}>Purok</option>
                             <option value="Barangay" {{ $votersProfile->leader == 'Barangay' ? 'selected' : '' }}>Barangay</option>
                             <option value="Municipal" {{ $votersProfile->leader == 'Municipal' ? 'selected' : '' }}>Municipal</option>
                             <option value="District" {{ $votersProfile->leader == 'District' ? 'selected' : '' }}>District</option>

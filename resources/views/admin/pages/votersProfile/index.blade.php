@@ -51,7 +51,13 @@
                     <td><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
                     <td>{{ $voters_profile->firstname }} {{ $voters_profile->middlename }} {{ $voters_profile->lastname }}</td>
                     <td>{{ $voters_profile->barangays->name }}</td>
-                    <td>{{ $voters_profile->precincts->number }}</td>
+                    <td>
+                        @if ($voters_profile->precincts && $voters_profile->precincts->number)
+                            {{ $voters_profile->precincts->number }}
+                        @else
+                            None
+                        @endif
+                    </td>
                     <td>{{ $voters_profile->leader }}</td>
                     <td>
                         <a href="{{ route('voters_profile.show', $voters_profile->id) }}" class="icon-link" title="Show">

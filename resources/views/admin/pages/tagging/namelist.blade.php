@@ -15,6 +15,7 @@
             <select id="leaderFilter" class="form-select">
                 {{-- <option selected disabled>Filter by</option> --}}
                 <option selected value="Barangay">Barangay Leader</option>
+                <option value="Purok">Purok Leader</option>
                 <option value="Municipal">Municipal Leader</option>
                 <option value="District">District Leader</option>
                 <option value="Provincial">Provincial Leader</option>

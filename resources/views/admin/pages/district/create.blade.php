@@ -16,6 +16,7 @@
                     <div class="form-group mb-4">
                         <label for="province">Province</label>
                         <select name="province" class="form-control" required>
+                            <option disabled selected value="">Select</option>
                             @foreach ($province as $province)
                                 <option value="{{ $province->id }}">{{ $province->name }}</option>
                             @endforeach

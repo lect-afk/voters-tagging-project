@@ -16,13 +16,14 @@ return new class extends Migration
         Schema::create('voters_profile', function (Blueprint $table) {
             $table->id();
             $table->string('firstname', 50);
-            $table->string('middlename', 50);
+            $table->string('middlename', 50)->nullable();
             $table->string('lastname', 50);
-            $table->unsignedBigInteger('sitio');
-            $table->unsignedBigInteger('purok');
-            $table->unsignedBigInteger('barangay');
-            $table->unsignedBigInteger('precinct');
-            $table->enum('leader', ['None','Barangay', 'Municipal','District','Provincial','Regional']);
+            $table->unsignedBigInteger('sitio')->nullable();
+            $table->unsignedBigInteger('purok')->nullable();
+            $table->unsignedBigInteger('barangay')->nullable();
+            $table->unsignedBigInteger('precinct')->nullable();
+            $table->enum('leader', ['None','Purok','Barangay', 'Municipal','District','Provincial','Regional']);
+            $table->enum('alliances_status', ['Green','Yellow', 'Orange','Red']);
             $table->timestamps();
 
             $table->foreign('sitio')->references('id')->on('sitio');
