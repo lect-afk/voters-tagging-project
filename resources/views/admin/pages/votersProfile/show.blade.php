@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-group">
                         <strong>Sitio:</strong>
-                        @if ($votersProfile->sitio != null)
+                        @if ($votersProfile->sitios && $votersProfile->sitios->name)
                             {{ $votersProfile->sitios->name }}
                         @else
                             None
@@ -36,7 +36,7 @@
                     </div>
                     <div class="form-group">
                         <strong>Purok:</strong>
-                        @if ($votersProfile->puroks != null)
+                        @if ($votersProfile->puroks && $votersProfile->puroks->name)
                             {{ $votersProfile->puroks->name }}
                         @else
                             None
@@ -48,7 +48,11 @@
                     </div>
                     <div class="form-group">
                         <strong>Precinct:</strong>
-                        {{ $votersProfile->precincts->number }}
+                        @if ($votersProfile->precincts && $votersProfile->precincts->number)
+                            {{ $votersProfile->precincts->number }}
+                        @else
+                            None
+                        @endif
                     </div>
                     <div class="form-group">
                         <strong>Leader:</strong>
