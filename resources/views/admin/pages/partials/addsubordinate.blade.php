@@ -90,6 +90,7 @@
                                     <div class="me-3 align-self-start">
                                         <label for="choose_subordinate" class="form-label fw-semibold">Choose subordinate:</label>
                                         <select name="successor" class="form-select" id="choose_subordinate">
+                                            <option disabled selected value="">Select</option>
                                             @foreach ($subordinates as $subordinate)
                                                 <option value="{{ $subordinate->id }}">{{ $subordinate->firstname }} {{ $subordinate->middlename }} {{ $subordinate->lastname }}</option>
                                             @endforeach
