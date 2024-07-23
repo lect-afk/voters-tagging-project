@@ -33,28 +33,8 @@
                         <input type="text" name="lastname" class="form-control" required>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="sitio">Sitio</label>
-                        <select name="sitio" class="form-control">
-                            <option disabled selected value="">Select</option>
-                            <option value="">None</option>
-                            @foreach ($sitio as $sitio)
-                                <option value="{{ $sitio->id }}">{{ $sitio->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="purok">Purok</label>
-                        <select name="purok" class="form-control">
-                            <option disabled selected value="">Select</option>
-                            <option value="">None</option>
-                            @foreach ($purok as $purok)
-                                <option value="{{ $purok->id }}">{{ $purok->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-4">
                         <label for="barangay">Barangay</label>
-                        <select name="barangay" class="form-control" required>
+                        <select name="barangay" id="barangay" class="form-control" required>
                             <option disabled selected value="">Select</option>
                             @foreach ($barangay as $barangay)
                                 <option value="{{ $barangay->id }}">{{ $barangay->name }}</option>
@@ -62,13 +42,27 @@
                         </select>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="precinct">Precinct</label>
-                        <select name="precinct" class="form-control">
+                        <label for="purok">Purok</label>
+                        <select name="purok" id="purok" class="form-control">
                             <option disabled selected value="">Select</option>
                             <option value="">None</option>
-                            @foreach ($precinct as $precinct)
+                        </select>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="sitio">Sitio</label>
+                        <select name="sitio" id="sitio" class="form-control">
+                            <option disabled selected value="">Select</option>
+                            <option value="">None</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="precinct">Precinct</label>
+                        <select name="precinct" id="precinct" class="form-control">
+                            <option disabled selected value="">Select</option>
+                            <option value="">None</option>
+                            {{-- @foreach ($precinct as $precinct)
                                 <option value="{{ $precinct->id }}">{{ $precinct->number }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </select>
                     </div>
                     <div class="form-group mb-4">
@@ -92,4 +86,72 @@
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#barangay').change(function() {
+            var barangayID = $(this).val();
+            if (barangayID) {
+                $.ajax({
+                    url: '/getPurok/' + barangayID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#purok').empty();
+                        $('#purok').append('<option disabled selected value="">Select</option>');
+                        $.each(data, function(key, value) {
+                            $('#purok').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#purok').empty();
+                $('#purok').append('<option disabled selected value="">Select</option>');
+            }
+        });
+
+        $('#purok').change(function() {
+            var purokID = $(this).val();
+            if (purokID) {
+                $.ajax({
+                    url: '/getSitio/' + purokID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#sitio').empty();
+                        $('#sitio').append('<option disabled selected value="">Select</option>');
+                        $.each(data, function(key, value) {
+                            $('#sitio').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#sitio').empty();
+                $('#sitio').append('<option disabled selected value="">Select</option>');
+            }
+        });
+
+        $('#barangay').change(function() {
+            var barangayID = $(this).val();
+            if (barangayID) {
+                $.ajax({
+                    url: '/getPrecinct/' + barangayID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#precinct').empty();
+                        $('#precinct').append('<option disabled selected value="">Select</option>');
+                        $.each(data, function(key, value) {
+                            $('#precinct').append('<option value="' + value.id + '">' + value.number + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#precinct').empty();
+                $('#precinct').append('<option disabled selected value="">Select</option>');
+            }
+        });
+    });
+</script>
 @endsection

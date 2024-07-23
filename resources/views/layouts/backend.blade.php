@@ -78,7 +78,7 @@
                         <div class="dropdown me-2">
                             <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-users-gear fa-2xs"></i>
-                                <span class="fw-semibold ms-2">MANAGE</span>
+                                <span class="fw-semibold ms-2">MANAGE TAGGING</span>
                             </button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
@@ -146,6 +146,7 @@
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('js/popper.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
+    
 
 </body>
 <!-- Logout Confirmation Modal -->

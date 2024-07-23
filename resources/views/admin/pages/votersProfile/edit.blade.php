@@ -14,6 +14,7 @@
                         <label for="alliances_status">Alliances Status</label>
                         <select name="alliances_status" class="form-control" required>
                             <option disabled selected value="">Select</option>
+                            <option value="None" {{ $votersProfile->alliances_status == 'None' ? 'selected' : '' }}>None</option>
                             <option value="Green" {{ $votersProfile->alliances_status == 'Green' ? 'selected' : '' }}>Green</option>
                             <option value="Yellow" {{ $votersProfile->alliances_status == 'Yellow' ? 'selected' : '' }}>Yellow</option>
                             <option value="Orange" {{ $votersProfile->alliances_status == 'Orange' ? 'selected' : '' }}>Orange</option>
@@ -33,29 +34,27 @@
                         <input type="text" name="lastname" class="form-control" value="{{ $votersProfile->lastname }}" required>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="sitio">Sitio</label>
-                        <select name="sitio" class="form-control">
+                        <label for="barangay">Barangay</label>
+                        <select name="barangay" id="barangay" class="form-control" required>
                             <option value="">None</option>
-                            @foreach ($sitio as $sitio)
-                                <option value="{{ $sitio->id }}" {{ $votersProfile->sitio == $sitio->id ? 'selected' : '' }}>{{ $sitio->name }}</option>
+                            @foreach ($barangay as $barangay)
+                            <option value="{{ $barangay->id }}" {{ $votersProfile->barangay == $barangay->id ? 'selected' : '' }}>{{ $barangay->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group mb-4">
                         <label for="purok">Purok</label>
-                        <select name="purok" class="form-control">
+                        <select name="purok" id="purok" class="form-control">
                             <option value="">None</option>
-                            @foreach ($purok as $purok)
-                            <option value="{{ $purok->id }}" {{ $votersProfile->purok == $purok->id ? 'selected' : '' }}>{{ $purok->name }}</option>
-                            @endforeach
+                            
                         </select>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="barangay">Barangay</label>
-                        <select name="barangay" class="form-control" required>
+                        <label for="sitio">Sitio</label>
+                        <select name="sitio" id="sitio" class="form-control">
                             <option value="">None</option>
-                            @foreach ($barangay as $barangay)
-                            <option value="{{ $barangay->id }}" {{ $votersProfile->barangay == $barangay->id ? 'selected' : '' }}>{{ $barangay->name }}</option>
+                            @foreach ($sitio as $sitio)
+                                <option value="{{ $sitio->id }}" {{ $votersProfile->sitio == $sitio->id ? 'selected' : '' }}>{{ $sitio->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -92,4 +91,5 @@
             </div>
         </div>
     </div>
+
 @endsection

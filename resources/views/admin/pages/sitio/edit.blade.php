@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="barangay">Barangay</label>
-                        <select name="barangay" class="form-control" required>
+                        <select name="barangay" id="barangay" class="form-control" required>
                             @foreach ($barangay as $barangay)
                                 <option value="{{ $barangay->id }}" {{ $barangay->id == $sitio->barangay_id ? 'selected' : '' }}>{{ $barangay->name }}</option>
                             @endforeach
@@ -24,7 +24,7 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="purok">Purok</label>
-                        <select name="purok" class="form-control" required>
+                        <select name="purok" id="purok" class="form-control" required>
                             @foreach ($purok as $purok)
                                 <option value="{{ $purok->id }}" {{ $purok->id == $sitio->purok_id ? 'selected' : '' }}>{{ $purok->name }}</option>
                             @endforeach

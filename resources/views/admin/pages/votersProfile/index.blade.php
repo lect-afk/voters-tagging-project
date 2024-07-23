@@ -18,6 +18,10 @@
                 <p>{{ $message }}</p>
             </div>
         @endif
+
+        <form class="d-flex" role="search">
+            <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        </form>
         <table class="table mt-2 table-light table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -29,56 +33,33 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($voters_profiles as $voters_profile)
-                @php
-                    $backgroundColor = '#6c757d'; 
-                    switch ($voters_profile->alliances_status) {
-                        case 'Green':
-                            $backgroundColor = '#70e000'; 
-                            break;
-                        case 'Yellow':
-                            $backgroundColor = '#ffd60a'; 
-                            break;
-                        case 'Orange':
-                            $backgroundColor = '#fb8500'; 
-                            break;
-                        case 'Red':
-                            $backgroundColor = '#d00000'; 
-                            break;
-                    }
-                @endphp
-                <tr>
-                    <td><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
-                    <td>{{ $voters_profile->firstname }} {{ $voters_profile->middlename }} {{ $voters_profile->lastname }}</td>
-                    <td>{{ $voters_profile->barangays->name }}</td>
-                    <td>
-                        @if ($voters_profile->precincts && $voters_profile->precincts->number)
-                            {{ $voters_profile->precincts->number }}
-                        @else
-                            None
-                        @endif
-                    </td>
-                    <td>{{ $voters_profile->leader }}</td>
-                    <td>
-                        <a href="{{ route('voters_profile.show', $voters_profile->id) }}" class="icon-link" title="Show">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="{{ route('voters_profile.edit', $voters_profile->id) }}" class="icon-link" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <form action="{{ route('voters_profile.destroy', $voters_profile->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="icon-link" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
+            <tbody class="voter-table-body">
+                @include('admin.pages.votersProfile.voter_table_body')
+            </tbody>
         </table>
     </div>
     <div class="pt-3">
         {{ $voters_profiles->links('admin.pages.partials.pagination') }}
     </div>
+
+
+
+<!-- Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#searchInput').on('input', function() {
+            var query = $(this).val().toLowerCase();
+            $.ajax({
+                url: '{{ route("voters.search") }}',
+                type: 'GET',
+                data: { query: query },
+                success: function(response) {
+                    // Update table rows with filtered results
+                    $('.voter-table-body').html(response);
+                }
+            });
+        });
+    });
+</script>
 @endsection

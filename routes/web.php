@@ -55,7 +55,8 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('namelist', [VotersProfileController::class, 'namelist'])->name('voter_profile.namelist');
 
     //Route for Search
-    Route::get('/leaders/search', [VotersProfileController::class, 'search'])->name('leaders.search');
+    Route::get('/leaders/search', [VotersProfileController::class, 'leadersearch'])->name('leaders.search');
+    Route::get('/voters/search', [VotersProfileController::class, 'votersearch'])->name('voters.search');
 
     //Route for Managing a Leader
     Route::get('manageleader/{manageleader}', [VotersProfileController::class, 'manageleader'])->name('voter_profile.manageleader');
@@ -66,6 +67,13 @@ Route::middleware(['check.user'])->group(function () {
     //Remove Successor
     Route::delete('/successor/{id}', [VotersProfileController::class, 'successorDestroy'])->name('successor.destroy');
 
+    //Route for partial updates
+    Route::patch('/voters_profile/{votersProfile}/update-leader', [VotersProfileController::class, 'updateLeader'])->name('voters_profile.update_leader');
+
+    //Route for showing the right purok and sitio
+    Route::get('/getPurok/{barangayID}', [VotersProfileController::class, 'getPurok']);
+    Route::get('/getSitio/{purokID}', [VotersProfileController::class, 'getSitio']);
+    Route::get('/getPrecinct/{barangayID}', [VotersProfileController::class, 'getPrecinct']);
 
 
 

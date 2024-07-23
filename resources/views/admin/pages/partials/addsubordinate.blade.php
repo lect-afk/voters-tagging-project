@@ -8,12 +8,12 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ route('voter_profile.namelist') }}" class="text-decoration-none leader_link">
+                            {{-- <a href="{{ route('voter_profile.namelist') }}" class="text-decoration-none leader_link">
                                 <i class="fa-solid fa-arrow-turn-up fa-rotate-270 fa-lg"></i>
                                 <span class="fw-semibold ms-2">Back</span> 
-                            </a>
+                            </a> --}}
+                            <span class="fw-semibold">Leaders</span>
                         </h5>
-                        <span class="fw-semibold">Leaders</span> 
                         <div class="mt-3">
                             @foreach ($leaders as $leader)
                                 <a class="d-block leader_link" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $leader->id) }}">{{ $leader->firstname }} {{ $leader->middlename }} {{ $leader->lastname }}</a>
