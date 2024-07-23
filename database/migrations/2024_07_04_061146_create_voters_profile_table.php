@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('barangay')->nullable();
             $table->unsignedBigInteger('precinct')->nullable();
             $table->enum('leader', ['None','Purok','Barangay', 'Municipal','District','Provincial','Regional']);
-            $table->enum('alliances_status', ['Green','Yellow', 'Orange','Red']);
+            $table->enum('alliances_status', ['None','Green','Yellow', 'Orange','Red']);
             $table->timestamps();
 
             $table->foreign('sitio')->references('id')->on('sitio');
