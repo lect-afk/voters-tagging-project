@@ -38,7 +38,7 @@ class VotersProfileController extends Controller
             // 'barangay' => 'required|exists:barangay,id',
             // 'precinct' => 'required|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
-            'alliances_status' => 'required|in:Green,Yellow,Orange,Red',
+            'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);
 
         VotersProfile::create($request->all());
@@ -103,7 +103,7 @@ class VotersProfileController extends Controller
             'barangay' => 'required|exists:barangay,id',
             // 'precinct' => 'required|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
-            'alliances_status' => 'required|in:Green,Yellow,Orange,Red',
+            'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);
 
         $votersProfile->update($request->all());

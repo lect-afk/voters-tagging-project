@@ -13,6 +13,7 @@
                         <label for="alliances_status">Alliances Status</label>
                         <select name="alliances_status" class="form-control" required>
                             <option disabled selected value="">Select</option>
+                            <option value="None">None</option>
                             <option value="Green">Green</option>
                             <option value="Yellow">Yellow</option>
                             <option value="Orange">Orange</option>
