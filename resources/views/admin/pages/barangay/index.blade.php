@@ -26,7 +26,7 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($barangay as $barangay)
+            @foreach ($barangays as $barangay)
                 <tr>
                     <td>{{ $barangay->name }}</td>
                     <td>{{ $barangay->cities->name }}</td>
@@ -48,5 +48,8 @@
                 </tr>
             @endforeach
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $barangays->links('admin.pages.partials.pagination') }}
     </div>
 @endsection

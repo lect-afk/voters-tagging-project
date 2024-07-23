@@ -27,7 +27,7 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($sitio as $sitio)
+            @foreach ($sitios as $sitio)
                 <tr>
                     <td>{{ $sitio->name }}</td>
                     <td>{{ $sitio->barangays->name}}</td>
@@ -50,5 +50,8 @@
                 </tr>
             @endforeach
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $sitios->links('admin.pages.partials.pagination') }}
     </div>
 @endsection

@@ -10,8 +10,8 @@ class ProvinceController extends Controller
 {
     public function index()
     {
-        $province = Province::all();
-        return view('admin.pages.province.index', compact('province'));
+        $provinces = Province::paginate(50);
+        return view('admin.pages.province.index', compact('provinces'));
     }
 
     public function create()

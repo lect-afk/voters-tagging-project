@@ -26,7 +26,7 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($purok as $purok)
+            @foreach ($puroks as $purok)
                 <tr>
                     <td>{{ $purok->name }}</td>
                     <td>{{ $purok->barangays->name }}</td>
@@ -48,5 +48,8 @@
                 </tr>
             @endforeach
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $puroks->links('admin.pages.partials.pagination') }}
     </div>
 @endsection

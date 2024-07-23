@@ -10,8 +10,8 @@ class PurokController extends Controller
 {
     public function index()
     {
-        $purok = Purok::all();
-        return view('admin.pages.purok.index', compact('purok'));
+        $puroks = Purok::paginate(50);
+        return view('admin.pages.purok.index', compact('puroks'));
     }
 
     public function create()

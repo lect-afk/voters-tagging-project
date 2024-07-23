@@ -25,7 +25,7 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($group as $group)
+            @foreach ($groups as $group)
                 <tr>
                     <td>{{ $group->name }}</td>
                     <td>
@@ -46,5 +46,8 @@
                 </tr>
             @endforeach
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $groups->links('admin.pages.partials.pagination') }}
     </div>
 @endsection

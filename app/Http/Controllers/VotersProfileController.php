@@ -14,8 +14,8 @@ class VotersProfileController extends Controller
 {
     public function index()
     {
-        $voters_profile = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])->get();
-        return view('admin.pages.votersProfile.index', compact('voters_profile'));
+        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])->paginate(50);
+        return view('admin.pages.votersProfile.index', compact('voters_profiles'));
     }
 
     public function create()

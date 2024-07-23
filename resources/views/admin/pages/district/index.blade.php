@@ -26,7 +26,7 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($legislative_district as $legislative_district)
+            @foreach ($legislative_districts as $legislative_district)
                 <tr>
                     <td>{{ $legislative_district->name }}</td>
                     <td>{{ $legislative_district->provinces->name }}</td>
@@ -48,5 +48,8 @@
                 </tr>
             @endforeach
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $legislative_districts->links('admin.pages.partials.pagination') }}
     </div>
 @endsection

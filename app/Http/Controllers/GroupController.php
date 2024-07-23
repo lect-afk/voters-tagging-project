@@ -9,8 +9,8 @@ class GroupController extends Controller
 {
     public function index()
     {
-        $group = Group::all();
-        return view('admin.pages.group.index', compact('group'));
+        $groups = Group::paginate(50);
+        return view('admin.pages.group.index', compact('groups'));
     }
 
     public function create()

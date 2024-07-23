@@ -26,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($province as $province)
+                @foreach ($provinces as $province)
                     <tr>
                         <td>{{ $province->name }}</td>
                         <td>
@@ -49,5 +49,8 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $provinces->links('admin.pages.partials.pagination') }}
     </div>
 @endsection
