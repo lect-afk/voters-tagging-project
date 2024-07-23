@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
-class UsersTableSeeder extends Seeder
+class AnotherUsersTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,13 +16,6 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $users = [
-            [
-                'name' => 'MentorsAdmin',
-                'email' => 'mentorspireitservices@gmail.com',
-                'email_verified_at' => null,
-                'password' => bcrypt('mentorSecrets'), // password
-                'remember_token' => null,
-            ],
             [
                 'name' => '1stAdmin',
                 'email'=>'1st_admin@email.com',
