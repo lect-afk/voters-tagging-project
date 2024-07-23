@@ -11,8 +11,8 @@ class LegislativeDistrictController extends Controller
 {
     public function index()
     {
-        $legislative_district = LegislativeDistrict::with('provinces')->get();
-        return view('admin.pages.district.index', compact('legislative_district'));
+        $legislative_districts = LegislativeDistrict::with('provinces')->paginate(50);
+        return view('admin.pages.district.index', compact('legislative_districts'));
     }
 
     public function create()

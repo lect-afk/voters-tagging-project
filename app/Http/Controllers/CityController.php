@@ -12,8 +12,8 @@ class CityController extends Controller
 {
     public function index()
     {
-        $city = City::with(['districts', 'provinces'])->get();
-        return view('admin.pages.city.index', compact('city'));
+        $cities = City::with(['districts', 'provinces'])->paginate(50);
+        return view('admin.pages.city.index', compact('cities'));
     }
 
     public function create()

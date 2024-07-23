@@ -10,8 +10,8 @@ class BarangayController extends Controller
 {
     public function index()
     {
-        $barangay = Barangay::with('cities')->get();
-        return view('admin.pages.barangay.index', compact('barangay'));
+        $barangays = Barangay::with('cities')->paginate(50);
+        return view('admin.pages.barangay.index', compact('barangays'));
     }
 
     public function create()

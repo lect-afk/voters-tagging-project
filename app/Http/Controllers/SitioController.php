@@ -11,8 +11,8 @@ class SitioController extends Controller
 {
     public function index()
     {
-        $sitio = Sitio::all();
-        return view('admin.pages.sitio.index', compact('sitio'));
+        $sitios = Sitio::paginate(50);
+        return view('admin.pages.sitio.index', compact('sitios'));
     }
 
     public function create()

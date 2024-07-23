@@ -29,7 +29,7 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($voters_profile as $voters_profile)
+            @foreach ($voters_profiles as $voters_profile)
                 @php
                     $backgroundColor = '#6c757d'; 
                     switch ($voters_profile->alliances_status) {
@@ -77,5 +77,8 @@
                 </tr>
             @endforeach
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $voters_profiles->links('admin.pages.partials.pagination') }}
     </div>
 @endsection

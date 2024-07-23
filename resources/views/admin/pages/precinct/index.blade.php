@@ -26,7 +26,7 @@
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
-            @foreach ($precinct as $precinct)
+            @foreach ($precincts as $precinct)
                 <tr>
                     <td>{{ $precinct->number }}</td>
                     <td>{{ $precinct->barangays->name }}</td>
@@ -48,5 +48,8 @@
                 </tr>
             @endforeach
         </table>
+    </div>
+    <div class="pt-3">
+        {{ $precincts->links('admin.pages.partials.pagination') }}
     </div>
 @endsection

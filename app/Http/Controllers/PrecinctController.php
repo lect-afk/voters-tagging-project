@@ -11,8 +11,8 @@ class PrecinctController extends Controller
 {
     public function index()
     {
-        $precinct = Precinct::with('barangays')->get();
-        return view('admin.pages.precinct.index', compact('precinct'));
+        $precincts = Precinct::with('barangays')->paginate(50);
+        return view('admin.pages.precinct.index', compact('precincts'));
     }
 
     public function create()
