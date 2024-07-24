@@ -27,16 +27,34 @@ class VotersProfileController extends Controller
         return view('admin.pages.votersProfile.create', compact('sitio', 'purok', 'barangay', 'precinct'));
     }
 
+    public function getPurok($barangayID)
+    {
+        $purok = Purok::where('barangay', $barangayID)->get();
+        return response()->json($purok);
+    }
+
+    public function getSitio($purokID)
+    {
+        $sitio = Sitio::where('purok', $purokID)->get();
+        return response()->json($sitio);
+    }
+
+    public function getPrecinct($barangayID)
+    {
+        $precinct = Precinct::where('barangay', $barangayID)->get();
+        return response()->json($precinct);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'firstname' => 'required|string|max:50',
-            // 'middlename' => 'required|string|max:50',
+            'middlename' => 'nullable|string|max:50',
             'lastname' => 'required|string|max:50',
-            // 'sitio' => 'required|exists:sitio,id',
-            // 'purok' => 'required|exists:purok,id',
-            // 'barangay' => 'required|exists:barangay,id',
-            // 'precinct' => 'required|exists:precinct,id',
+            'sitio' => 'nullable|exists:sitio,id',
+            'purok' => 'nullable|exists:purok,id',
+            'barangay' => 'required|exists:barangay,id',
+            'precinct' => 'nullable|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);
@@ -85,9 +103,11 @@ class VotersProfileController extends Controller
 
     public function edit(VotersProfile $votersProfile)
     {
-        $sitio = Sitio::all();
-        $purok = Purok::all();
+        // $sitio = Sitio::all();
+        // $purok = Purok::all();
         $barangay = Barangay::all();
+        $purok = Purok::where('barangay', $votersProfile->barangay)->get();
+        $sitio = Sitio::where('purok', $votersProfile->purok)->get();
         $precinct = Precinct::all();
         return view('admin.pages.votersProfile.edit', compact('votersProfile', 'sitio', 'purok', 'barangay', 'precinct'));
     }
@@ -96,12 +116,12 @@ class VotersProfileController extends Controller
     {
         $request->validate([
             'firstname' => 'required|string|max:50',
-            // 'middlename' => 'required|string|max:50',
+            'middlename' => 'nullable|string|max:255',
             'lastname' => 'required|string|max:50',
-            // 'sitio' => 'required|exists:sitio,id',
-            // 'purok' => 'required|exists:purok,id',
+            'sitio' => 'nullable|exists:sitio,id',
+            'purok' => 'nullable|exists:purok,id',
             'barangay' => 'required|exists:barangay,id',
-            // 'precinct' => 'required|exists:precinct,id',
+            'precinct' => 'nullable|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);
@@ -109,6 +129,20 @@ class VotersProfileController extends Controller
         $votersProfile->update($request->all());
         return redirect()->route('voters_profile.index')->with('success', 'Voters Profile updated successfully.');
     }
+
+    public function updateLeader(Request $request, VotersProfile $votersProfile)
+    {
+        $request->validate([
+            'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
+        ]);
+
+        $votersProfile->update([
+            'leader' => $request->leader,
+        ]);
+
+        return redirect()->route('voters_profile.index')->with('success', 'Leader updated successfully.');
+    }
+
 
     public function destroy(VotersProfile $votersProfile)
     {
@@ -123,7 +157,7 @@ class VotersProfileController extends Controller
         return view('admin.pages.tagging.namelist', compact('leaders'));
     }
 
-    public function search(Request $request)
+    public function leadersearch(Request $request)
     {
         $query = $request->input('query');
         $leader = $request->input('leader', 'Barangay');
@@ -140,6 +174,16 @@ class VotersProfileController extends Controller
         ->get();
 
         return view('admin.pages.tagging.leader_table_body', compact('leaders'))->render();
+
+    }
+
+    public function votersearch(Request $request)
+    {
+        $query = $request->input('query');
+        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])->where('firstname', 'like', "%$query%")
+        ->orWhere('lastname', 'like', "%$query%")->get();
+
+        return view('admin.pages.votersProfile.voter_table_body', compact('voters_profiles'))->render();
 
     }
 

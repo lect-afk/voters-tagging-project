@@ -26,6 +26,10 @@
                         <i class="fa-solid fa-pen-to-square fa-xl"></i>
                         <span class="fw-semibold ms-2">Submit</span>
                     </button>
+                    <a href="{{ route('purok.index') }}" class="button-index">
+                        <i class="fa-solid fa-ban fa-xl"></i>
+                        <span class="fw-semibold ms-2">Cancel</span>
+                    </a>
                 </form>
             </div>
         </div>

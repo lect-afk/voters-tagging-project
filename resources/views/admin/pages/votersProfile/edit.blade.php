@@ -14,6 +14,7 @@
                         <label for="alliances_status">Alliances Status</label>
                         <select name="alliances_status" class="form-control" required>
                             <option disabled selected value="">Select</option>
+                            <option value="None" {{ $votersProfile->alliances_status == 'None' ? 'selected' : '' }}>None</option>
                             <option value="Green" {{ $votersProfile->alliances_status == 'Green' ? 'selected' : '' }}>Green</option>
                             <option value="Yellow" {{ $votersProfile->alliances_status == 'Yellow' ? 'selected' : '' }}>Yellow</option>
                             <option value="Orange" {{ $votersProfile->alliances_status == 'Orange' ? 'selected' : '' }}>Orange</option>
@@ -33,39 +34,29 @@
                         <input type="text" name="lastname" class="form-control" value="{{ $votersProfile->lastname }}" required>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="sitio">Sitio</label>
-                        <select name="sitio" class="form-control">
-                            <option value="">None</option>
-                            @foreach ($sitio as $sitio)
-                                <option value="{{ $sitio->id }}" {{ $votersProfile->sitio == $sitio->id ? 'selected' : '' }}>{{ $sitio->name }}</option>
+                        <label for="barangay">Barangay</label>
+                        <select name="barangay" id="barangay" class="form-control" required>
+                            @foreach ($barangay as $barangay)
+                                <option value="{{ $barangay->id }}" {{ $votersProfile->barangay == $barangay->id ? 'selected' : '' }}>{{ $barangay->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group mb-4">
                         <label for="purok">Purok</label>
-                        <select name="purok" class="form-control">
-                            <option value="">None</option>
-                            @foreach ($purok as $purok)
-                            <option value="{{ $purok->id }}" {{ $votersProfile->purok == $purok->id ? 'selected' : '' }}>{{ $purok->name }}</option>
-                            @endforeach
+                        <select name="purok" id="purok" class="form-control">
+                            <!-- Purok options will be populated by JavaScript -->
                         </select>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="barangay">Barangay</label>
-                        <select name="barangay" class="form-control" required>
-                            <option value="">None</option>
-                            @foreach ($barangay as $barangay)
-                            <option value="{{ $barangay->id }}" {{ $votersProfile->barangay == $barangay->id ? 'selected' : '' }}>{{ $barangay->name }}</option>
-                            @endforeach
+                        <label for="sitio">Sitio</label>
+                        <select name="sitio" id="sitio" class="form-control">
+                            <!-- Sitio options will be populated by JavaScript -->
                         </select>
                     </div>
                     <div class="form-group mb-4">
                         <label for="precinct">Precinct</label>
-                        <select name="precinct" class="form-control">
-                            <option value="">None</option>
-                            @foreach ($precinct as $precinct)
-                            <option value="{{ $precinct->id }}" {{ $votersProfile->precinct == $precinct->id ? 'selected' : '' }}>{{ $precinct->number }}</option>
-                            @endforeach
+                        <select name="precinct" id="precinct" class="form-control">
+                            <!-- Precinct options will be populated by JavaScript -->
                         </select>
                     </div>
                     <div class="form-group mb-4">
@@ -92,4 +83,95 @@
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var initialBarangayID = '{{ $votersProfile->barangay }}';
+            var initialPurokID = '{{ $votersProfile->purok }}';
+            var initialSitioID = '{{ $votersProfile->sitio }}';
+            var initialPrecinctID = '{{ $votersProfile->precinct }}';
+
+            if (initialBarangayID) {
+                fetchPurokOptions(initialBarangayID, initialPurokID, initialSitioID);
+                fetchPrecinctOptions(initialBarangayID, initialPrecinctID);
+            }
+
+            $('#barangay').change(function() {
+                var barangayID = $(this).val();
+                if (barangayID) {
+                    fetchPurokOptions(barangayID);
+                    fetchPrecinctOptions(barangayID);
+                } else {
+                    $('#purok').empty().append('<option value="">Select (or None)</option>');
+                    $('#sitio').empty().append('<option value="">Select (or None)</option>');
+                    $('#precinct').empty().append('<option value="">Select (or None)</option>');
+                }
+            });
+
+            $('#purok').change(function() {
+                var purokID = $(this).val();
+                if (purokID) {
+                    fetchSitioOptions(purokID);
+                } else {
+                    $('#sitio').empty().append('<option value="">Select (or None)</option>');
+                }
+            });
+
+            function fetchPurokOptions(barangayID, selectedPurokID = null, selectedSitioID = null) {
+                $.ajax({
+                    url: '/getPurok/' + barangayID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#purok').empty().append('<option value="">Select (or None)</option>');
+                        $.each(data, function(key, value) {
+                            $('#purok').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                        $('#sitio').empty().append('<option value="">Select (or None)</option>');
+                        if (selectedPurokID) {
+                            $('#purok').val(selectedPurokID).trigger('change');
+                            if (selectedSitioID) {
+                                fetchSitioOptions(selectedPurokID, selectedSitioID);
+                            }
+                        }
+                    }
+                });
+            }
+
+            function fetchSitioOptions(purokID, selectedSitioID = null) {
+                $.ajax({
+                    url: '/getSitio/' + purokID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#sitio').empty().append('<option value="">Select (or None)</option>');
+                        $.each(data, function(key, value) {
+                            $('#sitio').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                        if (selectedSitioID) {
+                            $('#sitio').val(selectedSitioID);
+                        }
+                    }
+                });
+            }
+
+            function fetchPrecinctOptions(barangayID, selectedPrecinctID = null) {
+                $.ajax({
+                    url: '/getPrecinct/' + barangayID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#precinct').empty().append('<option value="">Select (or None)</option>');
+                        $.each(data, function(key, value) {
+                            $('#precinct').append('<option value="' + value.id + '">' + value.number + '</option>');
+                        });
+                        if (selectedPrecinctID) {
+                            $('#precinct').val(selectedPrecinctID);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

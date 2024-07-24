@@ -32,6 +32,15 @@ a:hover {
     color: #393e41;             
 }
 
+.a_alternate {
+  text-decoration: none;       
+  color: #004e89;             
+}
+
+.a_alternate:hover {
+  color: #393e41;             
+}
+
 .predecessor_link{
   color: #393e41; 
 }
