@@ -22,6 +22,12 @@ class SitioController extends Controller
         return view('admin.pages.sitio.create', compact('barangay','purok'));
     }
 
+    public function getPurok4Sitio($barangayID)
+    {
+        $purok = Purok::where('barangay', $barangayID)->get();
+        return response()->json($purok);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -42,7 +48,7 @@ class SitioController extends Controller
     public function edit(Sitio $sitio)
     {
         $barangay = Barangay::all();
-        $purok = Purok::all();
+        $purok = Purok::where('barangay', $sitio->barangay)->get();
         return view('admin.pages.sitio.edit', compact('sitio','barangay','purok'));
     }
 

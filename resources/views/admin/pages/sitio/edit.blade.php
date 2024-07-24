@@ -18,16 +18,14 @@
                         <label for="barangay">Barangay</label>
                         <select name="barangay" id="barangay" class="form-control" required>
                             @foreach ($barangay as $barangay)
-                                <option value="{{ $barangay->id }}" {{ $barangay->id == $sitio->barangay_id ? 'selected' : '' }}>{{ $barangay->name }}</option>
+                                <option value="{{ $barangay->id }}" {{ $barangay->id == $sitio->barangay ? 'selected' : '' }}>{{ $barangay->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group mb-4">
                         <label for="purok">Purok</label>
                         <select name="purok" id="purok" class="form-control" required>
-                            @foreach ($purok as $purok)
-                                <option value="{{ $purok->id }}" {{ $purok->id == $sitio->purok_id ? 'selected' : '' }}>{{ $purok->name }}</option>
-                            @endforeach
+                            <!-- Purok options will be populated by JavaScript -->
                         </select>
                     </div>
                     <button type="submit" class="button-index">
@@ -42,4 +40,42 @@
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var initialBarangayID = '{{ $sitio->barangay }}';
+            var initialPurokID = '{{ $sitio->purok }}';
+    
+            if (initialBarangayID) {
+                fetchPurokOptions(initialBarangayID, initialPurokID);
+            }
+    
+            $('#barangay').change(function() {
+                var barangayID = $(this).val();
+                if (barangayID) {
+                    fetchPurokOptions(barangayID);
+                } else {
+                    $('#purok').empty().append('<option disabled selected value="">Select</option>');
+                }
+            });
+    
+            function fetchPurokOptions(barangayID, selectedPurokID = null) {
+                $.ajax({
+                    url: '/getPurok4Sitio/' + barangayID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#purok').empty().append('<option disabled selected value="">Select</option>');
+                        $.each(data, function(key, value) {
+                            $('#purok').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                        if (selectedPurokID) {
+                            $('#purok').val(selectedPurokID);
+                        }
+                    }
+                });
+            }
+        });
+    </script>    
 @endsection

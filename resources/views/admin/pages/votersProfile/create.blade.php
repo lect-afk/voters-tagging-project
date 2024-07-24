@@ -82,12 +82,16 @@
                         <i class="fa-solid fa-pen-to-square fa-xl"></i>
                         <span class="fw-semibold ms-2">Submit</span>
                     </button>
+                    <a href="{{ route('voters_profile.index') }}" class="button-index">
+                        <i class="fa-solid fa-ban fa-xl"></i>
+                        <span class="fw-semibold ms-2">Cancel</span>
+                    </a>
                 </form>
             </div>
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#barangay').change(function() {
@@ -99,7 +103,9 @@
                     dataType: "json",
                     success: function(data) {
                         $('#purok').empty();
-                        $('#purok').append('<option disabled selected value="">Select</option>');
+                        $('#purok').append('<option value="">Select (or None)</option>');
+                        $('#sitio').empty();
+                        $('#sitio').append('<option value="">Select (or None)</option>');
                         $.each(data, function(key, value) {
                             $('#purok').append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
@@ -107,7 +113,8 @@
                 });
             } else {
                 $('#purok').empty();
-                $('#purok').append('<option disabled selected value="">Select</option>');
+                $('#purok').append('<option value="">Select (or None)</option>');
+                
             }
         });
 
@@ -120,7 +127,7 @@
                     dataType: "json",
                     success: function(data) {
                         $('#sitio').empty();
-                        $('#sitio').append('<option disabled selected value="">Select</option>');
+                        $('#sitio').append('<option value="">Select (or None)</option>');
                         $.each(data, function(key, value) {
                             $('#sitio').append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
@@ -128,7 +135,7 @@
                 });
             } else {
                 $('#sitio').empty();
-                $('#sitio').append('<option disabled selected value="">Select</option>');
+                $('#sitio').append('<option value="">Select (or None)</option>');
             }
         });
 
@@ -141,7 +148,7 @@
                     dataType: "json",
                     success: function(data) {
                         $('#precinct').empty();
-                        $('#precinct').append('<option disabled selected value="">Select</option>');
+                        $('#precinct').append('<option value="">Select (or None)</option>');
                         $.each(data, function(key, value) {
                             $('#precinct').append('<option value="' + value.id + '">' + value.number + '</option>');
                         });
@@ -149,7 +156,7 @@
                 });
             } else {
                 $('#precinct').empty();
-                $('#precinct').append('<option disabled selected value="">Select</option>');
+                $('#precinct').append('<option value="">Select (or None)</option>');
             }
         });
     });

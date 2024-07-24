@@ -49,12 +49,12 @@ class VotersProfileController extends Controller
     {
         $request->validate([
             'firstname' => 'required|string|max:50',
-            // 'middlename' => 'required|string|max:50',
+            'middlename' => 'nullable|string|max:50',
             'lastname' => 'required|string|max:50',
-            // 'sitio' => 'required|exists:sitio,id',
-            // 'purok' => 'required|exists:purok,id',
-            // 'barangay' => 'required|exists:barangay,id',
-            // 'precinct' => 'required|exists:precinct,id',
+            'sitio' => 'nullable|exists:sitio,id',
+            'purok' => 'nullable|exists:purok,id',
+            'barangay' => 'required|exists:barangay,id',
+            'precinct' => 'nullable|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);
@@ -116,12 +116,12 @@ class VotersProfileController extends Controller
     {
         $request->validate([
             'firstname' => 'required|string|max:50',
-            // 'middlename' => 'required|string|max:50',
+            'middlename' => 'nullable|string|max:255',
             'lastname' => 'required|string|max:50',
-            // 'sitio' => 'required|exists:sitio,id',
-            // 'purok' => 'required|exists:purok,id',
+            'sitio' => 'nullable|exists:sitio,id',
+            'purok' => 'nullable|exists:purok,id',
             'barangay' => 'required|exists:barangay,id',
-            // 'precinct' => 'required|exists:precinct,id',
+            'precinct' => 'nullable|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);

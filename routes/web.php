@@ -72,6 +72,7 @@ Route::middleware(['check.user'])->group(function () {
 
     //Route for showing the right purok and sitio
     Route::get('/getPurok/{barangayID}', [VotersProfileController::class, 'getPurok']);
+    Route::get('/getPurok4Sitio/{barangayID}', [SitioController::class, 'getPurok4Sitio']);
     Route::get('/getSitio/{purokID}', [VotersProfileController::class, 'getSitio']);
     Route::get('/getPrecinct/{barangayID}', [VotersProfileController::class, 'getPrecinct']);
 
