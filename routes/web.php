@@ -61,6 +61,9 @@ Route::middleware(['check.user'])->group(function () {
     //Route for Managing a Leader
     Route::get('manageleader/{manageleader}', [VotersProfileController::class, 'manageleader'])->name('voter_profile.manageleader');
 
+    //Route for Managing a Leader
+    Route::get('viewhierarchy/{viewhierarchy}', [VotersProfileController::class, 'viewhierarchy'])->name('voter_profile.viewhierarchy');
+
     //Route for Adding Subordinate
     Route::post('/subordinates/store', [VotersProfileController::class, 'storeSubordinate'])->name('storeSubordinate');
 

@@ -5,9 +5,11 @@
         {{-- <td>{{ $leader->puroks->name  }}</td>
         <td>{{ $leader->sitios->name }}</td> --}}
         <td>
-            <a class="button-30" href="{{ route('voter_profile.manageleader', $leader->id) }}" class="btn btn-primary">
-                <i class="fa-solid fa-user-gear fa-xs"></i>
-                <span class="fw-semibold ms-2">MANAGE</span>
+            <a class="icon-link" href="{{ route('voter_profile.manageleader', $leader->id) }}" title="Manage Subordinate">
+                <i class="fa-solid fa-user-gear"></i>
+            </a>
+            <a class="icon-link" href="{{ route('voter_profile.viewhierarchy', $leader->id) }}" title="View Hierarchy">
+                <i class="fa-solid fa-users-viewfinder"></i>
             </a>
         </td>
     </tr>
