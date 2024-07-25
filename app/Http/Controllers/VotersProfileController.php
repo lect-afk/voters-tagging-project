@@ -197,6 +197,45 @@ class VotersProfileController extends Controller
         return view('admin.pages.partials.addsubordinate', compact('manageleader','subordinates','successors','leaders'));
     }
 
+    // public function viewhierarchy(VotersProfile $viewhierarchy)
+    // {
+    //     $leaders = VotersProfile::all();
+    //     $successors = Tagging::with(['predecessors', 'successors'])
+    //     ->where('predecessor', '=', $viewhierarchy->id)->paginate(47);
+    //     $subordinates = VotersProfile::where('id', '!=', $viewhierarchy->id)
+    //     ->where('barangay', '=', $viewhierarchy->barangay)->get();
+    //     return view('admin.pages.tagging.hierarchy', compact('viewhierarchy','subordinates','successors','leaders'));
+    // }
+
+    public function viewhierarchy(VotersProfile $viewhierarchy)
+    {
+        $hierarchy = $this->buildhierarchy($viewhierarchy);
+
+        return view('admin.pages.tagging.hierarchy', compact('hierarchy'));
+    }
+
+    private function buildhierarchy($voter)
+    {
+        $hierarchy = [
+            'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
+            'precinct' => $voter->precincts->number,
+            'alliance_status' => $voter->alliances_status,
+            'children' => []
+        ];
+
+        $successors = Tagging::with('successors')
+            ->where('predecessor', $voter->id)
+            ->get();
+
+        foreach ($successors as $tag) {
+            if ($tag->successors) {
+                $hierarchy['children'][] = $this->buildhierarchy($tag->successors);
+            }
+        }
+
+        return $hierarchy;
+    }
+
     public function storeSubordinate(Request $request)
     {
         $request->validate([
