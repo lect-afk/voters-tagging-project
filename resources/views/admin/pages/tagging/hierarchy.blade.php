@@ -72,7 +72,7 @@
                             '<div class="name-with-color" style="background-color: ' + allianceColor + ';">' +
                             '<span class="name-text">' + node.name + '</span>' +
                             '</div>' +
-                            '<div style="margin-top: 5px;">Precinct: ' + node.precinct + '</div>' +
+                            '<div style="margin-top: 5px;">' + node.precinct + '</div>' +
                             '</div>' +
                            '</div>';
             var tooltip = 'Precinct: ' + node.precinct + '\nAlliance: ' + node.alliance_status;
