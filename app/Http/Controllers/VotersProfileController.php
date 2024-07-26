@@ -189,7 +189,7 @@ class VotersProfileController extends Controller
 
     public function manageleader(VotersProfile $manageleader)
     {
-        $leaders = VotersProfile::all();
+        $leaders = VotersProfile::where('barangay', '=', $manageleader->barangay)->get();
         $successors = Tagging::with(['predecessors', 'successors'])
         ->where('predecessor', '=', $manageleader->id)->paginate(47);
         $subordinates = VotersProfile::where('id', '!=', $manageleader->id)
@@ -216,12 +216,21 @@ class VotersProfileController extends Controller
 
     private function buildhierarchy($voter)
     {
-        $hierarchy = [
-            'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
-            'precinct' => $voter->precincts->number,
-            'alliance_status' => $voter->alliances_status,
-            'children' => []
-        ];
+        if ($voter->leader == 'Barangay') {
+            $hierarchy = [
+                'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
+                'precinct' => $voter->precincts->number,
+                'alliance_status' => $voter->alliances_status,
+                'children' => []
+            ];
+        } elseif($voter->leader == 'Purok') {
+            $hierarchy = [
+                'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
+                'precinct' => $voter->puroks->name,
+                'alliance_status' => $voter->alliances_status,
+                'children' => []
+            ];
+        }
 
         $successors = Tagging::with('successors')
             ->where('predecessor', $voter->id)
