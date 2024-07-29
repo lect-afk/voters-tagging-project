@@ -241,6 +241,16 @@ class VotersProfileController extends Controller
 
     private function buildhierarchy($voter)
     {
+
+        // Initialize $hierarchy to avoid undefined variable issues
+        $hierarchy = [
+            'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
+            'purok' => $voter->puroks->name ?? 'N/A',
+            'precinct' => $voter->precincts->number ?? 'N/A',
+            'alliance_status' => $voter->alliances_status,
+            'children' => []
+        ];
+
         if ($voter->leader == 'Barangay') {
             $hierarchy = [
                 'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
