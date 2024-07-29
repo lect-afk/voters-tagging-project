@@ -8,10 +8,17 @@ use Illuminate\Database\QueryException;
 
 class PurokController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $puroks = Purok::paginate(50);
-        return view('admin.pages.purok.index', compact('puroks'));
+        $query = $request->input('query');
+
+        $puroks = Purok::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.purok.index', compact('puroks'))
+            ->with('query', $query);
     }
 
     public function create()

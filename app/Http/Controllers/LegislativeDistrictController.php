@@ -9,10 +9,17 @@ use Illuminate\Database\QueryException;
 
 class LegislativeDistrictController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $legislative_districts = LegislativeDistrict::with('provinces')->paginate(50);
-        return view('admin.pages.district.index', compact('legislative_districts'));
+        $query = $request->input('query');
+
+        $legislative_districts = LegislativeDistrict::with('provinces')->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.district.index', compact('legislative_districts'))
+            ->with('query', $query);
     }
 
     public function create()

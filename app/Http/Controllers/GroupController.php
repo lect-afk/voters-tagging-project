@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $groups = Group::paginate(50);
-        return view('admin.pages.group.index', compact('groups'));
+        $query = $request->input('query');
+
+        $groups = Group::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.group.index', compact('groups'))
+            ->with('query', $query);
     }
 
     public function create()

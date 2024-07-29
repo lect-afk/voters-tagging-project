@@ -8,10 +8,17 @@ use Illuminate\Database\QueryException;
 
 class BarangayController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $barangays = Barangay::with('cities')->paginate(50);
-        return view('admin.pages.barangay.index', compact('barangays'));
+        $query = $request->input('query');
+
+        $barangays = Barangay::with('cities')->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.barangay.index', compact('barangays'))
+            ->with('query', $query);
     }
 
     public function create()

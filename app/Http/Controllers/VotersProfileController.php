@@ -12,11 +12,34 @@ use Illuminate\Http\Request;
 
 class VotersProfileController extends Controller
 {
-    public function index()
-    {
-        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])->paginate(50);
-        return view('admin.pages.votersProfile.index', compact('voters_profiles'));
-    }
+    public function index(Request $request)
+{
+    $query = $request->input('query');
+    $leader = $request->input('leader');
+
+    $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+        ->when($leader, function($queryBuilder) use ($leader) {
+            return $queryBuilder->where('leader', $leader);
+        })
+        ->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where(function($queryBuilder) use ($query) {
+                $queryBuilder->where('firstname', 'like', "%$query%")
+                             ->orWhere('lastname', 'like', "%$query%")
+                             ->orWhereHas('barangays', function ($q) use ($query) {
+                                 $q->where('name', 'like', "%$query%");
+                             })
+                             ->orWhereHas('precincts', function ($q) use ($query) {
+                                 $q->where('name', 'like', "%$query%");
+                             });
+            });
+        })
+        ->paginate(50);
+
+    return view('admin.pages.votersProfile.index', compact('voters_profiles'))
+        ->with('query', $query)
+        ->with('leader', $leader);
+}
+
 
     public function create()
     {
@@ -162,20 +185,22 @@ class VotersProfileController extends Controller
         $query = $request->input('query');
         $leader = $request->input('leader', 'Barangay');
 
-        $leaders = VotersProfile::where(function($queryBuilder) use ($leader) {
-            if (!empty($leader)) {
-                $queryBuilder->where('leader', $leader);
-            }
-        })
-        ->where(function($queryBuilder) use ($query) {
-            $queryBuilder->where('firstname', 'like', "%$query%")
-                        ->orWhere('lastname', 'like', "%$query%");
-        })
-        ->get();
+        $leaders = VotersProfile::when($leader, function($queryBuilder) use ($leader) {
+                return $queryBuilder->where('leader', $leader);
+            })
+            ->when($query, function($queryBuilder) use ($query) {
+                return $queryBuilder->where(function($queryBuilder) use ($query) {
+                    $queryBuilder->where('firstname', 'like', "%$query%")
+                                ->orWhere('lastname', 'like', "%$query%");
+                });
+            })
+            ->paginate(50);
 
-        return view('admin.pages.tagging.leader_table_body', compact('leaders'))->render();
-
+        return view('admin.pages.tagging.namelist', compact('leaders'))
+            ->with('query', $query)
+            ->with('leader', $leader);
     }
+
 
     public function votersearch(Request $request)
     {

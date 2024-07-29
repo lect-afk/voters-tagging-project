@@ -27,7 +27,7 @@ class LoginController extends Controller
      * @var string
      */
     // protected $redirectTo = '/home';
-    protected $redirectTo = '/dashboard';
+    // protected $redirectTo = '/dashboard';
     // protected function authenticated(Request $request, $user)
     // {
     //     if ($user->name == 'MentorsAdmin') {
@@ -36,6 +36,11 @@ class LoginController extends Controller
     //         return redirect('/');
     //     }
     // }
+
+    protected function authenticated(Request $request, $user)
+    {
+        return redirect('/dashboard');
+    }
 
     /**
      * Create a new controller instance.

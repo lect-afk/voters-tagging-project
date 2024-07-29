@@ -10,10 +10,17 @@ use Illuminate\Database\QueryException;
 
 class CityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cities = City::with(['districts', 'provinces'])->paginate(50);
-        return view('admin.pages.city.index', compact('cities'));
+        $query = $request->input('query');
+
+        $cities = City::with(['districts', 'provinces'])->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.city.index', compact('cities'))
+            ->with('query', $query);
     }
 
     public function create()

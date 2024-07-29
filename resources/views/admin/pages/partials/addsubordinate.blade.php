@@ -8,10 +8,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
-                            {{-- <a href="{{ route('voter_profile.namelist') }}" class="text-decoration-none leader_link">
-                                <i class="fa-solid fa-arrow-turn-up fa-rotate-270 fa-lg"></i>
-                                <span class="fw-semibold ms-2">Back</span> 
-                            </a> --}}
                             <span class="fw-semibold">Leaders</span>
                         </h5>
                         <div class="mt-3">
@@ -88,14 +84,15 @@
                                 <form action="{{ route('storeSubordinate') }}" method="POST" class="d-flex flex-column align-items-center h-100">
                                     @csrf
                                     <div class="me-3 align-self-start">
-                                        <label for="choose_subordinate" class="form-label fw-semibold">Choose subordinate:</label>
-                                        <select name="successor" class="form-select" id="choose_subordinate">
+                                        <label for="choose_subordinate_autocomplete" class="form-label fw-semibold">Choose subordinate:</label>
+                                        <input type="text" id="choose_subordinate_autocomplete" class="form-control">
+                                        <select name="successor" class="form-select d-none" id="choose_subordinate">
                                             <option disabled selected value="">Select</option>
                                             @foreach ($subordinates as $subordinate)
                                                 <option value="{{ $subordinate->id }}">{{ $subordinate->firstname }} {{ $subordinate->middlename }} {{ $subordinate->lastname }}</option>
                                             @endforeach
                                         </select>
-
+                            
                                         <input hidden type="text" name="predecessor" class="form-control" required value="{{ $manageleader->id }}">
                                         <input hidden type="text" name="tier_level" class="form-control" required value="1">
                                         <input hidden type="text" name="team" class="form-control" required value="Sample">
@@ -117,4 +114,27 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            var subordinates = [];
+            $('#choose_subordinate option').each(function() {
+                if ($(this).val()) {
+                    subordinates.push({
+                        label: $(this).text(),
+                        value: $(this).val()
+                    });
+                }
+            });
+        
+            $('#choose_subordinate_autocomplete').autocomplete({
+                source: subordinates,
+                select: function(event, ui) {
+                    $('#choose_subordinate').val(ui.item.value);
+                    $('#choose_subordinate_autocomplete').val(ui.item.label);
+                    return false; // Prevents the default behavior of setting the value
+                }
+            });
+        });
+    </script>    
 @endsection

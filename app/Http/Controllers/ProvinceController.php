@@ -8,10 +8,17 @@ use Illuminate\Database\QueryException;
 
 class ProvinceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $provinces = Province::paginate(50);
-        return view('admin.pages.province.index', compact('provinces'));
+        $query = $request->input('query');
+
+        $provinces = Province::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.province.index', compact('provinces'))
+            ->with('query', $query);
     }
 
     public function create()
