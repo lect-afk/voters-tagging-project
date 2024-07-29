@@ -244,14 +244,14 @@ class VotersProfileController extends Controller
         if ($voter->leader == 'Barangay') {
             $hierarchy = [
                 'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
-                'precinct' => $voter->precincts->number,
+                'precinct' => $voter->precincts->number ?? 'No Precinct',
                 'alliance_status' => $voter->alliances_status,
                 'children' => []
             ];
         } elseif($voter->leader == 'Purok') {
             $hierarchy = [
                 'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
-                'precinct' => $voter->puroks->name,
+                'precinct' => $voter->puroks->name ?? 'No Purok',
                 'alliance_status' => $voter->alliances_status,
                 'children' => []
             ];

@@ -75,7 +75,7 @@
                             '<div style="margin-top: 5px;">' + node.precinct + '</div>' +
                             '</div>' +
                            '</div>';
-            var tooltip = 'Precinct: ' + node.precinct + '\nAlliance: ' + node.alliance_status;
+            var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nAlliance: ' + node.alliance_status;
             data.addRow([{v: node.name, f: nodeHtml}, parentName, tooltip]);
             if (node.children) {
                 node.children.forEach(child => buildRows(child, node.name));
