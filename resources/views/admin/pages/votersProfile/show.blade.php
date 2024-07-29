@@ -103,7 +103,7 @@
                                         @endif
                                         |
                                 Purok:  @if($votersProfile->puroks && $votersProfile->puroks->name)
-                                            {{ $votersProfile->sitios->name }}
+                                            {{ $votersProfile->puroks->name }}
                                         @else
                                             None
                                         @endif
