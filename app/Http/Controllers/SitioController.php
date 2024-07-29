@@ -9,10 +9,17 @@ use Illuminate\Database\QueryException;
 
 class SitioController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sitios = Sitio::paginate(50);
-        return view('admin.pages.sitio.index', compact('sitios'));
+        $query = $request->input('query');
+
+        $sitios = Sitio::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.sitio.index', compact('sitios'))
+            ->with('query', $query);
     }
 
     public function create()

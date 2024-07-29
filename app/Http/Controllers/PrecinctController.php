@@ -9,10 +9,17 @@ use Illuminate\Database\QueryException;
 
 class PrecinctController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $precincts = Precinct::with('barangays')->paginate(50);
-        return view('admin.pages.precinct.index', compact('precincts'));
+        $query = $request->input('query');
+
+        $precincts = Precinct::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('number', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        return view('admin.pages.precinct.index', compact('precincts'))
+            ->with('query', $query);
     }
 
     public function create()

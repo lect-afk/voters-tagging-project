@@ -4,10 +4,9 @@
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>Sitio</h1>
-            <a href="{{ route('sitio.create') }}" class="button-index">
-                <i class="fa-solid fa-circle-plus fa-xl"></i>
-                <span class="fw-semibold ms-2">Add</span>
-            </a>
+            <div class="pt-3">
+                {{ $sitios->links('admin.pages.partials.pagination') }}
+            </div>
         </div>
         @if ($message = Session::get('success'))
             <div class="alert alert-success">
@@ -18,6 +17,19 @@
                 <p>{{ $message }}</p>
             </div>
         @endif
+
+        <form class="d-flex mb-3 justify-content-between" method="GET" action="{{ route('sitio.index') }}" role="search">
+            <input id="searchInput" name="query" class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" value="{{ request('query') }}">
+            <button class="ms-2 button-index" type="submit">
+                <i class="fa-solid fa-magnifying-glass fa-xl"></i>
+                <span class="fw-semibold ms-2">Search</span>
+            </button>
+
+            <a href="{{ route('sitio.create') }}" class="button-index ms-2">
+                <i class="fa-solid fa-circle-plus fa-xl"></i>
+                <span class="fw-semibold ms-2">Add</span>
+            </a>
+        </form>
         <table class="table mt-2 table-light table-hover">
             <thead class="thead-dark">
                 <tr>

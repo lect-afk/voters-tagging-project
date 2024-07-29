@@ -4,23 +4,22 @@
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>List Of Leaders</h1>
+            {{ $leaders->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
         </div>
-        {{-- <div>
-            <form class="d-flex" role="search">
-                <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            </form>
-        </div> --}}
-        <form class="d-flex" role="search">
-            <input id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <select id="leaderFilter" class="form-select">
-                {{-- <option selected disabled>Filter by</option> --}}
-                <option selected value="Barangay">Barangay Leader</option>
-                <option value="Purok">Purok Leader</option>
-                <option value="Municipal">Municipal Leader</option>
-                <option value="District">District Leader</option>
-                <option value="Provincial">Provincial Leader</option>
-                <option value="Regional">Regional Leader</option>
+        <form class="d-flex" method="GET" action="{{ route('leaders.search') }}" role="search">
+            <input id="searchInput" name="query" class="form-control me-2 w-50" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
+            <select id="leaderFilter" name="leader" class="form-select w-50">
+                <option value="Barangay" {{ request('leader') == 'Barangay' ? 'selected' : '' }}>Barangay Leader</option>
+                <option value="Purok" {{ request('leader') == 'Purok' ? 'selected' : '' }}>Purok Leader</option>
+                <option value="Municipal" {{ request('leader') == 'Municipal' ? 'selected' : '' }}>Municipal Leader</option>
+                <option value="District" {{ request('leader') == 'District' ? 'selected' : '' }}>District Leader</option>
+                <option value="Provincial" {{ request('leader') == 'Provincial' ? 'selected' : '' }}>Provincial Leader</option>
+                <option value="Regional" {{ request('leader') == 'Regional' ? 'selected' : '' }}>Regional Leader</option>
             </select>
+            <button class="ms-2 button-index" type="submit">
+                <i class="fa-solid fa-magnifying-glass fa-xl"></i>
+                <span class="fw-semibold ms-2">Search</span>
+            </button>
         </form>
         
         <table class="table mt-2 table-light table-hover">
@@ -28,8 +27,6 @@
                 <tr>
                     <th>Full Name</th>
                     <th>Barangay</th>
-                    {{-- <th>Purok</th>
-                    <th>Sitio</th> --}}
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
@@ -39,27 +36,6 @@
         </table>
     </div>
     <div class="pt-3">
-        {{ $leaders->links('admin.pages.partials.pagination') }}
+        {{ $leaders->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
     </div>
-<!-- Scripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#searchInput, #leaderFilter').on('input change', function() {
-            var query = $('#searchInput').val();
-            var leader = $('#leaderFilter').val();
-            console.log('Search query:', query); // Debugging
-            $.ajax({
-                url: '{{ route("leaders.search") }}',
-                type: 'GET',
-                data: { query: query, leader: leader },
-                success: function(response) {
-                    $('.leader-table-body').html(response);
-                }
-            });
-        });
-    });
-</script>
-
-
 @endsection
