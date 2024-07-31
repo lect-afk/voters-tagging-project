@@ -21,7 +21,8 @@
         <form class="d-flex" method="GET" action="{{ route('voters_profile.index') }}" role="search">
             <input id="searchInput" name="query" class="form-control me-2 w-50" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
             <select id="leaderFilter" name="leader" class="form-select w-50">
-                <option value="" {{ request('leader') == '' ? 'selected' : '' }}>All Leaders</option>
+                <option value="" {{ request('leader') == '' ? 'selected' : '' }}>All</option>
+                <option value="None" {{ request('leader') == 'None' ? 'selected' : '' }}>None Leader</option>
                 <option value="Barangay" {{ request('leader') == 'Barangay' ? 'selected' : '' }}>Barangay Leader</option>
                 <option value="Purok" {{ request('leader') == 'Purok' ? 'selected' : '' }}>Purok Leader</option>
                 <option value="Municipal" {{ request('leader') == 'Municipal' ? 'selected' : '' }}>Municipal Leader</option>
