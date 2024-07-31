@@ -16,7 +16,7 @@ class VotersProfileController extends Controller
 {
     $query = $request->input('query');
     $leader = $request->input('leader');
-
+    
     $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
         ->when($leader, function($queryBuilder) use ($leader) {
             return $queryBuilder->where('leader', $leader);
