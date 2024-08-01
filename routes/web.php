@@ -79,6 +79,9 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('/getSitio/{purokID}', [VotersProfileController::class, 'getSitio']);
     Route::get('/getPrecinct/{barangayID}', [VotersProfileController::class, 'getPrecinct']);
 
+    //Route for the Summary
+    Route::get('summary', [VotersProfileController::class, 'summary'])->name('voters.summary');
+
 
 
 });

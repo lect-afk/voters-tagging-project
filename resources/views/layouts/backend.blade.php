@@ -81,10 +81,11 @@
                         <div class="dropdown me-2">
                             <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-users-gear fa-2xs"></i>
-                                <span class="fw-semibold ms-2">MANAGE TAGGING</span>
+                                <span class="fw-semibold ms-2">TAGGING</span>
                             </button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voters.summary') }}">Summary</a></li>
                             </ul>
                         </div>
                         
