@@ -2,9 +2,6 @@
 
 @section('content')
 <div class="container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Organizational Chart</h1>
-    </div>
         <div id="chart_div" style="width: 100%; height: 1000px;"></div>
 </div>
 <style>
@@ -12,7 +9,7 @@
         border: 1px solid #ccc;
         background-color: #f5f5f5;
         border-radius: 5px;
-        padding: 10px;
+        padding: 20px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         text-align: center;
     }
@@ -51,7 +48,14 @@
         margin: 0;
         font-weight: bold;
     }
+    .leader {
+        border: 2px solid #7b2cbf;
+    }
+    .no-leader {
+        background-color: #e9ecef;
+    }
 </style>
+
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
@@ -67,15 +71,17 @@
         // Recursively build the rows
         function buildRows(node, parentName = null) {
             var allianceColor = getAllianceColor(node.alliance_status);
-            var nodeHtml = '<div class="node-content">' +
+            var leaderClass = node.leader_type === 'None' ? 'no-leader' : 'leader';
+            var nodeHtml = '<div class="node-content ' + leaderClass + '">' +
                             '<div class="node-header">' +
                             '<div class="name-with-color" style="background-color: ' + allianceColor + ';">' +
                             '<span class="name-text">' + node.name + '</span>' +
                             '</div>' +
                             '<div style="margin-top: 5px;">' + node.precinct + '</div>' +
+                            '<div style="margin-top: 5px;">' + node.leader_type + " leader" + '</div>' +
                             '</div>' +
                            '</div>';
-            var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nAlliance: ' + node.alliance_status;
+            var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nAlliance: ' + node.alliance_status+ '\nLeader Type: ' + node.leader_type;
             data.addRow([{v: node.name, f: nodeHtml}, parentName, tooltip]);
             if (node.children) {
                 node.children.forEach(child => buildRows(child, node.name));
@@ -105,4 +111,5 @@
         chart.draw(data, {allowHtml:true, size: 'medium'});
     }
 </script>
+
 @endsection

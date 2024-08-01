@@ -13,26 +13,26 @@ use Illuminate\Http\Request;
 class VotersProfileController extends Controller
 {
     public function index(Request $request)
-{
-    $query = $request->input('query');
-    $leader = $request->input('leader');
-    
-    $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
-        ->when($leader, function($queryBuilder) use ($leader) {
-            return $queryBuilder->where('leader', $leader);
-        })
-        ->when($query, function($queryBuilder) use ($query) {
-            return $queryBuilder->where(function($queryBuilder) use ($query) {
-                $queryBuilder->where('firstname', 'like', "%$query%")
-                             ->orWhere('lastname', 'like', "%$query%");
-            });
-        })
-        ->paginate(50);
+    {
+        $query = $request->input('query');
+        $leader = $request->input('leader');
+        
+        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+            ->when($leader, function($queryBuilder) use ($leader) {
+                return $queryBuilder->where('leader', $leader);
+            })
+            ->when($query, function($queryBuilder) use ($query) {
+                return $queryBuilder->where(function($queryBuilder) use ($query) {
+                    $queryBuilder->where('firstname', 'like', "%$query%")
+                                ->orWhere('lastname', 'like', "%$query%");
+                });
+            })
+            ->paginate(50);
 
-    return view('admin.pages.votersProfile.index', compact('voters_profiles'))
-        ->with('query', $query)
-        ->with('leader', $leader);
-}
+        return view('admin.pages.votersProfile.index', compact('voters_profiles'))
+            ->with('query', $query)
+            ->with('leader', $leader);
+    }
 
 
     public function create()
@@ -242,6 +242,7 @@ class VotersProfileController extends Controller
             'purok' => $voter->puroks->name ?? 'N/A',
             'precinct' => $voter->precincts->number ?? 'N/A',
             'alliance_status' => $voter->alliances_status,
+            'leader_type' => $voter->leader,
             'children' => []
         ];
 
@@ -250,6 +251,7 @@ class VotersProfileController extends Controller
                 'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
                 'precinct' => $voter->precincts->number ?? 'No Precinct',
                 'alliance_status' => $voter->alliances_status,
+                'leader_type' => $voter->leader,
                 'children' => []
             ];
         } elseif($voter->leader == 'Purok') {
@@ -257,6 +259,7 @@ class VotersProfileController extends Controller
                 'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
                 'precinct' => $voter->puroks->name ?? 'No Purok',
                 'alliance_status' => $voter->alliances_status,
+                'leader_type' => $voter->leader,
                 'children' => []
             ];
         }
@@ -338,6 +341,64 @@ class VotersProfileController extends Controller
         // If no conflict, proceed with deletion
         $successor->delete();
         return redirect()->back()->with('success', 'Successor removed successfully.');
+    }
+
+    public function summary(Request $request)
+    {
+        // Get all barangays
+        $query = $request->input('query');
+
+        $barangays = Barangay::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+        
+        $data = $barangays->map(function($barangay) {
+            // Count Barangay Leaders
+            $barangayLeadersCount = VotersProfile::where('barangay', $barangay->id)
+                ->where('leader', 'Barangay')
+                ->count();
+
+            // Count Purok Leaders
+            $purokLeadersCount = VotersProfile::where('barangay', $barangay->id)
+                ->where('leader', 'Purok')
+                ->count();
+
+            // Get all predecessors for the barangay
+            $predecessors = Tagging::whereHas('predecessors', function($query) use ($barangay) {
+                $query->where('barangay', $barangay->id)
+                      ->where('leader', 'None');
+            })->pluck('predecessor')->toArray();
+
+            // Get all successors for the barangay
+            $successors = Tagging::whereHas('successors', function($query) use ($barangay) {
+                $query->where('barangay', $barangay->id)
+                      ->where('leader', 'None');
+            })->pluck('successor')->toArray();
+
+            // Combine predecessors and successors and remove duplicates
+            $downLine = array_unique(array_merge($predecessors, $successors));
+            $downLineCount = count($downLine);
+
+            // Count Total Voters
+            $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
+            $totalLeadersAndDownline = $barangayLeadersCount + $purokLeadersCount + $downLineCount;
+
+            // Calculate the percentage
+            $percentage = $totalVotersCount > 0 ? ($totalLeadersAndDownline / $totalVotersCount) * 100 : 0;
+
+            return [
+                'barangay' => $barangay->name,
+                'barangayLeaders' => $barangayLeadersCount,
+                'purokLeaders' => $purokLeadersCount,
+                'downLine' => $downLineCount,
+                'totalLeadersAndDownline' => $totalLeadersAndDownline,
+                'total' => $totalVotersCount,
+                'percentage' => $percentage,
+            ];
+        });
+
+        return view('admin.pages.tagging.summary', compact('data'))->with('query', $query);
     }
 
 
