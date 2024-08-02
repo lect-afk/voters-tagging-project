@@ -343,7 +343,7 @@ class VotersProfileController extends Controller
         return redirect()->back()->with('success', 'Successor removed successfully.');
     }
 
-    public function summary(Request $request)
+    public function barangaysummary(Request $request)
     {
         // Get all barangays
         $query = $request->input('query');
@@ -398,7 +398,66 @@ class VotersProfileController extends Controller
             ];
         });
 
-        return view('admin.pages.tagging.summary', compact('data'))->with('query', $query);
+        return view('admin.pages.tagging.barangaysummary', compact('data'))->with('query', $query);
+    }
+
+
+    public function precinctsummary(Request $request)
+    {
+        // Get all precincts
+        $query = $request->input('query');
+
+        $precincts = Precinct::with('barangays')->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('number', 'like', "%$query%");
+        })
+        ->paginate(50);
+        
+        $data = $precincts->map(function($precinct) {
+            // Count Barangay Leaders
+            $barangayLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                ->where('leader', 'Barangay')
+                ->count();
+
+            // Count Purok Leaders
+            $purokLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                ->where('leader', 'Purok')
+                ->count();
+
+            // Get all predecessors for the precinct
+            $predecessors = Tagging::whereHas('predecessors', function($query) use ($precinct) {
+                $query->where('precinct', $precinct->id)
+                      ->where('leader', 'None');
+            })->pluck('predecessor')->toArray();
+
+            // Get all successors for the precinct
+            $successors = Tagging::whereHas('successors', function($query) use ($precinct) {
+                $query->where('precinct', $precinct->id)
+                      ->where('leader', 'None');
+            })->pluck('successor')->toArray();
+
+            // Combine predecessors and successors and remove duplicates
+            $downLine = array_unique(array_merge($predecessors, $successors));
+            $downLineCount = count($downLine);
+
+            // Count Total Voters
+            $totalVotersCount = VotersProfile::where('precinct', $precinct->id)->count();
+
+            // Calculate the total of barangay leaders, purok leaders, and downline members
+            $totalLeadersAndDownline = $barangayLeadersCount + $purokLeadersCount + $downLineCount;
+
+            // Calculate the percentage
+            $percentage = $totalVotersCount > 0 ? ($totalLeadersAndDownline / $totalVotersCount) * 100 : 0;
+
+            return [
+                'precinct' => $precinct->number,
+                'barangay' => $precinct->barangays->name,
+                'totalLeadersAndDownline' => $totalLeadersAndDownline,
+                'total' => $totalVotersCount,
+                'percentage' => $percentage,
+            ];
+        });
+
+        return view('admin.pages.tagging.precinctsummary', compact('data'))->with('query', $query);
     }
 
 

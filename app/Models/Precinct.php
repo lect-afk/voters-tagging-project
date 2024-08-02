@@ -20,5 +20,10 @@ class Precinct extends Model
     {
         return $this->belongsTo(Barangay::class, 'barangay', 'id');
     }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class, 'precinct');
+    }
 }
 

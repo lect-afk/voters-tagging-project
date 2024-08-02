@@ -85,7 +85,19 @@
                             </button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
-                              <li><a class="dropdown-item" href="{{ route('voters.summary') }}">Summary</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voters.barangaysummary') }}">Barangay Summary</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown me-2">
+                            <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-user-tie fa-2xs"></i>
+                                <span class="fw-semibold ms-2">Election</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
+                              {{-- <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li> --}}
                             </ul>
                         </div>
                         

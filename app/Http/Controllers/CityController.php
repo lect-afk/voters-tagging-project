@@ -78,5 +78,11 @@ class CityController extends Controller
             return redirect()->route('city.index')->with('error', 'An unexpected error occurred while trying to delete the City.');
         }
     }
+
+    public function getDistrict4City($provinceID)
+    {
+        $district = LegislativeDistrict::where('province', $provinceID)->get();
+        return response()->json($district);
+    }
 }
 

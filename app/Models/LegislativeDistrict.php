@@ -21,4 +21,9 @@ class LegislativeDistrict extends Model
         return $this->hasMany(City::class);
     }
 
+    public function candidates()
+    {
+        return $this->hasMany(Candidate::class, 'district');
+    }
+
 }
