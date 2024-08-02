@@ -20,4 +20,9 @@ class Province extends Model
     {
         return $this->hasMany(District::class, 'legislative_district', 'id');
     }
+
+    public function candidates()
+    {
+        return $this->hasMany(Candidate::class, 'province');
+    }
 }

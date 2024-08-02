@@ -15,19 +15,17 @@
                         <input type="text" name="name" id="name" class="form-control" value="{{ $city->name }}" required>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="district" class="form-label">District</label>
-                        <select name="district" id="district" class="form-control" required>
-                            @foreach ($district as $dist)
-                                <option value="{{ $dist->id }}" {{ $city->district == $dist->id ? 'selected' : '' }}>{{ $dist->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-4">
                         <label for="province" class="form-label">Province</label>
                         <select name="province" id="province" class="form-control" required>
                             @foreach ($province as $prov)
                                 <option value="{{ $prov->id }}" {{ $city->province == $prov->id ? 'selected' : '' }}>{{ $prov->name }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="district" class="form-label">District</label>
+                        <select name="district" id="district" class="form-control" required>
+                            <!-- District options will be populated by JavaScript -->
                         </select>
                     </div>
                     <button type="submit" class="button-index">
@@ -42,4 +40,42 @@
             </div>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var initialProvinceID = '{{ $city->province }}';
+            var initialDistrictID = '{{ $city->district }}';
+    
+            if (initialProvinceID) {
+                fetchDistrictOptions(initialProvinceID, initialDistrictID);
+            }
+    
+            $('#province').change(function() {
+                var provinceID = $(this).val();
+                if (provinceID) {
+                    fetchDistrictOptions(provinceID);
+                } else {
+                    $('#district').empty().append('<option disabled selected value="">Select</option>');
+                }
+            });
+    
+            function fetchDistrictOptions(provinceID, selectedDistrictID = null) {
+                $.ajax({
+                    url: '/getDistrict4City/' + provinceID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#district').empty().append('<option disabled selected value="">Select</option>');
+                        $.each(data, function(key, value) {
+                            $('#district').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                        if (selectedDistrictID) {
+                            $('#district').val(selectedDistrictID);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

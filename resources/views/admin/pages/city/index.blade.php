@@ -34,16 +34,16 @@
             <thead class="thead-dark">
                 <tr>
                     <th>Name</th>
-                    <th>District</th>
                     <th>Province</th>
+                    <th>District</th>
                     <th style="width: 15%;">Actions</th>
                 </tr>
             </thead>
             @foreach ($cities as $city)
                 <tr>
                     <td>{{ $city->name }}</td>
-                    <td>{{ $city->districts->name }}</td>
                     <td>{{ $city->provinces->name }}</td>
+                    <td>{{ $city->districts->name }}</td>
                     <td>
                         <a href="{{ route('city.show', $city->id) }}" class="icon-link" title="Show">
                             <i class="fas fa-eye"></i>

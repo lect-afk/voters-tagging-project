@@ -14,21 +14,18 @@
                         <input type="text" name="name" class="form-control" required>
                     </div>
                     <div class="form-group mb-4">
-                        <label for="district">District</label>
-                        <select name="district" class="form-control" required>
-                            <option disabled selected value="">Select</option>
-                            @foreach ($district as $district)
-                                <option value="{{ $district->id }}">{{ $district->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-4">
                         <label for="province">Province</label>
-                        <select name="province" class="form-control" required>
+                        <select name="province" id="province" class="form-control" required>
                             <option disabled selected value="">Select</option>
                             @foreach ($province as $province)
                                 <option value="{{ $province->id }}">{{ $province->name }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="district">District</label>
+                        <select name="district" id="district" class="form-control" required>
+                            <option disabled selected value="">Select</option>
                         </select>
                     </div>
                     <button type="submit" class="button-index">
@@ -43,4 +40,29 @@
             </div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#province').change(function() {
+                var provinceID = $(this).val();
+                if (provinceID) {
+                    $.ajax({
+                        url: '/getDistrict4City/' + provinceID,
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#district').empty();
+                            $('#district').append('<option value="">Select</option>');
+                            $.each(data, function(key, value) {
+                                $('#district').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#district').empty();
+                    $('#district').append('<option value="">Select</option>');
+                }
+            });
+        });
+    </script>
 @endsection

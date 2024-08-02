@@ -25,4 +25,9 @@ class City extends Model
     {
         return $this->belongsTo(LegislativeDistrict::class, 'district', 'id');
     }
+
+    public function candidates()
+    {
+        return $this->hasMany(Candidate::class, 'city');
+    }
 }

@@ -13,6 +13,8 @@ use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\LegislativeDistrictController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\TaggingController;
+use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\VoteController;
 
 
 /*
@@ -50,6 +52,8 @@ Route::middleware(['check.user'])->group(function () {
     Route::resource('legislative_district', LegislativeDistrictController::class);
     Route::resource('city', CityController::class);
     Route::resource('tagging', TaggingController::class);
+    Route::resource('candidates', CandidateController::class);
+    Route::resource('votes', VoteController::class);
 
     //Route for the Name List
     Route::get('namelist', [VotersProfileController::class, 'namelist'])->name('voter_profile.namelist');
@@ -79,8 +83,14 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('/getSitio/{purokID}', [VotersProfileController::class, 'getSitio']);
     Route::get('/getPrecinct/{barangayID}', [VotersProfileController::class, 'getPrecinct']);
 
+    //Route for showing the right province,district, and city
+    Route::get('/getDistrict/{provinceID}', [CandidateController::class, 'getDistrict']);
+    Route::get('/getDistrict4City/{provinceID}', [CityController::class, 'getDistrict4City']);
+    Route::get('/getCity/{districtID}', [CandidateController::class, 'getCity']);
+
     //Route for the Summary
-    Route::get('summary', [VotersProfileController::class, 'summary'])->name('voters.summary');
+    Route::get('barangaysummary', [VotersProfileController::class, 'barangaysummary'])->name('voters.barangaysummary');
+    Route::get('precinctsummary', [VotersProfileController::class, 'precinctsummary'])->name('voters.precinctsummary');
 
 
 
