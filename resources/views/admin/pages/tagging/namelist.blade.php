@@ -6,9 +6,6 @@
             <div class="col-12 col-md-6">
                 <h1>List Of Leaders</h1>
             </div>
-            <div class="col-12 col-md-6 d-flex justify-content-md-end">
-                {{ $leaders->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
-            </div>
         </div>
         <form class="row g-2" method="GET" action="{{ route('leaders.search') }}" role="search">
             <div class="col-12 col-md-6">
@@ -31,21 +28,23 @@
                 </button>
             </div>
         </form>
-        
-        <table class="table mt-2 table-light table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Full Name</th>
-                    <th>Barangay</th>
-                    <th style="width: 15%;"></th>
-                </tr>
-            </thead>
-            <tbody class="leader-table-body">
-                @include('admin.pages.tagging.leader_table_body', ['leaders' => $leaders])
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table mt-2 table-light table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Barangay</th>
+                        <th style="width: 15%;"></th>
+                    </tr>
+                </thead>
+                <tbody class="leader-table-body">
+                    @include('admin.pages.tagging.leader_table_body', ['leaders' => $leaders])
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            {{ $leaders->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
+        </div>
     </div>
-    <div class="pt-3">
-        {{ $leaders->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
-    </div>
+    
 @endsection
