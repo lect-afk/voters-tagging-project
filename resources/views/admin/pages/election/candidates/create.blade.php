@@ -37,13 +37,13 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="district">District</label>
-                        <select name="district" id="district" class="form-control" required>
+                        <select name="district" id="district" class="form-control">
                             <option disabled selected value="">Select</option>
                         </select>
                     </div>
                     <div class="form-group mb-4">
                         <label for="city">City</label>
-                        <select name="city" id="city" class="form-control" required>
+                        <select name="city" id="city" class="form-control">
                             <option disabled selected value="">Select</option>
                         </select>
                     </div>
