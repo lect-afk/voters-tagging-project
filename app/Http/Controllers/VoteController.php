@@ -9,17 +9,27 @@ use Illuminate\Http\Request;
 
 class VoteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $votes = Vote::with(['candidate', 'precinct'])->get();
-        return view('votes.index', compact('votes'));
+        // $getPrecinct = Vote::with(['candidates', 'precincts'])->get();
+
+        $query = $request->input('query');
+        
+        $votes = Vote::with(['candidates', 'precincts'])
+            ->when($query, function($queryBuilder) use ($query) {
+                return $queryBuilder->whereHas('precincts', function($precinctQuery) use ($query) {
+                    $precinctQuery->where('number', 'like', "%$query%");
+                });
+            })
+            ->paginate(50);
+        return view('admin.pages.election.votes.index', compact('votes'));
     }
 
     public function create()
     {
         $candidates = Candidate::all();
         $precincts = Precinct::all();
-        return view('votes.create', compact('candidates', 'precincts'));
+        return view('admin.pages.election.votes.create', compact('candidates', 'precincts'));
     }
 
     public function store(Request $request)
@@ -37,14 +47,14 @@ class VoteController extends Controller
 
     public function show(Vote $vote)
     {
-        return view('votes.show', compact('vote'));
+        return view('admin.pages.election.votes.show', compact('vote'));
     }
 
     public function edit(Vote $vote)
     {
         $candidates = Candidate::all();
         $precincts = Precinct::all();
-        return view('votes.edit', compact('vote', 'candidates', 'precincts'));
+        return view('admin.pages.election.votes.edit', compact('vote', 'candidates', 'precincts'));
     }
 
     public function update(Request $request, Vote $vote)
@@ -65,4 +75,5 @@ class VoteController extends Controller
         $vote->delete();
         return redirect()->route('votes.index')->with('success', 'Vote deleted successfully.');
     }
+    
 }

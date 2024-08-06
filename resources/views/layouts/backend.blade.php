@@ -93,11 +93,11 @@
                         <div class="dropdown me-2">
                             <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-user-tie fa-2xs"></i>
-                                <span class="fw-semibold ms-2">Election</span>
+                                <span class="fw-semibold ms-2">ELECTION</span>
                             </button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
-                              {{-- <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li> --}}
+                              <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li>
                             </ul>
                         </div>
                         
