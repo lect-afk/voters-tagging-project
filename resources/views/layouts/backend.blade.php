@@ -117,41 +117,87 @@
             </div>
         </nav>
 
-        <!-- Offcanvas menu -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasExampleLabel">User</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body ps-5">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Menu 1</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Menu 2</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Menu 3</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Menu 4</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Menu 5</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Menu 6</a>
-                    </li>    
-                </ul>
-                <div>
-                    <a class="" href="" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                        <i class="fa-solid fa-right-from-bracket fa-xl"></i>
-                          <span class="fw-semibold ms-2">Logout</span>
-                    </a>
+        <nav class="navbar navbar-expand-md shadow-sm fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ route("dashboard") }}">
+                    <span class="button">VOTERS TAGGING</span>
+                </a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="offcanvas menu_offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
+                <div class="offcanvas-body">
+                  <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <div class="dropdown me-2">
+                        <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-map-location-dot fa-2xs"></i>
+                            <span class="fw-semibold ms-2">LOCATION</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{{ route('province.index') }}">Province</a></li>
+                          <li><a class="dropdown-item" href="{{ route('legislative_district.index') }}">District</a></li>
+                          <li><a class="dropdown-item" href="{{ route('city.index') }}">City</a></li>
+                          <li><a class="dropdown-item" href="{{ route('barangay.index') }}">Barangay</a></li>
+                          <li><a class="dropdown-item" href="{{ route('purok.index') }}">Purok</a></li>
+                          <li><a class="dropdown-item" href="{{ route('sitio.index') }}">Sitio</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown me-2">
+                        <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-plus-minus fa-2xs"></i>
+                            <span class="fw-semibold ms-2">CREATE</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{{ route('precinct.index') }}">Precinct</a></li>
+                          <li><a class="dropdown-item" href="{{ route('group.index') }}">Group</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters_profile.index') }}">Voters Profile</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dropdown me-2">
+                        <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-users-gear fa-2xs"></i>
+                            <span class="fw-semibold ms-2">TAGGING</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters.barangaysummary') }}">Barangay Summary</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown me-5">
+                        <button class="button-30 dropdown-button" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-user-tie fa-2xs"></i>
+                            <span class="fw-semibold ms-2">ELECTION</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
+                          <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li>
+                        </ul>
+                    </div>
+                    
+                    {{-- <div class="ms-2">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                            Offcanvas
+                        </button>
+                    </div> --}}
+                    <div class="logout_btn d-flex align-items-center">
+                        <a class="" href="" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fa-solid fa-right-from-bracket fa-xl"></i>
+                              <span class="fw-semibold ms-2">Logout</span>
+                        </a>
+                    </div>
+                  </ul>
+                </div>
+              </div>
             </div>
-        </div>
+          </nav>
 
         <main class="py-4">
             @yield('content')

@@ -21,10 +21,7 @@
 
             <!-- Main Content -->
             <div class="col-md-9">
-                <h1>{{ $manageleader->firstname }} {{ $manageleader->middlename }} {{ $manageleader->lastname }}</h1>
-                <form class="d-flex" role="search">
-                    <input id="searchInput" class="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search">
-                </form>
+                
                 @if ($message = Session::get('success'))
                     <div class="alert alert-success mt-2">
                         <p>{{ $message }}</p>
@@ -36,6 +33,7 @@
                 @endif
                 <div class="card mt-3">
                     <div class="card-body">
+                        <h1 class="mb-4">{{ $manageleader->firstname }} {{ $manageleader->middlename }} {{ $manageleader->lastname }}'s subordinates</h1>
                         <div class="row">
                             @foreach ($successors as $successor)
                                 @php
@@ -97,7 +95,7 @@
                                         <input hidden type="text" name="tier_level" class="form-control" required value="1">
                                         <input hidden type="text" name="team" class="form-control" required value="Sample">
                                     </div>
-                                    <div class="align-self-start mt-2">
+                                    <div class="choose_subordinate align-self-start mt-2">
                                         <button type="submit" class="button-index">
                                             <i class="fa-solid fa-square-plus fa-sm"></i>
                                             <span class="fw-semibold ms-2">Add Subordinate</span>

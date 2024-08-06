@@ -190,4 +190,85 @@ a:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 5px;
 }
+
+.menu_offcanvas{
+    background-color: #004e89;
+}
+
+.offcanvas-title{
+    color: #FCFCFD;
+}
+
+/* Mobile devices (up to 767px) */
+@media (max-width: 767px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .navbar-nav .nav-item {
+        font-size: 0.875rem;
+    }
+
+    .button-30 {
+        font-size: 0.875rem;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .dropdown-menu .dropdown-item {
+        font-size: 0.875rem;
+    }
+
+    .dropdown{
+      margin-top: 10px;
+    }
+
+    .logout_btn{
+      margin-top: 30px;
+      margin-left: 0;
+    }
+
+    .table th, .table td {
+      font-size: 12px;
+    }
+}
+
+/* Tablets (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .navbar-brand {
+      font-size: 1.25rem;
+  }
+
+  .navbar-nav .nav-item {
+      font-size: 1rem;
+  }
+
+  .button-30 {
+      font-size: 1rem;
+      padding-left: 12px;
+      padding-right: 12px;
+  }
+
+  .dropdown-menu .dropdown-item {
+      font-size: 1rem;
+  }
+
+  .dropdown{
+    margin-top: 10px;
+  }
+
+  .logout_btn{
+    margin-top: 30px;
+    margin-left: 0;
+  }
+
+  .table th, .table td {
+      font-size: 14px;
+  }
+
+  .card {
+      margin: 0.5rem 0;
+  }
+
+}
   

@@ -27,7 +27,7 @@ class VotersProfileController extends Controller
                                 ->orWhere('lastname', 'like', "%$query%");
                 });
             })
-            ->paginate(50);
+            ->paginate(25);
 
         return view('admin.pages.votersProfile.index', compact('voters_profiles'))
             ->with('query', $query)
@@ -169,7 +169,7 @@ class VotersProfileController extends Controller
 
     public function namelist(Request $request)
     {
-        $leaders = VotersProfile::where('leader', '=', 'Barangay')->paginate(50);
+        $leaders = VotersProfile::where('leader', '=', 'Barangay')->paginate(25);
 
         return view('admin.pages.tagging.namelist', compact('leaders'));
     }
@@ -188,7 +188,7 @@ class VotersProfileController extends Controller
                                 ->orWhere('lastname', 'like', "%$query%");
                 });
             })
-            ->paginate(50);
+            ->paginate(25);
 
         return view('admin.pages.tagging.namelist', compact('leaders'))
             ->with('query', $query)
@@ -351,9 +351,9 @@ class VotersProfileController extends Controller
         $barangays = Barangay::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
-        
-        $data = $barangays->map(function($barangay) {
+        ->paginate(25);
+
+        $barangays->getCollection()->transform(function($barangay) {
             // Count Barangay Leaders
             $barangayLeadersCount = VotersProfile::where('barangay', $barangay->id)
                 ->where('leader', 'Barangay')
@@ -367,13 +367,13 @@ class VotersProfileController extends Controller
             // Get all predecessors for the barangay
             $predecessors = Tagging::whereHas('predecessors', function($query) use ($barangay) {
                 $query->where('barangay', $barangay->id)
-                      ->where('leader', 'None');
+                    ->where('leader', 'None');
             })->pluck('predecessor')->toArray();
 
             // Get all successors for the barangay
             $successors = Tagging::whereHas('successors', function($query) use ($barangay) {
                 $query->where('barangay', $barangay->id)
-                      ->where('leader', 'None');
+                    ->where('leader', 'None');
             })->pluck('successor')->toArray();
 
             // Combine predecessors and successors and remove duplicates
@@ -398,8 +398,9 @@ class VotersProfileController extends Controller
             ];
         });
 
-        return view('admin.pages.tagging.barangaysummary', compact('data'))->with('query', $query);
+        return view('admin.pages.tagging.barangaysummary', compact('barangays'))->with('query', $query);
     }
+
 
 
     public function precinctsummary(Request $request)
@@ -410,9 +411,9 @@ class VotersProfileController extends Controller
         $precincts = Precinct::with('barangays')->when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('number', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
         
-        $data = $precincts->map(function($precinct) {
+        $precincts->getCollection()->transform(function($precinct) {
             // Count Barangay Leaders
             $barangayLeadersCount = VotersProfile::where('precinct', $precinct->id)
                 ->where('leader', 'Barangay')
@@ -457,7 +458,7 @@ class VotersProfileController extends Controller
             ];
         });
 
-        return view('admin.pages.tagging.precinctsummary', compact('data'))->with('query', $query);
+        return view('admin.pages.tagging.precinctsummary', compact('precincts'))->with('query', $query);
     }
 
 
