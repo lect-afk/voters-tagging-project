@@ -16,7 +16,7 @@ class LegislativeDistrictController extends Controller
         $legislative_districts = LegislativeDistrict::with('provinces')->when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.district.index', compact('legislative_districts'))
             ->with('query', $query);

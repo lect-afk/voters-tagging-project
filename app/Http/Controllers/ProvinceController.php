@@ -15,7 +15,7 @@ class ProvinceController extends Controller
         $provinces = Province::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.province.index', compact('provinces'))
             ->with('query', $query);

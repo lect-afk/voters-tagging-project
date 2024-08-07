@@ -16,7 +16,7 @@ class SitioController extends Controller
         $sitios = Sitio::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.sitio.index', compact('sitios'))
             ->with('query', $query);
