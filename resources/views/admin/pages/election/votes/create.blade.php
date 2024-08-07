@@ -55,11 +55,11 @@
                         <input type="number" name="actual_votes" id="actual_votes" class="form-control" required min="1" pattern="[1-9][0-9]*">
                     </div>
                     <button type="submit" class="button-index">
-                        <i class="fa-solid fa-pen-to-square fa-xl"></i>
+                        <i class="fa-solid fa-pen-to-square fa-md"></i>
                         <span class="fw-semibold ms-2">Submit</span>
                     </button>
                     <a href="{{ route('votes.index') }}" class="button-index">
-                        <i class="fa-solid fa-ban fa-xl"></i>
+                        <i class="fa-solid fa-ban fa-md"></i>
                         <span class="fw-semibold ms-2">Cancel</span>
                     </a>
                 </form>

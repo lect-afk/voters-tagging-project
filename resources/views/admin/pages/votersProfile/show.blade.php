@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <!-- Left Side Content -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-3">
             <div class="card">
                 <div class="card-header">
                     <h2>Voters Profile Details</h2>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="mt-2">
                         <a class="button-index" href="{{ route('voters_profile.index') }}">
-                            <i class="fa-solid fa-arrow-turn-down fa-rotate-90 fa-xl"></i>
+                            <i class="fa-solid fa-arrow-turn-down fa-rotate-90 fa-md"></i>
                               <span class="fw-semibold ms-2">Return to the List</span>
                         </a>
                     </div>

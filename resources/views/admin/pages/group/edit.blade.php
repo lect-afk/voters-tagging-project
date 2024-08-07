@@ -15,11 +15,11 @@
                         <input type="text" name="name" class="form-control" value="{{ $group->name }}" required>
                     </div>
                     <button type="submit" class="button-index">
-                        <i class="fa-solid fa-pen-to-square fa-xl"></i>
+                        <i class="fa-solid fa-pen-to-square fa-md"></i>
                         <span class="fw-semibold ms-2">Update</span>
                     </button>
                     <a href="{{ route('group.index') }}" class="button-index">
-                        <i class="fa-solid fa-ban fa-xl"></i>
+                        <i class="fa-solid fa-ban fa-md"></i>
                         <span class="fw-semibold ms-2">Cancel</span>
                     </a>
                 </form>
