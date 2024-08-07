@@ -15,7 +15,7 @@
                 </div>
                 <div class="mt-2">
                     <a class="button-index" href="{{ route('barangay.index') }}">
-                        <i class="fa-solid fa-arrow-turn-down fa-rotate-90 fa-xl"></i>
+                        <i class="fa-solid fa-arrow-turn-down fa-rotate-90 fa-md"></i>
                           <span class="fw-semibold ms-2">Return to Barangay List</span>
                     </a>
                 </div>

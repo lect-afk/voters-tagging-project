@@ -17,40 +17,55 @@
         }
     @endphp
     <tr>
-        <td><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
-        <td>{{ $voters_profile->firstname }} {{ $voters_profile->middlename }} {{ $voters_profile->lastname }}</td>
-        <td>{{ $voters_profile->barangays->name }}</td>
-        <td>
+        <td class="align-middle"><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
+        <td class="align-middle">{{ $voters_profile->firstname }} {{ $voters_profile->middlename }} {{ $voters_profile->lastname }}</td>
+        <td class="align-middle">{{ $voters_profile->barangays->name }}</td>
+        <td class="align-middle">
             @if ($voters_profile->precincts && $voters_profile->precincts->number)
                 {{ $voters_profile->precincts->number }}
             @else
                 None
             @endif
         </td>
-        <td>
+        <td class="align-middle">
             @if ($voters_profile->leader != 'None')
                 {{ $voters_profile->leader }}
             @else
                 <a class="a_alternate" href="#" data-bs-toggle="modal" data-bs-target="#setLeaderModal{{ $voters_profile->id }}"><b>Set as leader</b></a>
             @endif
         </td>
-        <td>
-            <a href="{{ route('voters_profile.show', $voters_profile->id) }}" class="icon-link" title="Show">
-                <i class="fas fa-eye"></i>
-            </a>
-            <a href="{{ route('voter_profile.manageleader', $voters_profile->id) }}" class="icon-link" title="Manage Tagging">
-                <i class="fas fa-users-gear"></i>
-            </a>
-            <a href="{{ route('voters_profile.edit', $voters_profile->id) }}" class="icon-link" title="Edit">
-                <i class="fas fa-edit"></i>
-            </a>
-            <form action="{{ route('voters_profile.destroy', $voters_profile->id) }}" method="POST" class="d-inline">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="icon-link" title="Delete">
-                    <i class="fas fa-trash"></i>
+        <td class="align-middle">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Actions
                 </button>
-            </form>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('voters_profile.show', $voters_profile->id) }}" class="icon-link" title="Show">
+                            <i class="fas fa-eye"></i> Show
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('voter_profile.manageleader', $voters_profile->id) }}" class="icon-link" title="Manage Tagging">
+                            <i class="fas fa-users-gear"></i> Manage Tagging
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('voters_profile.edit', $voters_profile->id) }}" class="icon-link" title="Edit">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </li>
+                    <li>
+                        <form action="{{ route('voters_profile.destroy', $voters_profile->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="dropdown-item" type="submit" class="icon-link" title="Delete">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </td>
     </tr>
 
