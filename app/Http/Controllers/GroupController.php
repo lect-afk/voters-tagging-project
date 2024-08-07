@@ -14,7 +14,7 @@ class GroupController extends Controller
         $groups = Group::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.group.index', compact('groups'))
             ->with('query', $query);

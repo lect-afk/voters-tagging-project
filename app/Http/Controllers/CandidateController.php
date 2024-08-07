@@ -20,7 +20,7 @@ class CandidateController extends Controller
                     $queryBuilder->where('fullname', 'like', "%$query%");
                 });
             })
-            ->paginate(50);
+            ->paginate(25);
 
         return view('admin.pages.election.candidates.index', compact('candidates'));
     }

@@ -15,7 +15,7 @@ class PurokController extends Controller
         $puroks = Purok::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.purok.index', compact('puroks'))
             ->with('query', $query);

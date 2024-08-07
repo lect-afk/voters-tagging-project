@@ -15,7 +15,7 @@ class BarangayController extends Controller
         $barangays = Barangay::with('cities')->when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.barangay.index', compact('barangays'))
             ->with('query', $query);

@@ -16,7 +16,7 @@ class PrecinctController extends Controller
         $precincts = Precinct::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('number', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.precinct.index', compact('precincts'))
             ->with('query', $query);

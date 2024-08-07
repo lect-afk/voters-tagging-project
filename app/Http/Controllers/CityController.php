@@ -17,7 +17,7 @@ class CityController extends Controller
         $cities = City::with(['districts', 'provinces'])->when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(50);
+        ->paginate(25);
 
         return view('admin.pages.city.index', compact('cities'))
             ->with('query', $query);
