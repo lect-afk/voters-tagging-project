@@ -208,7 +208,7 @@ class VotersProfileController extends Controller
 
     public function manageleader(VotersProfile $manageleader)
     {
-        $leaders = VotersProfile::where('barangay', '=', $manageleader->barangay)->get();
+        $leaders = VotersProfile::where('barangay', '=', $manageleader->barangay)->paginate(25);
         $successors = Tagging::with(['predecessors', 'successors'])
         ->where('predecessor', '=', $manageleader->id)->paginate(47);
         $subordinates = VotersProfile::where('id', '!=', $manageleader->id)

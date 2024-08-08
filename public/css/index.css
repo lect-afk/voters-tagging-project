@@ -118,3 +118,21 @@
 .icon-link i {
     pointer-events: none;
 }
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination .page-item {
+    flex: 1 1 auto;
+    margin: 2px;
+}
+
+.pagination .page-item a, .pagination .page-item span {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    text-align: center;
+}
+

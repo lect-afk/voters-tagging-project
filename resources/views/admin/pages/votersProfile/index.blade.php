@@ -65,7 +65,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="pt-3">
+        <div class="d-flex justify-content-center">
             {{ $voters_profiles->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
         </div>
     </div>
