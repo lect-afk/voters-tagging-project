@@ -16,6 +16,9 @@
                             @endforeach
                         </div>
                     </div>
+                    <div class="d-flex justify-content-center">
+                        {{ $leaders->links('admin.pages.partials.pagination') }}
+                    </div>
                 </div>
             </div>
 
