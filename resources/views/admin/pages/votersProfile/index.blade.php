@@ -19,10 +19,10 @@
         @endif
 
         <form class="row g-2 mb-3" method="GET" action="{{ route('voters_profile.index') }}" role="search">
-            <div class="col-12 col-md-5">
+            <div class="col-12 col-md-4">
                 <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
             </div>
-            <div class="col-12 col-md-5">
+            <div class="col-12 col-md-3">
                 <select id="leaderFilter" name="leader" class="form-select">
                     <option value="" {{ request('leader') == '' ? 'selected' : '' }}>All</option>
                     <option value="None" {{ request('leader') == 'None' ? 'selected' : '' }}>None Leader</option>
@@ -32,6 +32,14 @@
                     <option value="District" {{ request('leader') == 'District' ? 'selected' : '' }}>District Leader</option>
                     <option value="Provincial" {{ request('leader') == 'Provincial' ? 'selected' : '' }}>Provincial Leader</option>
                     <option value="Regional" {{ request('leader') == 'Regional' ? 'selected' : '' }}>Regional Leader</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <select name="barangay" class="form-control">
+                    <option value="" {{ request('barangay') == '' ? 'selected' : '' }}>All Barangays</option>
+                    @foreach ($barangay as $b)
+                        <option value="{{ $b->id }}" {{ request('barangay') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-12 col-md-1">

@@ -14,8 +14,10 @@ class VotersProfileController extends Controller
 {
     public function index(Request $request)
     {
+        $barangay = Barangay::all();
         $query = $request->input('query');
         $leader = $request->input('leader');
+        $barangayId = $request->input('barangay');
         
         $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
             ->when($leader, function($queryBuilder) use ($leader) {
@@ -27,12 +29,16 @@ class VotersProfileController extends Controller
                                 ->orWhere('lastname', 'like', "%$query%");
                 });
             })
+            ->when($barangayId, function($queryBuilder) use ($barangayId) {
+                return $queryBuilder->where('barangay', $barangayId);
+            })
             ->paginate(25);
 
-        return view('admin.pages.votersProfile.index', compact('voters_profiles'))
+        return view('admin.pages.votersProfile.index', compact('voters_profiles', 'barangay'))
             ->with('query', $query)
             ->with('leader', $leader);
     }
+
 
 
     public function create()
@@ -211,9 +217,11 @@ class VotersProfileController extends Controller
         $leaders = VotersProfile::where('barangay', '=', $manageleader->barangay)->paginate(25);
         $successors = Tagging::with(['predecessors', 'successors'])
         ->where('predecessor', '=', $manageleader->id)->paginate(47);
+        $subordinatelist = Tagging::with(['predecessors', 'successors'])
+        ->where('predecessor', '=', $manageleader->id)->paginate(47);
         $subordinates = VotersProfile::where('id', '!=', $manageleader->id)
         ->where('barangay', '=', $manageleader->barangay)->get();
-        return view('admin.pages.partials.addsubordinate', compact('manageleader','subordinates','successors','leaders'));
+        return view('admin.pages.partials.addsubordinate', compact('manageleader','subordinates','successors','leaders','subordinatelist'));
     }
 
     // public function viewhierarchy(VotersProfile $viewhierarchy)
@@ -287,18 +295,26 @@ class VotersProfileController extends Controller
         ]);
 
         // Check if the combination of successor and predecessor already exists
-            $exists = Tagging::where('successor', $request->successor)
+        $exists = Tagging::where('successor', $request->successor)
             ->where('predecessor', $request->predecessor)
             ->exists();
 
         if ($exists) {
             return redirect()->back()->with('error', 'This subordinate relationship already exists.');
         }
+        
+        // Check if the successor is already a successor in the tagging table
+        $isAlreadySuccessor = Tagging::where('successor', $request->successor)->exists();
+
+        if ($isAlreadySuccessor) {
+            return redirect()->back()->with('error', 'This person has been tagged under [existing predecessor]');
+        }
 
         Tagging::create($request->all());
 
         return redirect()->back()->with('success', 'Subordinate added successfully.');
     }
+
 
     // public function searchSuccessors(Request $request, VotersProfile $manageleader)
     // {

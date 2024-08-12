@@ -4,26 +4,26 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3">
+            <div class="col-md-3 order-md-1 order-2">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <span class="fw-semibold">Leaders</span>
+                            <span class="fw-semibold">Subordinates Navigation</span>
                         </h5>
                         <div class="mt-3">
-                            @foreach ($leaders as $leader)
+                            {{-- @foreach ($leaders as $leader)
                                 <a class="d-block leader_link" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $leader->id) }}">{{ $leader->firstname }} {{ $leader->middlename }} {{ $leader->lastname }}</a>
+                            @endforeach --}}
+                            @foreach ($successors as $successor)
+                                <a class="d-block leader_link" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $successor->successors) }}">{{ $successor->successors->firstname }} {{ $successor->successors->middlename }} {{ $successor->successors->lastname }}</a>
                             @endforeach
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        {{ $leaders->links('admin.pages.partials.pagination') }}
                     </div>
                 </div>
             </div>
 
             <!-- Main Content -->
-            <div class="col-md-9">
+            <div class="col-md-9 order-md-2 order-1">
                 
                 @if ($message = Session::get('success'))
                     <div class="alert alert-success mt-2">
@@ -63,7 +63,7 @@
                                             <div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div>
                                             <div class="text-center flex-grow-1">
                                                 <h5 class="card-title mb-0 ">Precinct No.</h5>
-                                                <h6 class="card-subtitle mb-0 fw-semibold">{{ $successor->successors->precincts->number }}</h6>
+                                                <h6 class="card-subtitle mb-0 fw-semibold">{{ $successor->successors->precincts->number ?? 'None' }}</h6>
                                             </div>
                                             <form action="{{ route('successor.destroy', $successor->id) }}" method="POST" style="display:inline;">
                                                 @csrf

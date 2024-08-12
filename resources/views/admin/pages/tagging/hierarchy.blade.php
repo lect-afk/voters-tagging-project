@@ -70,23 +70,24 @@
 
         // Recursively build the rows
         function buildRows(node, parentName = null) {
-            var allianceColor = getAllianceColor(node.alliance_status);
-            var leaderClass = node.leader_type === 'None' ? 'no-leader' : 'leader';
-            var nodeHtml = '<div class="node-content ' + leaderClass + '">' +
-                            '<div class="node-header">' +
-                            '<div class="name-with-color" style="background-color: ' + allianceColor + ';">' +
-                            '<span class="name-text">' + node.name + '</span>' +
-                            '</div>' +
-                            '<div style="margin-top: 5px;">' + node.precinct + '</div>' +
-                            '<div style="margin-top: 5px;">' + node.leader_type + " leader" + '</div>' +
-                            '</div>' +
-                           '</div>';
-            var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nAlliance: ' + node.alliance_status+ '\nLeader Type: ' + node.leader_type;
-            data.addRow([{v: node.name, f: nodeHtml}, parentName, tooltip]);
-            if (node.children) {
-                node.children.forEach(child => buildRows(child, node.name));
-            }
+        var allianceColor = getAllianceColor(node.alliance_status);
+        var leaderClass = node.leader_type === 'None' ? 'no-leader' : 'leader';
+        var leaderCaption = node.leader_type === 'None' ? '' : node.leader_type + " leader";
+        var nodeHtml = '<div class="node-content ' + leaderClass + '">' +
+                        '<div class="node-header">' +
+                        '<div class="name-with-color" style="background-color: ' + allianceColor + ';">' +
+                        '<span class="name-text">' + node.name + '</span>' +
+                        '</div>' +
+                        '<div style="margin-top: 5px;">' + node.precinct + '</div>' +
+                        '<div style="margin-top: 5px;">' + leaderCaption + '</div>' +
+                        '</div>' +
+                    '</div>';
+        var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nAlliance: ' + node.alliance_status + '\nLeader Type: ' + node.leader_type;
+        data.addRow([{v: node.name, f: nodeHtml}, parentName, tooltip]);
+        if (node.children) {
+            node.children.forEach(child => buildRows(child, node.name));
         }
+    }
 
         function getAllianceColor(status) {
             switch (status) {
