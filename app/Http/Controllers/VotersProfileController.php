@@ -215,14 +215,39 @@ class VotersProfileController extends Controller
     public function manageleader(VotersProfile $manageleader)
     {
         $leaders = VotersProfile::where('barangay', '=', $manageleader->barangay)->paginate(25);
+        
+        // Get successors (current leader's subordinates)
         $successors = Tagging::with(['predecessors', 'successors'])
-        ->where('predecessor', '=', $manageleader->id)->paginate(47);
-        $subordinatelist = Tagging::with(['predecessors', 'successors'])
-        ->where('predecessor', '=', $manageleader->id)->paginate(47);
+            ->where('predecessor', '=', $manageleader->id)
+            ->paginate(47);
+        
+        // Get subordinates for dropdown
         $subordinates = VotersProfile::where('id', '!=', $manageleader->id)
-        ->where('barangay', '=', $manageleader->barangay)->get();
-        return view('admin.pages.partials.addsubordinate', compact('manageleader','subordinates','successors','leaders','subordinatelist'));
+            ->where('barangay', '=', $manageleader->barangay)
+            ->get();
+
+        // Get subordinates of previous leaders
+        $previousSubordinates = [];
+        $currentLeader = $manageleader;
+        while ($currentLeader) {
+            $previousLeader = Tagging::with('predecessors')
+                ->where('successor', $currentLeader->id)
+                ->first();
+            if ($previousLeader) {
+                $subordinatesOfPrevious = Tagging::with('successors')
+                    ->where('predecessor', $previousLeader->predecessors->id)
+                    ->get()
+                    ->pluck('successors');
+                $previousSubordinates = array_merge($previousSubordinates, $subordinatesOfPrevious->toArray());
+                $currentLeader = $previousLeader->predecessors;
+            } else {
+                break;
+            }
+        }
+
+        return view('admin.pages.partials.addsubordinate', compact('manageleader', 'subordinates', 'successors', 'leaders', 'previousSubordinates'));
     }
+
 
     // public function viewhierarchy(VotersProfile $viewhierarchy)
     // {
