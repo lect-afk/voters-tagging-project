@@ -11,11 +11,10 @@
                             <span class="fw-semibold">Subordinates Navigation</span>
                         </h5>
                         <div class="mt-3">
-                            {{-- @foreach ($leaders as $leader)
-                                <a class="d-block leader_link" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $leader->id) }}">{{ $leader->firstname }} {{ $leader->middlename }} {{ $leader->lastname }}</a>
-                            @endforeach --}}
-                            @foreach ($successors as $successor)
-                                <a class="d-block leader_link" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $successor->successors) }}">{{ $successor->successors->firstname }} {{ $successor->successors->middlename }} {{ $successor->successors->lastname }}</a>
+                            @foreach ($previousSubordinates as $subordinate)
+                                <a class="d-block leader_link" style="text-decoration: none;" href="{{ route('voter_profile.manageleader', $subordinate['id']) }}">
+                                    {{ $subordinate['firstname'] }} {{ $subordinate['middlename'] }} {{ $subordinate['lastname'] }}
+                                </a>
                             @endforeach
                         </div>
                     </div>
