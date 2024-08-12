@@ -83,7 +83,7 @@
                                 </a>
                             </h5>
                             <p class="card-text">
-                                Precinct: {{ $tagging->predecessors->precincts->number }} |
+                                Precinct: {{ $tagging->predecessors->precincts->number ?? 'None'}} |
                                 Barangay: {{ $tagging->predecessors->barangays->name }}
                             </p>
                         </div>
