@@ -8,6 +8,7 @@ use App\Models\Purok;
 use App\Models\Barangay;
 use App\Models\Precinct;
 use App\Models\Tagging;
+use App\Models\Candidate;
 use Illuminate\Http\Request;
 
 class VotersProfileController extends Controller
@@ -18,7 +19,7 @@ class VotersProfileController extends Controller
         $query = $request->input('query');
         $leader = $request->input('leader');
         $barangayId = $request->input('barangay');
-        
+
         $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
             ->when($leader, function($queryBuilder) use ($leader) {
                 return $queryBuilder->where('leader', $leader);
@@ -36,8 +37,10 @@ class VotersProfileController extends Controller
 
         return view('admin.pages.votersProfile.index', compact('voters_profiles', 'barangay'))
             ->with('query', $query)
-            ->with('leader', $leader);
+            ->with('leader', $leader)
+            ->with('barangayId', $barangayId);
     }
+
 
 
 
@@ -501,6 +504,81 @@ class VotersProfileController extends Controller
 
         return view('admin.pages.tagging.precinctsummary', compact('precincts'))->with('query', $query);
     }
+
+
+    public function votecomparison(Request $request)
+{
+    $candidates = Candidate::all();
+    $barangay = Barangay::all();
+
+    $position = $request->input('position');
+    $candidate_id = $request->input('candidate_id');
+    $barangay_id = $request->input('barangay');
+
+    // Check if any filter is applied
+    $filtersApplied = $position || $candidate_id || $barangay_id;
+
+    $precincts = collect(); // Start with an empty collection
+
+    if ($filtersApplied) {
+        $precincts = Precinct::with(['barangays', 'votes'])
+            ->when($candidate_id, function($query) use ($candidate_id) {
+                return $query->whereHas('votes', function($voteQuery) use ($candidate_id) {
+                    $voteQuery->where('candidate_id', $candidate_id);
+                });
+            })
+            ->when($barangay_id, function($query) use ($barangay_id) {
+                return $query->where('barangay', $barangay_id);
+            })
+            ->paginate(25);
+
+        $precincts->getCollection()->transform(function($precinct) {
+            $barangayLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                ->where('leader', 'Barangay')
+                ->count();
+
+            $purokLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                ->where('leader', 'Purok')
+                ->count();
+
+            $predecessors = Tagging::whereHas('predecessors', function($query) use ($precinct) {
+                $query->where('precinct', $precinct->id)
+                    ->where('leader', 'None');
+            })->pluck('predecessor')->toArray();
+
+            $successors = Tagging::whereHas('successors', function($query) use ($precinct) {
+                $query->where('precinct', $precinct->id)
+                    ->where('leader', 'None');
+            })->pluck('successor')->toArray();
+
+            $downLine = array_unique(array_merge($predecessors, $successors));
+            $downLineCount = count($downLine);
+
+            $totalVotersCount = VotersProfile::where('precinct', $precinct->id)->count();
+
+            $totalLeadersAndDownline = $barangayLeadersCount + $purokLeadersCount + $downLineCount;
+
+            $actualVotes = $precinct->votes->sum('actual_votes');
+
+            $comparison = $totalLeadersAndDownline - $actualVotes;
+
+            return [
+                'precinct' => $precinct->number,
+                'barangay' => $precinct->barangays->name,
+                'totalLeadersAndDownline' => $totalLeadersAndDownline,
+                'actualVotes' => $actualVotes,
+                'comparison' => $comparison,
+            ];
+        });
+    }
+
+    return view('admin.pages.election.votecomparison.index', compact('precincts', 'barangay', 'candidates'))
+        ->with('position', $position)
+        ->with('candidate_id', $candidate_id)
+        ->with('barangay_id', $barangay_id);
+}
+
+
 
 
 }

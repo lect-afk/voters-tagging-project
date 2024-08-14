@@ -98,6 +98,7 @@
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
                               <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voters.votecomparison') }}">Vote Comparison</a></li>
                             </ul>
                         </div>
                         
@@ -179,6 +180,7 @@
                         <ul class="dropdown-menu">
                           <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
                           <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters.votecomparison') }}">Vote Comparison</a></li>
                         </ul>
                     </div>
                     
