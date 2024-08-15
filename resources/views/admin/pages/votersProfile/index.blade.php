@@ -74,7 +74,11 @@
             </table>
         </div>
         <div class="d-flex justify-content-center">
-            {{ $voters_profiles->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
-        </div>
+            {{ $voters_profiles->appends([
+                'query' => request('query'),
+                'leader' => request('leader'),
+                'barangay' => request('barangay')
+            ])->links('admin.pages.partials.pagination') }}
+        </div>        
     </div>
 @endsection

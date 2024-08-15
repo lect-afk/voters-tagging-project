@@ -199,6 +199,56 @@ a:hover {
     color: #FCFCFD;
 }
 
+.buttonAT_blue{
+  background-color: #0466c8;
+  font-weight: bolder;
+}
+
+.buttonAT_blue:hover{
+  color: #0466c8;
+  border: 2px solid #0466c8;
+}
+
+.buttonAT_none{
+  background-color: #6c757d;
+  font-weight: bolder;
+}
+
+.buttonAT_none:hover{
+  color: #6c757d;
+  border: 2px solid #6c757d;
+}
+
+.buttonAT_yellow{
+  background-color: #ffd60a;
+  font-weight: bolder;
+}
+
+.buttonAT_yellow:hover{
+  color: #ffd60a;
+  border: 2px solid #ffd60a;
+}
+
+.buttonAT_orange{
+  background-color: #fb8500;
+  font-weight: bolder;
+}
+
+.buttonAT_orange:hover{
+  color: #fb8500;
+  border: 2px solid #fb8500;
+}
+
+.buttonAT_red{
+  background-color: #d00000;
+  font-weight: bolder;
+}
+
+.buttonAT_red:hover{
+  color: #d00000;
+  border: 2px solid #d00000;
+}
+
 /* Mobile devices (up to 767px) */
 @media (max-width: 767px) {
     .navbar-brand {

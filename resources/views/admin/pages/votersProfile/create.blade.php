@@ -14,7 +14,7 @@
                         <select name="alliances_status" class="form-control" required>
                             <option disabled selected value="">Select</option>
                             <option value="None">None</option>
-                            <option value="Green">Green</option>
+                            <option value="Green">Blue</option>
                             <option value="Yellow">Yellow</option>
                             <option value="Orange">Orange</option>
                             <option value="Red">Red</option>

@@ -87,6 +87,7 @@
                               <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
                               <li><a class="dropdown-item" href="{{ route('voters.barangaysummary') }}">Barangay Summary</a></li>
                               <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voters.alliancetagging') }}">Alliance Tagging</a></li>
                             </ul>
                         </div>
 
@@ -98,6 +99,7 @@
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
                               <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voters.votecomparison') }}">Vote Comparison</a></li>
                             </ul>
                         </div>
                         
@@ -168,6 +170,7 @@
                           <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
                           <li><a class="dropdown-item" href="{{ route('voters.barangaysummary') }}">Barangay Summary</a></li>
                           <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters.alliancetagging') }}">Alliance Tagging</a></li>
                         </ul>
                     </div>
 
@@ -179,6 +182,7 @@
                         <ul class="dropdown-menu">
                           <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
                           <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters.votecomparison') }}">Vote Comparison</a></li>
                         </ul>
                     </div>
                     

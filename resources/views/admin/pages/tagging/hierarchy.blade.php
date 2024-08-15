@@ -82,7 +82,7 @@
                         '<div style="margin-top: 5px;">' + leaderCaption + '</div>' +
                         '</div>' +
                     '</div>';
-        var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nAlliance: ' + node.alliance_status + '\nLeader Type: ' + node.leader_type;
+        var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nLeader Type: ' + node.leader_type;
         data.addRow([{v: node.name, f: nodeHtml}, parentName, tooltip]);
         if (node.children) {
             node.children.forEach(child => buildRows(child, node.name));
@@ -92,7 +92,7 @@
         function getAllianceColor(status) {
             switch (status) {
                 case 'Green':
-                    return '#70e000';
+                    return '#0466c8';
                 case 'Yellow':
                     return '#ffd60a';
                 case 'Orange':

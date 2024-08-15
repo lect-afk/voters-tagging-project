@@ -43,7 +43,7 @@
 
                                     switch ($successor->successors->alliances_status) {
                                         case 'Green':
-                                            $backgroundColor = '#70e000';
+                                            $backgroundColor = '#0466c8';
                                             break;
                                         case 'Yellow':
                                             $backgroundColor = '#ffd60a';
