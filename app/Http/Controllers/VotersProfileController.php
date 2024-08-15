@@ -507,77 +507,107 @@ class VotersProfileController extends Controller
 
 
     public function votecomparison(Request $request)
-{
-    $candidates = Candidate::all();
-    $barangay = Barangay::all();
+    {
+        $candidates = Candidate::all();
+        $barangay = Barangay::all();
 
-    $position = $request->input('position');
-    $candidate_id = $request->input('candidate_id');
-    $barangay_id = $request->input('barangay');
+        $position = $request->input('position');
+        $candidate_id = $request->input('candidate_id');
+        $barangay_id = $request->input('barangay');
 
-    // Check if any filter is applied
-    $filtersApplied = $position || $candidate_id || $barangay_id;
+        // Check if any filter is applied
+        $filtersApplied = $position || $candidate_id || $barangay_id;
 
-    $precincts = collect(); // Start with an empty collection
+        $precincts = collect(); // Start with an empty collection
 
-    if ($filtersApplied) {
-        $precincts = Precinct::with(['barangays', 'votes'])
-            ->when($candidate_id, function($query) use ($candidate_id) {
-                return $query->whereHas('votes', function($voteQuery) use ($candidate_id) {
-                    $voteQuery->where('candidate_id', $candidate_id);
-                });
-            })
-            ->when($barangay_id, function($query) use ($barangay_id) {
-                return $query->where('barangay', $barangay_id);
+        if ($filtersApplied) {
+            $precincts = Precinct::with(['barangays', 'votes'])
+                ->when($candidate_id, function($query) use ($candidate_id) {
+                    return $query->whereHas('votes', function($voteQuery) use ($candidate_id) {
+                        $voteQuery->where('candidate_id', $candidate_id);
+                    });
+                })
+                ->when($barangay_id, function($query) use ($barangay_id) {
+                    return $query->where('barangay', $barangay_id);
+                })
+                ->paginate(25);
+
+            $precincts->getCollection()->transform(function($precinct) {
+                $barangayLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                    ->where('leader', 'Barangay')
+                    ->count();
+
+                $purokLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                    ->where('leader', 'Purok')
+                    ->count();
+
+                $predecessors = Tagging::whereHas('predecessors', function($query) use ($precinct) {
+                    $query->where('precinct', $precinct->id)
+                        ->where('leader', 'None');
+                })->pluck('predecessor')->toArray();
+
+                $successors = Tagging::whereHas('successors', function($query) use ($precinct) {
+                    $query->where('precinct', $precinct->id)
+                        ->where('leader', 'None');
+                })->pluck('successor')->toArray();
+
+                $downLine = array_unique(array_merge($predecessors, $successors));
+                $downLineCount = count($downLine);
+
+                $totalVotersCount = VotersProfile::where('precinct', $precinct->id)->count();
+
+                $totalLeadersAndDownline = $barangayLeadersCount + $purokLeadersCount + $downLineCount;
+
+                $actualVotes = $precinct->votes->sum('actual_votes');
+
+                $comparison = $totalLeadersAndDownline - $actualVotes;
+
+                return [
+                    'precinct' => $precinct->number,
+                    'barangay' => $precinct->barangays->name,
+                    'totalLeadersAndDownline' => $totalLeadersAndDownline,
+                    'actualVotes' => $actualVotes,
+                    'comparison' => $comparison,
+                ];
+            });
+        }
+
+        return view('admin.pages.election.votecomparison.index', compact('precincts', 'barangay', 'candidates'))
+            ->with('position', $position)
+            ->with('candidate_id', $candidate_id)
+            ->with('barangay_id', $barangay_id);
+    }
+
+
+
+    public function alliancetagging(Request $request)
+    {
+        $precinct = Precinct::all();
+        $precinctId = $request->input('precinct');
+
+        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+            ->when($precinctId, function($queryBuilder) use ($precinctId) {
+                return $queryBuilder->where('precinct', $precinctId);
             })
             ->paginate(25);
 
-        $precincts->getCollection()->transform(function($precinct) {
-            $barangayLeadersCount = VotersProfile::where('precinct', $precinct->id)
-                ->where('leader', 'Barangay')
-                ->count();
-
-            $purokLeadersCount = VotersProfile::where('precinct', $precinct->id)
-                ->where('leader', 'Purok')
-                ->count();
-
-            $predecessors = Tagging::whereHas('predecessors', function($query) use ($precinct) {
-                $query->where('precinct', $precinct->id)
-                    ->where('leader', 'None');
-            })->pluck('predecessor')->toArray();
-
-            $successors = Tagging::whereHas('successors', function($query) use ($precinct) {
-                $query->where('precinct', $precinct->id)
-                    ->where('leader', 'None');
-            })->pluck('successor')->toArray();
-
-            $downLine = array_unique(array_merge($predecessors, $successors));
-            $downLineCount = count($downLine);
-
-            $totalVotersCount = VotersProfile::where('precinct', $precinct->id)->count();
-
-            $totalLeadersAndDownline = $barangayLeadersCount + $purokLeadersCount + $downLineCount;
-
-            $actualVotes = $precinct->votes->sum('actual_votes');
-
-            $comparison = $totalLeadersAndDownline - $actualVotes;
-
-            return [
-                'precinct' => $precinct->number,
-                'barangay' => $precinct->barangays->name,
-                'totalLeadersAndDownline' => $totalLeadersAndDownline,
-                'actualVotes' => $actualVotes,
-                'comparison' => $comparison,
-            ];
-        });
+        return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct'))
+            ->with('precinctId', $precinctId);
     }
 
-    return view('admin.pages.election.votecomparison.index', compact('precincts', 'barangay', 'candidates'))
-        ->with('position', $position)
-        ->with('candidate_id', $candidate_id)
-        ->with('barangay_id', $barangay_id);
-}
+    public function updateAllianceStatus(Request $request)
+    {
+        $request->validate([
+            'alliance_status' => 'required|in:None,Green,Yellow,Orange,Red',
+            'selected_profiles' => 'required|array',
+            'selected_profiles.*' => 'exists:voters_profile,id',
+        ]);
 
+        VotersProfile::whereIn('id', $request->selected_profiles)
+            ->update(['alliances_status' => $request->alliance_status]);
+
+        return redirect()->back()->with('success', 'Alliance status updated successfully.');
+    }
 
 
 
