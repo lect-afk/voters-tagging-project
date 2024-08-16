@@ -89,9 +89,10 @@
         </div>
         <div class="d-flex justify-content-center">
             {{ $voters_profiles->appends([
-                'precinctId' => request('precinctId')
+                'precinct' => request('precinct')
             ])->links('admin.pages.partials.pagination') }}
-        </div>        
+        </div>
+                
     </form>
 </div>
 
