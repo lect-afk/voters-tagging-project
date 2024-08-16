@@ -589,7 +589,7 @@ class VotersProfileController extends Controller
             ->when($precinctId, function($queryBuilder) use ($precinctId) {
                 return $queryBuilder->where('precinct', $precinctId);
             })
-            ->paginate(25);
+            ->paginate(50);
 
         return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct'))
             ->with('precinctId', $precinctId);
