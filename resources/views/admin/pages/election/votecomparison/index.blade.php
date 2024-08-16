@@ -67,13 +67,15 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-center">
-            {{ $precincts->appends([
-                'position' => request('position'),
-                'candidate_id' => request('candidate_id'),
-                'barangay' => request('barangay')
-            ])->links('admin.pages.partials.pagination') }}
-        </div>        
+        @if($precincts->isNotEmpty() && $precincts instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            <div class="d-flex justify-content-center">
+                {{ $precincts->appends([
+                    'position' => request('position'),
+                    'candidate_id' => request('candidate_id'),
+                    'barangay' => request('barangay')
+                ])->links('admin.pages.partials.pagination') }}
+            </div>
+        @endif       
     </div>
 <script>
     const candidates = @json($candidates);
