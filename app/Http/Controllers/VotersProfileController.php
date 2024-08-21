@@ -332,10 +332,19 @@ class VotersProfileController extends Controller
         }
         
         // Check if the successor is already a successor in the tagging table
-        $isAlreadySuccessor = Tagging::where('successor', $request->successor)->exists();
+        // $isAlreadySuccessor = Tagging::where('successor', $request->successor)->exists();
+        $existingPredecessor = Tagging::where('successor', $request->successor)->first();
 
-        if ($isAlreadySuccessor) {
-            return redirect()->back()->with('error', 'This person has been tagged under [existing predecessor]');
+        // if ($isAlreadySuccessor) {
+        //     return redirect()->back()->with('error', 'This person has been tagged under [existing predecessor]');
+        // }
+
+        if ($existingPredecessor) {
+            return redirect()->back()->with('error', 'This person has been tagged under ' . 
+                $existingPredecessor->predecessors->firstname . ' ' . 
+                $existingPredecessor->predecessors->middlename . ' ' . 
+                $existingPredecessor->predecessors->lastname
+            );
         }
 
         Tagging::create($request->all());
