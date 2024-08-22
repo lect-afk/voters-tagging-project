@@ -9,6 +9,7 @@ use App\Models\Barangay;
 use App\Models\Precinct;
 use App\Models\Tagging;
 use App\Models\Candidate;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class VotersProfileController extends Controller
@@ -598,6 +599,7 @@ class VotersProfileController extends Controller
             ->when($precinctId, function($queryBuilder) use ($precinctId) {
                 return $queryBuilder->where('precinct', $precinctId);
             })
+            ->orderBy('lastname', 'asc')
             ->paginate(50);
 
         return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct'))
