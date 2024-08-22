@@ -8,6 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h2>Voters Profile Details</h2>
+                    {{ $votersProfile->id }}
                 </div>
                 <div class="card-body">
                     <div class="form-group">
