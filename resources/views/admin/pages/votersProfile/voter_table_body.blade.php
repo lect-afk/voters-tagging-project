@@ -18,7 +18,7 @@
     @endphp
     <tr>
         <td class="align-middle"><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
-        <td class="align-middle">{{ $voters_profile->firstname }} {{ $voters_profile->middlename }} {{ $voters_profile->lastname }}</td>
+        <td class="align-middle">{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
         <td class="align-middle">{{ $voters_profile->barangays->name }}</td>
         <td class="align-middle">
             @if ($voters_profile->precincts && $voters_profile->precincts->number)
