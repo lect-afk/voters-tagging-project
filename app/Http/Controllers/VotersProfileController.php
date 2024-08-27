@@ -600,6 +600,7 @@ class VotersProfileController extends Controller
                 return $queryBuilder->where('precinct', $precinctId);
             })
             ->orderBy('lastname', 'asc')
+            ->orderBy('id', 'asc')
             ->paginate(50);
 
         return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct'))
