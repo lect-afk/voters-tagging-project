@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <form class="row g-2 mb-3" method="GET" action="{{ route('voters.precinctsummary') }}" role="search">
+        <form class="row g-2 mb-3" method="GET" action="{{ route('voters.alliancetaggingsummary') }}" role="search">
             <div class="col-12 col-md-10">
                 <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search..." aria-label="Search" value="{{ request('query') }}">
             </div>
@@ -24,7 +24,6 @@
             <table class="table mt-2 table-light table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th>Precinct</th>
                         <th>Barangay</th>
                         <th>Allied</th>
                         <th>Hard Core</th>
@@ -32,9 +31,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($precincts as $item)
+                    @foreach($barangay as $item)
                         <tr>
-                            <td>{{ $item['precinct'] }}</td>
                             <td>{{ $item['barangay'] }}</td>
                             <td class="{{ $item['allied'] < 50 ? 'text-danger' : '' }}">
                                 {{ $item['allied'] }} / {{ $item['total'] }} 
@@ -54,7 +52,7 @@
             </table>
         </div>
         <div class="d-flex justify-content-center">
-            {{ $precincts->appends(['query' => request('query')])->links('admin.pages.partials.pagination') }}
+            {{ $barangay->appends(['query' => request('query')])->links('admin.pages.partials.pagination') }}
         </div>
     </div>
     
