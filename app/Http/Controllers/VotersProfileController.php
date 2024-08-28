@@ -34,6 +34,8 @@ class VotersProfileController extends Controller
             ->when($barangayId, function($queryBuilder) use ($barangayId) {
                 return $queryBuilder->where('barangay', $barangayId);
             })
+            ->orderBy('lastname', 'asc')
+            ->orderBy('id', 'asc')
             ->paginate(25);
 
         return view('admin.pages.votersProfile.index', compact('voters_profiles', 'barangay'))
@@ -619,6 +621,48 @@ class VotersProfileController extends Controller
             ->update(['alliances_status' => $request->alliance_status]);
 
         return redirect()->back()->with('success', 'Alliance status updated successfully.');
+    }
+
+    public function alliancetaggingsummary(Request $request)
+    {
+        // Get all precincts
+        $query = $request->input('query');
+
+        $precincts = Precinct::with('barangays')->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('number', 'like', "%$query%");
+        })
+        ->paginate(25);
+        
+        $precincts->getCollection()->transform(function($precinct) {
+            // Count Blue(Green) Voters
+            $allied = VotersProfile::where('precinct', $precinct->id)
+                ->where('alliances_status', 'Green')
+                ->count();
+
+            // Count Red Voters
+            $hardcore = VotersProfile::where('precinct', $precinct->id)
+                ->where('alliances_status', 'Red')
+                ->count();
+
+            // Count Grey Voters
+            $undecided = VotersProfile::where('precinct', $precinct->id)
+                ->where('alliances_status', 'None')
+                ->count();
+
+            // Count Total Voters
+            $totalVotersCount = VotersProfile::where('precinct', $precinct->id)->count();
+
+            return [
+                'precinct' => $precinct->number,
+                'barangay' => $precinct->barangays->name,
+                'allied' => $allied,
+                'hardcore' => $hardcore,
+                'undecided' => $undecided,
+                'total' => $totalVotersCount,
+            ];
+        });
+
+        return view('admin.pages.tagging.alliancetaggingsummary', compact('precincts'))->with('query', $query);
     }
 
 
