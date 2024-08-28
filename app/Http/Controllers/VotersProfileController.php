@@ -625,36 +625,35 @@ class VotersProfileController extends Controller
 
     public function alliancetaggingsummary(Request $request)
     {
-        // Get all precincts
+        // Get all barangay
         $query = $request->input('query');
 
-        $precincts = Precinct::with('barangays')->when($query, function($queryBuilder) use ($query) {
-            return $queryBuilder->where('number', 'like', "%$query%");
+        $barangay = Barangay::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
         })
         ->paginate(25);
         
-        $precincts->getCollection()->transform(function($precinct) {
+        $barangay->getCollection()->transform(function($barangay) {
             // Count Blue(Green) Voters
-            $allied = VotersProfile::where('precinct', $precinct->id)
+            $allied = VotersProfile::where('barangay', $barangay->id)
                 ->where('alliances_status', 'Green')
                 ->count();
 
             // Count Red Voters
-            $hardcore = VotersProfile::where('precinct', $precinct->id)
+            $hardcore = VotersProfile::where('barangay', $barangay->id)
                 ->where('alliances_status', 'Red')
                 ->count();
 
             // Count Grey Voters
-            $undecided = VotersProfile::where('precinct', $precinct->id)
-                ->where('alliances_status', 'None')
+            $undecided = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Yellow')
                 ->count();
 
             // Count Total Voters
-            $totalVotersCount = VotersProfile::where('precinct', $precinct->id)->count();
+            $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
 
             return [
-                'precinct' => $precinct->number,
-                'barangay' => $precinct->barangays->name,
+                'barangay' => $barangay->name,
                 'allied' => $allied,
                 'hardcore' => $hardcore,
                 'undecided' => $undecided,
@@ -662,7 +661,7 @@ class VotersProfileController extends Controller
             ];
         });
 
-        return view('admin.pages.tagging.alliancetaggingsummary', compact('precincts'))->with('query', $query);
+        return view('admin.pages.tagging.alliancetaggingsummary', compact('barangay'))->with('query', $query);
     }
 
 
