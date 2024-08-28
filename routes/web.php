@@ -91,6 +91,7 @@ Route::middleware(['check.user'])->group(function () {
     //Route for the Summary
     Route::get('barangaysummary', [VotersProfileController::class, 'barangaysummary'])->name('voters.barangaysummary');
     Route::get('precinctsummary', [VotersProfileController::class, 'precinctsummary'])->name('voters.precinctsummary');
+    Route::get('alliancetaggingsummary', [VotersProfileController::class, 'alliancetaggingsummary'])->name('voters.alliancetaggingsummary');
 
     //Route for the Vote Comparison
     Route::get('votecomparison', [VotersProfileController::class, 'votecomparison'])->name('voters.votecomparison');

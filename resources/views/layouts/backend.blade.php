@@ -88,6 +88,7 @@
                               <li><a class="dropdown-item" href="{{ route('voters.barangaysummary') }}">Barangay Summary</a></li>
                               <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
                               <li><a class="dropdown-item" href="{{ route('voters.alliancetagging') }}">Alliance Tagging</a></li>
+                              <li><a class="dropdown-item" href="{{ route('voters.alliancetaggingsummary') }}">Alliance Tagging Summary</a></li>
                             </ul>
                         </div>
 
@@ -171,6 +172,7 @@
                           <li><a class="dropdown-item" href="{{ route('voters.barangaysummary') }}">Barangay Summary</a></li>
                           <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
                           <li><a class="dropdown-item" href="{{ route('voters.alliancetagging') }}">Alliance Tagging</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters.alliancetaggingsummary') }}">Alliance Tagging Summary</a></li>
                         </ul>
                     </div>
 
