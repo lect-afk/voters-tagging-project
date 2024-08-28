@@ -407,7 +407,7 @@ class VotersProfileController extends Controller
         $barangays = Barangay::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(25);
+        ->paginate(50);
 
         $barangays->getCollection()->transform(function($barangay) {
             // Count Barangay Leaders
@@ -631,7 +631,7 @@ class VotersProfileController extends Controller
         $barangay = Barangay::when($query, function($queryBuilder) use ($query) {
             return $queryBuilder->where('name', 'like', "%$query%");
         })
-        ->paginate(25);
+        ->paginate(50);
         
         $barangay->getCollection()->transform(function($barangay) {
             // Count Blue(Green) Voters
@@ -644,7 +644,7 @@ class VotersProfileController extends Controller
                 ->where('alliances_status', 'Red')
                 ->count();
 
-            // Count Grey Voters
+            // Count Yellow Voters
             $undecided = VotersProfile::where('barangay', $barangay->id)
                 ->where('alliances_status', 'Yellow')
                 ->count();
