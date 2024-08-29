@@ -1,93 +1,55 @@
 @extends('layouts.backend')
 
 @section('content')
-<div class="container my-5">
-        <div id="chart_div" style="width: 100%; height: 1000px;"></div>
+<div class="container">
+    <div id="chart_div" style="width: 100%; height: 1000px;"></div>
 </div>
+
 <style>
-    .google-visualization-orgchart-node {
-        border: 1px solid #ccc;
-        background-color: #f5f5f5;
-        border-radius: 5px;
-        padding: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
-    .google-visualization-orgchart-linebottom {
-        border-color: #007bff;
-    }
-    .google-visualization-orgchart-lineright {
-        border-color: #007bff;
-    }
-    .google-visualization-orgchart-lineleft {
-        border-color: #007bff;
-    }
-    .google-visualization-orgchart-linetop {
-        border-color: #007bff;
-    }
-    .node-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .node-header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-    .name-with-color {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px;
-        border-radius: 5px;
-    }
-    .name-text {
-        margin: 0;
-        font-weight: bold;
-    }
-    .leader {
-        border: 2px solid #7b2cbf;
-    }
-    .no-leader {
-        background-color: #e9ecef;
+    #chart_div {
+        position: relative;
+        height: 1000px;
     }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var chart = echarts.init(document.getElementById('chart_div'));
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-    google.charts.load('current', {packages:["orgchart"]});
-    google.charts.setOnLoadCallback(drawChart);
+        // Example data structure
+        var hierarchy = @json($hierarchy);
 
-    function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Name');
-        data.addColumn('string', 'Manager');
-        data.addColumn('string', 'Tooltip');
+        function buildChartData(node) {
+            var data = {
+                name: node.name,
+                alliance_status: node.alliance_status,
+                leader_type: node.leader_type,
+                precinct: node.precinct,
+                label: {
+                    rich: {
+                        name: {
+                            color: '#fff',
+                            backgroundColor: getAllianceColor(node.alliance_status),
+                            padding: [5, 10],
+                            borderRadius: 5,
+                            fontSize: 14,
+                            align: 'center'
+                        }
+                    },
+                    formatter: '{name|{b}}',
+                },
+                children: []
+            };
 
-        // Recursively build the rows
-        function buildRows(node, parentName = null) {
-        var allianceColor = getAllianceColor(node.alliance_status);
-        var leaderClass = node.leader_type === 'None' ? 'no-leader' : 'leader';
-        var leaderCaption = node.leader_type === 'None' ? '' : node.leader_type + " leader";
-        var nodeHtml = '<div class="node-content ' + leaderClass + '">' +
-                        '<div class="node-header">' +
-                        '<div class="name-with-color" style="background-color: ' + allianceColor + ';">' +
-                        '<span class="name-text">' + node.name + '</span>' +
-                        '</div>' +
-                        '<div style="margin-top: 5px;">' + node.precinct + '</div>' +
-                        '<div style="margin-top: 5px;">' + leaderCaption + '</div>' +
-                        '</div>' +
-                    '</div>';
-        var tooltip =  (node.precinct || 'No Purok/Precinct') + '\nLeader Type: ' + node.leader_type;
-        data.addRow([{v: node.name, f: nodeHtml}, parentName, tooltip]);
-        if (node.children) {
-            node.children.forEach(child => buildRows(child, node.name));
+            if (node.children) {
+                node.children.forEach(child => {
+                    data.children.push(buildChartData(child));
+                });
+            }
+
+            return data;
         }
-    }
 
         function getAllianceColor(status) {
             switch (status) {
@@ -104,13 +66,56 @@
             }
         }
 
-        // Starting with the top-level node
-        var hierarchy = @json($hierarchy);
-        buildRows(hierarchy);
+        var chartData = buildChartData(hierarchy);
 
-        var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
-        chart.draw(data, {allowHtml:true, size: 'medium'});
-    }
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                triggerOn: 'mousemove',
+                formatter: function(params) {
+                    return params.data.name + '<br>' +
+                           'Precinct: ' + (params.data.precinct || 'No Purok/Precinct') + '<br>' +
+                           'Leader Type: ' + (params.data.leader_type || 'N/A');
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [chartData],
+                    orient: 'horizontal',
+                    symbol: 'circle',  // Changed to a simple circle symbol
+                    symbolSize: [30, 30],  // Adjust size to fit content better
+                    label: {
+                        position: 'inside',
+                        formatter: '{name|{b}}',
+                        rich: {
+                            name: {
+                                backgroundColor: 'transparent', // Remove any extra background color
+                                padding: [5, 10],
+                                borderRadius: 5,
+                                fontSize: 14,
+                                align: 'center'
+                            }
+                        }
+                    },
+                    lineStyle: {
+                        color: '#007bff',
+                        width: 2
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            color: '#f0f0f0'
+                        },
+                        label: {
+                            color: '#000',
+                            fontSize: 16
+                        }
+                    }
+                }
+            ]
+        };
+
+        chart.setOption(option);
+    });
 </script>
-
 @endsection

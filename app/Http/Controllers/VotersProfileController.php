@@ -84,7 +84,7 @@ class VotersProfileController extends Controller
             'purok' => 'nullable|exists:purok,id',
             'barangay' => 'required|exists:barangay,id',
             'precinct' => 'nullable|exists:precinct,id',
-            'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
+            'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional,Cluster',
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);
 
@@ -151,7 +151,7 @@ class VotersProfileController extends Controller
             'purok' => 'nullable|exists:purok,id',
             'barangay' => 'required|exists:barangay,id',
             'precinct' => 'nullable|exists:precinct,id',
-            'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
+            'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional,Cluster',
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
         ]);
 
@@ -162,7 +162,7 @@ class VotersProfileController extends Controller
     public function updateLeader(Request $request, VotersProfile $votersProfile)
     {
         $request->validate([
-            'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional',
+            'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional,Cluster',
         ]);
 
         $votersProfile->update([
@@ -228,9 +228,13 @@ class VotersProfileController extends Controller
             ->paginate(47);
         
         // Get subordinates for dropdown
-        $subordinates = VotersProfile::where('id', '!=', $manageleader->id)
-            ->where('barangay', '=', $manageleader->barangay)
-            ->get();
+        $subordinatesQuery = VotersProfile::where('id', '!=', $manageleader->id);
+
+        if ($manageleader->leader !== 'Cluster') {
+            $subordinatesQuery->where('barangay', '=', $manageleader->barangay);
+        }
+
+        $subordinates = $subordinatesQuery->get();
 
         // Get subordinates of previous leaders
         $previousSubordinates = [];
@@ -268,7 +272,7 @@ class VotersProfileController extends Controller
     public function viewhierarchy(VotersProfile $viewhierarchy)
     {
         $hierarchy = $this->buildhierarchy($viewhierarchy);
-
+        
         return view('admin.pages.tagging.hierarchy', compact('hierarchy'));
     }
 

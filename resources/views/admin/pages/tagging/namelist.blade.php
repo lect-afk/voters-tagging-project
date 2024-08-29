@@ -15,6 +15,7 @@
                 <select id="leaderFilter" name="leader" class="form-select">
                     <option value="Barangay" {{ request('leader') == 'Barangay' ? 'selected' : '' }}>Barangay Leader</option>
                     <option value="Purok" {{ request('leader') == 'Purok' ? 'selected' : '' }}>Purok Leader</option>
+                    <option value="Cluster" {{ request('leader') == 'Cluster' ? 'selected' : '' }}>Cluster Leader</option>
                     <option value="Municipal" {{ request('leader') == 'Municipal' ? 'selected' : '' }}>Municipal Leader</option>
                     <option value="District" {{ request('leader') == 'District' ? 'selected' : '' }}>District Leader</option>
                     <option value="Provincial" {{ request('leader') == 'Provincial' ? 'selected' : '' }}>Provincial Leader</option>
