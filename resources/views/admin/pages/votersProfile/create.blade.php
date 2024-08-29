@@ -72,6 +72,7 @@
                             <option value="None">None</option>
                             <option value="Purok">Purok</option>
                             <option value="Barangay">Barangay</option>
+                            <option value="Cluster">Cluster</option>
                             <option value="Municipal">Municipal</option>
                             <option value="District">District</option>
                             <option value="Provincial">Provincial</option>

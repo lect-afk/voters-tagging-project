@@ -65,6 +65,7 @@
                             <option value="None" {{ $votersProfile->leader == 'None' ? 'selected' : '' }}>None</option>
                             <option value="Purok" {{ $votersProfile->leader == 'Purok' ? 'selected' : '' }}>Purok</option>
                             <option value="Barangay" {{ $votersProfile->leader == 'Barangay' ? 'selected' : '' }}>Barangay</option>
+                            <option value="Cluster" {{ $votersProfile->leader == 'Cluster' ? 'selected' : '' }}>Cluster</option>
                             <option value="Municipal" {{ $votersProfile->leader == 'Municipal' ? 'selected' : '' }}>Municipal</option>
                             <option value="District" {{ $votersProfile->leader == 'District' ? 'selected' : '' }}>District</option>
                             <option value="Provincial" {{ $votersProfile->leader == 'Provincial' ? 'selected' : '' }}>Provincial</option>
