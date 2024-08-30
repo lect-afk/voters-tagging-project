@@ -2,7 +2,9 @@
 
 @section('content')
 <div class="container">
-    <div id="chart_div" style="width: 100%; height: 1000px;"></div>
+    <div style="overflow-x: auto; white-space: nowrap;">
+        <div id="chart_div" style="min-width: 1000px; height: 1000px;"></div>
+    </div>
 </div>
 
 <style>
@@ -116,6 +118,11 @@
         };
 
         chart.setOption(option);
+
+        // Handle resize
+        window.addEventListener('resize', function() {
+            chart.resize();
+        });
     });
 </script>
 @endsection
