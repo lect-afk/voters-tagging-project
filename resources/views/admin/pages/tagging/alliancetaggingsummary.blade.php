@@ -17,7 +17,7 @@
                     $totalPercentage = ($totalAllied / $totalVotes) * 100;
                 @endphp
                 <h4>
-                    Total Allied: {{ $totalAllied }} / {{ $totalVotes }} 
+                    Total Allied: {{ $totalAllied }} out of {{ $totalVotes }} 
                     <span class="{{ $totalPercentage < 50 ? 'text-danger' : '' }}">
                         ({{ number_format($totalPercentage, 1) }}%)
                     </span>
