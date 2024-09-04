@@ -2,9 +2,26 @@
 
 @section('content')
     <div class="container my-5">
-        <div class="row mb-3">
-            <div class="col-12">
+        <div class="row mb-3 align-items-center">
+            <div class="col-12 col-md-6">
                 <h1>Alliance Tagging Summary</h1>
+            </div>
+            <div class="col-12 col-md-6 text-md-end">
+                @php
+                    $totalAllied = 0;
+                    $totalVotes = 0;
+                    foreach ($barangay as $item) {
+                        $totalAllied += $item['allied'];
+                        $totalVotes += $item['total'];
+                    }
+                    $totalPercentage = ($totalAllied / $totalVotes) * 100;
+                @endphp
+                <h4>
+                    Total Allied: {{ $totalAllied }} / {{ $totalVotes }} 
+                    <span class="{{ $totalPercentage < 50 ? 'text-danger' : '' }}">
+                        ({{ number_format($totalPercentage, 1) }}%)
+                    </span>
+                </h4>
             </div>
         </div>
 
@@ -32,11 +49,14 @@
                 </thead>
                 <tbody>
                     @foreach($barangay as $item)
+                        @php
+                            $percentage = ($item['allied'] / $item['total']) * 100;
+                        @endphp
                         <tr>
                             <td>{{ $item['barangay'] }}</td>
-                            <td class="{{ $item['allied'] < 50 ? 'text-danger' : '' }}">
+                            <td class="{{ $percentage < 50 ? 'text-danger' : '' }}">
                                 {{ $item['allied'] }} / {{ $item['total'] }} 
-                                ({{ number_format(($item['allied'] / $item['total']) * 100, 1) }}%)
+                                ({{ number_format($percentage, 1) }}%)
                             </td>
                             <td>
                                 {{ $item['hardcore'] }} / {{ $item['total'] }}
