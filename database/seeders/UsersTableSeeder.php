@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
                 'name' => 'MentorsAdmin',
                 'email' => 'mentorspireitservices@gmail.com',
                 'email_verified_at' => null,
-                'password' => bcrypt('mentorSecrets'), // password
+                'password' => bcrypt('MentorsSecrets'), // password
                 'remember_token' => null,
             ],
         ];

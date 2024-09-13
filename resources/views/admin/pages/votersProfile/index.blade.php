@@ -6,6 +6,10 @@
             <div class="col-12 col-md-6">
                 <h1>Voters Profiles</h1>
             </div>
+            <!-- Add Spinner HTML -->
+            <div id="loadingSpinner" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Your PDF is being generated. Please wait and refrain from making any actions until it's finished.
+            </div>
         </div>
 
         @if ($message = Session::get('success'))
@@ -19,10 +23,10 @@
         @endif
 
         <form class="row g-2 mb-3" method="GET" action="{{ route('voters_profile.index') }}" role="search">
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-2">
                 <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
                 <select id="leaderFilter" name="leader" class="form-select">
                     <option value="" {{ request('leader') == '' ? 'selected' : '' }}>All</option>
                     <option value="None" {{ request('leader') == 'None' ? 'selected' : '' }}>None Leader</option>
@@ -34,7 +38,7 @@
                     <option value="Regional" {{ request('leader') == 'Regional' ? 'selected' : '' }}>Regional Leader</option>
                 </select>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
                 <select name="barangay" class="form-control">
                     <option value="" {{ request('barangay') == '' ? 'selected' : '' }}>All Barangays</option>
                     @foreach ($barangay as $b)
@@ -42,16 +46,22 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-12 col-md-1">
+            <div class="col-12 col-md-2">
                 <button class="button-index w-100" type="submit">
                     <i class="fa-solid fa-magnifying-glass fa-md"></i>
                     <span class="fw-semibold ms-2">Search</span>
                 </button>
             </div>
-            <div class="col-12 col-md-1">
+            <div class="col-12 col-md-2">
                 <a href="{{ route('voters_profile.create') }}" class="button-index w-100">
                     <i class="fa-solid fa-circle-plus fa-md"></i>
                     <span class="fw-semibold ms-2">Add</span>
+                </a>
+            </div>
+            <div class="col-12 col-md-2">
+                <a id="pdfDownloadButton" href="{{ route('voters_profile.pdf', request()->all()) }}" class="button-index w-100">
+                    <i class="fa-solid fa-file-pdf fa-md"></i>
+                    <span class="fw-semibold ms-2">Download</span>
                 </a>
             </div>
         </form>
@@ -81,4 +91,5 @@
             ])->links('admin.pages.partials.pagination') }}
         </div>        
     </div>
+    <script src="{{ asset('js/spinner.js') }}"></script>
 @endsection
