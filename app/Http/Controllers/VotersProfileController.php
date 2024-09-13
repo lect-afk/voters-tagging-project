@@ -11,6 +11,7 @@ use App\Models\Tagging;
 use App\Models\Candidate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use PDF;
 
 class VotersProfileController extends Controller
 {
@@ -42,6 +43,39 @@ class VotersProfileController extends Controller
             ->with('query', $query)
             ->with('leader', $leader)
             ->with('barangayId', $barangayId);
+    }
+
+    public function downloadPdf(Request $request)
+    {
+        // Increase the maximum execution time
+        ini_set('max_execution_time', 1800); // 30 minutes
+        ini_set('memory_limit', '5G'); // or higher if needed
+
+        $barangay = Barangay::all();
+        $query = $request->input('query');
+        $leader = $request->input('leader');
+        $barangayId = $request->input('barangay');
+
+        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+            ->when($leader, function($queryBuilder) use ($leader) {
+                return $queryBuilder->where('leader', $leader);
+            })
+            ->when($query, function($queryBuilder) use ($query) {
+                return $queryBuilder->where(function($queryBuilder) use ($query) {
+                    $queryBuilder->where('firstname', 'like', "%$query%")
+                                ->orWhere('lastname', 'like', "%$query%");
+                });
+            })
+            ->when($barangayId, function($queryBuilder) use ($barangayId) {
+                return $queryBuilder->where('barangay', $barangayId);
+            })
+            ->orderBy('lastname', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $pdf = PDF::loadView('admin.pages.votersProfile.voters_profile_pdf', compact('voters_profiles'));
+
+        return $pdf->download('voters_profiles.pdf');
     }
 
 
@@ -300,7 +334,7 @@ class VotersProfileController extends Controller
         } elseif($voter->leader == 'Purok') {
             $hierarchy = [
                 'name' => $voter->firstname . ' ' . $voter->middlename . ' ' . $voter->lastname,
-                'precinct' => $voter->puroks->name ?? 'No Purok',
+                'precinct' => $voter->precincts->number ?? 'No Precinct',
                 'alliance_status' => $voter->alliances_status,
                 'leader_type' => $voter->leader,
                 'children' => []

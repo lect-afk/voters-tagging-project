@@ -100,6 +100,10 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('alliancetagging', [VotersProfileController::class, 'alliancetagging'])->name('voters.alliancetagging');
     Route::post('/voters-profile/update-alliance-status', [VotersProfileController::class, 'updateAllianceStatus'])->name('voters_profile.updateAllianceStatus');
 
+    //Route for the HTML to PDF
+    Route::get('/voters_profiles/pdf', [VotersProfileController::class, 'downloadPdf'])->name('voters_profile.pdf');
+
+
 
 
 

@@ -20,14 +20,14 @@ class AnotherUsersTableSeeder extends Seeder
                 'name' => '1stAdmin',
                 'email'=>'1st_admin@email.com',
                 'email_verified_at' => null,
-                'password'=> bcrypt('1stSecrets'),
+                'password'=> bcrypt('Admin1Secrets'),
                 'remember_token' => null,
             ],
             [
                'name' => '2ndAdmin',
                'email'=>'2nd_admin@email.com',
                'email_verified_at' => null,
-               'password'=> bcrypt('2ndSecrets'),
+               'password'=> bcrypt('Admin2Secrets'),
                'remember_token' => null,
             ],
         ];
