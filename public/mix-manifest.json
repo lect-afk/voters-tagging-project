@@ -10,6 +10,7 @@
     "/css/login.css": "/css/login.css",
     "/favicon.ico": "/favicon.ico",
     "/index.php": "/index.php",
+    "/js/spinner.js": "/js/spinner.js",
     "/mix-manifest.json": "/mix-manifest.json",
     "/robots.txt": "/robots.txt"
 }

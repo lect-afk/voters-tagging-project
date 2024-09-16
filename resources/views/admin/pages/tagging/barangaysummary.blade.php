@@ -5,11 +5,15 @@
         <div class="row mb-3">
             <div class="col-12">
                 <h1>Barangay Summary</h1>
+            </div>
+            <!-- Add Spinner HTML -->
+            <div id="loadingSpinner" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Your PDF is being generated. Please wait and refrain from making any actions until it's finished.
             </div>       
         </div>
 
         <form class="row g-2 mb-3" method="GET" action="{{ route('voters.barangaysummary') }}" role="search">
-            <div class="col-12 col-md-10">
+            <div class="col-12 col-md-8">
                 <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search..." aria-label="Search" value="{{ request('query') }}">
             </div>
             <div class="col-12 col-md-2">
@@ -17,6 +21,12 @@
                     <i class="fa-solid fa-magnifying-glass fa-xl"></i>
                     <span class="fw-semibold ms-2">Search</span>
                 </button>
+            </div>
+            <div class="col-12 col-md-2">
+                <a id="pdfDownloadButton" href="{{ route('barangaysummary.pdf', request()->all()) }}" class="button-index w-100" data-filename="barangay_summary.pdf">
+                    <i class="fa-solid fa-file-pdf fa-md"></i>
+                    <span class="fw-semibold ms-2">Download</span>
+                </a>
             </div>
         </form>
         
@@ -52,5 +62,5 @@
             {{ $barangays->appends(['query' => request('query')])->links('admin.pages.partials.pagination') }}
         </div>
     </div>
-    
+    <script src="{{ asset('js/spinner.js') }}"></script>
 @endsection
