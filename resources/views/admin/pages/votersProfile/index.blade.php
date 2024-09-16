@@ -59,7 +59,7 @@
                 </a>
             </div>
             <div class="col-12 col-md-2">
-                <a id="pdfDownloadButton" href="{{ route('voters_profile.pdf', request()->all()) }}" class="button-index w-100">
+                <a id="pdfDownloadButton" href="{{ route('voters_profile.pdf', request()->all()) }}" class="button-index w-100" data-filename="voters_profiles.pdf">
                     <i class="fa-solid fa-file-pdf fa-md"></i>
                     <span class="fw-semibold ms-2">Download</span>
                 </a>

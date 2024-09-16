@@ -12,6 +12,8 @@ use App\Models\Candidate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use PDF;
+use setasign\Fpdi\Fpdi;
+
 
 class VotersProfileController extends Controller
 {
@@ -46,16 +48,37 @@ class VotersProfileController extends Controller
     }
 
     public function downloadPdf(Request $request)
-    {
-        // Increase the maximum execution time
-        ini_set('max_execution_time', 1800); // 30 minutes
-        ini_set('memory_limit', '5G'); // or higher if needed
+{
+    ini_set('max_execution_time', 3600); // 1 hour
+    ini_set('memory_limit', '5G'); // or higher if needed
 
-        $barangay = Barangay::all();
-        $query = $request->input('query');
-        $leader = $request->input('leader');
-        $barangayId = $request->input('barangay');
+    $query = $request->input('query');
+    $leader = $request->input('leader');
+    $barangayId = $request->input('barangay');
 
+    // Define paths for temporary PDFs
+    $pdfPaths = [];
+
+    // Get distinct precinct numbers
+    $precincts = VotersProfile::select('precinct')
+        ->when($leader, function($queryBuilder) use ($leader) {
+            return $queryBuilder->where('leader', $leader);
+        })
+        ->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where(function($queryBuilder) use ($query) {
+                $queryBuilder->where('firstname', 'like', "%$query%")
+                            ->orWhere('lastname', 'like', "%$query%");
+            });
+        })
+        ->when($barangayId, function($queryBuilder) use ($barangayId) {
+            return $queryBuilder->where('barangay', $barangayId);
+        })
+        ->groupBy('precinct')
+        ->orderBy('precinct', 'asc')
+        ->get();
+
+    // Process each precinct
+    foreach ($precincts as $precinct) {
         $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
             ->when($leader, function($queryBuilder) use ($leader) {
                 return $queryBuilder->where('leader', $leader);
@@ -69,14 +92,49 @@ class VotersProfileController extends Controller
             ->when($barangayId, function($queryBuilder) use ($barangayId) {
                 return $queryBuilder->where('barangay', $barangayId);
             })
+            ->where('precinct', $precinct->precinct)
             ->orderBy('lastname', 'asc')
             ->orderBy('id', 'asc')
             ->get();
 
-        $pdf = PDF::loadView('admin.pages.votersProfile.voters_profile_pdf', compact('voters_profiles'));
+        // Fetch the precinct number
+        $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
 
-        return $pdf->download('voters_profiles.pdf');
+        // Generate a PDF for the current precinct
+        $pdfPath = storage_path("app/public/voters_profiles_precinct_{$precinct->precinct}.pdf");
+        $pdf = PDF::loadView('admin.pages.votersProfile.voters_profile_pdf', [
+            'voters_profiles' => $voters_profiles,
+            'precinct_number' => $precinctNumber, // Pass the precinct number
+        ]);
+        $pdf->save($pdfPath);
+        $pdfPaths[] = $pdfPath;
     }
+
+    // Merge the PDFs
+    $finalPdf = new Fpdi();
+    foreach ($pdfPaths as $path) {
+        $pageCount = $finalPdf->setSourceFile($path);
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $tplIdx = $finalPdf->importPage($i);
+            $finalPdf->addPage();
+            $finalPdf->useTemplate($tplIdx);
+        }
+    }
+
+    // Output the final merged PDF
+    $finalPdfPath = storage_path('app/public/voters_profiles_final.pdf');
+    $finalPdf->Output($finalPdfPath, 'F');
+
+    // Clean up temporary files
+    foreach ($pdfPaths as $path) {
+        unlink($path);
+    }
+
+    return response()->download($finalPdfPath)->deleteFileAfterSend(true);
+}
+
+
+
 
 
 
@@ -495,6 +553,70 @@ class VotersProfileController extends Controller
         return view('admin.pages.tagging.barangaysummary', compact('barangays'))->with('query', $query);
     }
 
+    public function downloadBarangaySummaryPdf(Request $request)
+    {
+        // Increase the maximum execution time and memory limit
+        ini_set('max_execution_time', 1800); // 30 minutes
+        ini_set('memory_limit', '5G'); // or higher if needed
+
+        // Get all barangays
+        $query = $request->input('query');
+
+        $barangays = Barangay::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        $barangays->getCollection()->transform(function($barangay) {
+            // Count Barangay Leaders
+            $barangayLeadersCount = VotersProfile::where('barangay', $barangay->id)
+                ->where('leader', 'Barangay')
+                ->count();
+
+            // Count Purok Leaders
+            $purokLeadersCount = VotersProfile::where('barangay', $barangay->id)
+                ->where('leader', 'Purok')
+                ->count();
+
+            // Get all predecessors for the barangay
+            $predecessors = Tagging::whereHas('predecessors', function($query) use ($barangay) {
+                $query->where('barangay', $barangay->id)
+                    ->where('leader', 'None');
+            })->pluck('predecessor')->toArray();
+
+            // Get all successors for the barangay
+            $successors = Tagging::whereHas('successors', function($query) use ($barangay) {
+                $query->where('barangay', $barangay->id)
+                    ->where('leader', 'None');
+            })->pluck('successor')->toArray();
+
+            // Combine predecessors and successors and remove duplicates
+            $downLine = array_unique(array_merge($predecessors, $successors));
+            $downLineCount = count($downLine);
+
+            // Count Total Voters
+            $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
+            $totalLeadersAndDownline = $barangayLeadersCount + $purokLeadersCount + $downLineCount;
+
+            // Calculate the percentage
+            $percentage = $totalVotersCount > 0 ? ($totalLeadersAndDownline / $totalVotersCount) * 100 : 0;
+
+            return [
+                'barangay' => $barangay->name,
+                'barangayLeaders' => $barangayLeadersCount,
+                'purokLeaders' => $purokLeadersCount,
+                'downLine' => $downLineCount,
+                'totalLeadersAndDownline' => $totalLeadersAndDownline,
+                'total' => $totalVotersCount,
+                'percentage' => $percentage,
+            ];
+        });
+
+        $pdf = PDF::loadView('admin.pages.tagging.barangaysummary_pdf', compact('barangays', 'query'));
+
+        return $pdf->download('barangay_summary.pdf');
+    }
+
 
 
     public function precinctsummary(Request $request)
@@ -555,6 +677,69 @@ class VotersProfileController extends Controller
         return view('admin.pages.tagging.precinctsummary', compact('precincts'))->with('query', $query);
     }
 
+    public function downloadPrecinctSummaryPdf(Request $request)
+    {
+        // Increase the maximum execution time and memory limit
+        ini_set('max_execution_time', 1800); // 30 minutes
+        ini_set('memory_limit', '5G'); // or higher if needed
+
+        // Get all precincts
+        $query = $request->input('query');
+
+        $precincts = Precinct::with('barangays')->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('number', 'like', "%$query%");
+        })
+        ->paginate(25);
+        
+        $precincts->getCollection()->transform(function($precinct) {
+            // Count Barangay Leaders
+            $barangayLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                ->where('leader', 'Barangay')
+                ->count();
+
+            // Count Purok Leaders
+            $purokLeadersCount = VotersProfile::where('precinct', $precinct->id)
+                ->where('leader', 'Purok')
+                ->count();
+
+            // Get all predecessors for the precinct
+            $predecessors = Tagging::whereHas('predecessors', function($query) use ($precinct) {
+                $query->where('precinct', $precinct->id)
+                    ->where('leader', 'None');
+            })->pluck('predecessor')->toArray();
+
+            // Get all successors for the precinct
+            $successors = Tagging::whereHas('successors', function($query) use ($precinct) {
+                $query->where('precinct', $precinct->id)
+                    ->where('leader', 'None');
+            })->pluck('successor')->toArray();
+
+            // Combine predecessors and successors and remove duplicates
+            $downLine = array_unique(array_merge($predecessors, $successors));
+            $downLineCount = count($downLine);
+
+            // Count Total Voters
+            $totalVotersCount = VotersProfile::where('precinct', $precinct->id)->count();
+
+            // Calculate the total of barangay leaders, purok leaders, and downline members
+            $totalLeadersAndDownline = $barangayLeadersCount + $purokLeadersCount + $downLineCount;
+
+            // Calculate the percentage
+            $percentage = $totalVotersCount > 0 ? ($totalLeadersAndDownline / $totalVotersCount) * 100 : 0;
+
+            return [
+                'precinct' => $precinct->number,
+                'barangay' => $precinct->barangays->name,
+                'totalLeadersAndDownline' => $totalLeadersAndDownline,
+                'total' => $totalVotersCount,
+                'percentage' => $percentage,
+            ];
+        });
+
+        $pdf = PDF::loadView('admin.pages.tagging.precinctsummary_pdf', compact('precincts', 'query'));
+
+        return $pdf->download('precinct_summary.pdf');
+    }
 
     public function votecomparison(Request $request)
     {
@@ -702,6 +887,52 @@ class VotersProfileController extends Controller
         return view('admin.pages.tagging.alliancetaggingsummary', compact('barangay'))->with('query', $query);
     }
 
+    public function downloadAllianceTaggingSummaryPdf(Request $request)
+    {
+        // Increase the maximum execution time and memory limit
+        ini_set('max_execution_time', 1800); // 30 minutes
+        ini_set('memory_limit', '5G'); // or higher if needed
+
+        // Get all barangay
+        $query = $request->input('query');
+
+        $barangay = Barangay::when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->where('name', 'like', "%$query%");
+        })
+        ->paginate(50);
+
+        $barangay->getCollection()->transform(function($barangay) {
+            // Count Green Voters
+            $allied = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Green')
+                ->count();
+
+            // Count Red Voters
+            $hardcore = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Red')
+                ->count();
+
+            // Count Yellow Voters
+            $undecided = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Yellow')
+                ->count();
+
+            // Count Total Voters
+            $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
+
+            return [
+                'barangay' => $barangay->name,
+                'allied' => $allied,
+                'hardcore' => $hardcore,
+                'undecided' => $undecided,
+                'total' => $totalVotersCount,
+            ];
+        });
+
+        $pdf = PDF::loadView('admin.pages.tagging.alliancetaggingsummary_pdf', compact('barangay', 'query'));
+
+        return $pdf->download('alliance_tagging_summary.pdf');
+    }
 
 
 }

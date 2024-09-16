@@ -102,6 +102,10 @@ Route::middleware(['check.user'])->group(function () {
 
     //Route for the HTML to PDF
     Route::get('/voters_profiles/pdf', [VotersProfileController::class, 'downloadPdf'])->name('voters_profile.pdf');
+    Route::get('/barangaysummary/pdf', [VotersProfileController::class, 'downloadBarangaySummaryPdf'])->name('barangaysummary.pdf');
+    Route::get('/precinctsummary/pdf', [VotersProfileController::class, 'downloadPrecinctSummaryPdf'])->name('precinctsummary.pdf');
+    Route::get('/alliancetaggingsummary/pdf', [VotersProfileController::class, 'downloadAllianceTaggingSummaryPdf'])->name('alliancetaggingsummary.pdf');
+
 
 
 
