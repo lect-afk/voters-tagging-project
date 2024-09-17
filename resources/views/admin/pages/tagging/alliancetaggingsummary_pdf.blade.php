@@ -5,26 +5,37 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
         }
         h1 {
             text-align: center;
         }
-        table {
+        .table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
-        th, td {
-            border: 1px solid #ddd;
+        .table, .table th, .table td {
+            border: 1px solid black;
+        }
+        .table th, .table td {
             padding: 8px;
+            text-align: left;
         }
-        th {
+        .table th {
             background-color: #f2f2f2;
-            text-align: center;
         }
-        .text-danger {
+        .percentage {
             color: red;
+        }
+        .footer {
+            bottom: 0;
+            font-size: 10px;
         }
     </style>
 </head>
@@ -39,14 +50,16 @@
         }
         $totalPercentage = ($totalAllied / $totalVotes) * 100;
     @endphp
-    <h4>
-        Total Allied: {{ $totalAllied }} out of {{ $totalVotes }} 
-        <span class="{{ $totalPercentage < 50 ? 'text-danger' : '' }}">
-            ({{ number_format($totalPercentage, 1) }}%)
-        </span>
-    </h4>
+    <div style="text-align: right">
+        <h4>
+            Total Allied: {{ $totalAllied }} out of {{ $totalVotes }} 
+            <span class="{{ $totalPercentage < 50 ? 'percentage' : '' }}">
+                ({{ number_format($totalPercentage, 1) }}%)
+            </span>
+        </h4>
+    </div>
 
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th>Barangay</th>
@@ -78,5 +91,8 @@
             @endforeach
         </tbody>
     </table>
+    <div class="footer">
+        <p>Generated on {{ \Carbon\Carbon::now()->format('F d, Y') }}</p>
+    </div>
 </body>
 </html>
