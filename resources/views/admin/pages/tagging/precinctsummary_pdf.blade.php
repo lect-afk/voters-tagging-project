@@ -11,19 +11,11 @@
             font-size: 12px;
         }
         .container {
-            margin: 20px;
-        }
-        .header, .footer {
-            text-align: center;
-            position: fixed;
             width: 100%;
+            margin: 0 auto;
         }
-        .header {
-            top: 0;
-        }
-        .footer {
-            bottom: 0;
-            font-size: 10px;
+        h1 {
+            text-align: center;
         }
         .table {
             width: 100%;
@@ -43,21 +35,15 @@
         .percentage {
             color: red;
         }
-        .clearfix::after {
-            content: "";
-            clear: both;
-            display: table;
+        .footer {
+            bottom: 0;
+            font-size: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Precinct Summary</h1>
-        </div>
-        
-        <div class="clearfix"></div>
-
+        <h1>Precinct Summary</h1>
         <table class="table">
             <thead>
                 <tr>
@@ -85,7 +71,7 @@
     </div>
 
     <div class="footer">
-        <p>Generated on {{ date('Y-m-d H:i:s') }}</p>
+        <p>Generated on {{ \Carbon\Carbon::now()->format('F d, Y') }}</p>
     </div>
 </body>
 </html>

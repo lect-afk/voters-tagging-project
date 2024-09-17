@@ -2,9 +2,9 @@
 
 @section('content')
     <div class="container my-5">
-        <h6>Precinct Number: {{ $precinct_number }}</h6>
         <table class="table mt-2 table-light table-hover">
             <thead class="thead-dark">
+                <tr><h6>Precinct Number: {{ $precinct_number }}</h6></tr>
                 <tr>
                     <th>No.</th>
                     <th>Voter's Name</th>

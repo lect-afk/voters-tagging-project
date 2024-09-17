@@ -48,38 +48,19 @@ class VotersProfileController extends Controller
     }
 
     public function downloadPdf(Request $request)
-{
-    ini_set('max_execution_time', 3600); // 1 hour
-    ini_set('memory_limit', '5G'); // or higher if needed
+    {
+        ini_set('max_execution_time', 3600); // 1 hour
+        ini_set('memory_limit', '5G'); // or higher if needed
 
-    $query = $request->input('query');
-    $leader = $request->input('leader');
-    $barangayId = $request->input('barangay');
+        $query = $request->input('query');
+        $leader = $request->input('leader');
+        $barangayId = $request->input('barangay');
 
-    // Define paths for temporary PDFs
-    $pdfPaths = [];
+        // Define paths for temporary PDFs
+        $pdfPaths = [];
 
-    // Get distinct precinct numbers
-    $precincts = VotersProfile::select('precinct')
-        ->when($leader, function($queryBuilder) use ($leader) {
-            return $queryBuilder->where('leader', $leader);
-        })
-        ->when($query, function($queryBuilder) use ($query) {
-            return $queryBuilder->where(function($queryBuilder) use ($query) {
-                $queryBuilder->where('firstname', 'like', "%$query%")
-                            ->orWhere('lastname', 'like', "%$query%");
-            });
-        })
-        ->when($barangayId, function($queryBuilder) use ($barangayId) {
-            return $queryBuilder->where('barangay', $barangayId);
-        })
-        ->groupBy('precinct')
-        ->orderBy('precinct', 'asc')
-        ->get();
-
-    // Process each precinct
-    foreach ($precincts as $precinct) {
-        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+        // Get distinct precinct numbers
+        $precincts = VotersProfile::select('precinct')
             ->when($leader, function($queryBuilder) use ($leader) {
                 return $queryBuilder->where('leader', $leader);
             })
@@ -92,46 +73,65 @@ class VotersProfileController extends Controller
             ->when($barangayId, function($queryBuilder) use ($barangayId) {
                 return $queryBuilder->where('barangay', $barangayId);
             })
-            ->where('precinct', $precinct->precinct)
-            ->orderBy('lastname', 'asc')
-            ->orderBy('id', 'asc')
+            ->groupBy('precinct')
+            ->orderBy('precinct', 'asc')
             ->get();
 
-        // Fetch the precinct number
-        $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
+        // Process each precinct
+        foreach ($precincts as $precinct) {
+            $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+                ->when($leader, function($queryBuilder) use ($leader) {
+                    return $queryBuilder->where('leader', $leader);
+                })
+                ->when($query, function($queryBuilder) use ($query) {
+                    return $queryBuilder->where(function($queryBuilder) use ($query) {
+                        $queryBuilder->where('firstname', 'like', "%$query%")
+                                    ->orWhere('lastname', 'like', "%$query%");
+                    });
+                })
+                ->when($barangayId, function($queryBuilder) use ($barangayId) {
+                    return $queryBuilder->where('barangay', $barangayId);
+                })
+                ->where('precinct', $precinct->precinct)
+                ->orderBy('lastname', 'asc')
+                ->orderBy('id', 'asc')
+                ->get();
 
-        // Generate a PDF for the current precinct
-        $pdfPath = storage_path("app/public/voters_profiles_precinct_{$precinct->precinct}.pdf");
-        $pdf = PDF::loadView('admin.pages.votersProfile.voters_profile_pdf', [
-            'voters_profiles' => $voters_profiles,
-            'precinct_number' => $precinctNumber, // Pass the precinct number
-        ]);
-        $pdf->save($pdfPath);
-        $pdfPaths[] = $pdfPath;
-    }
+            // Fetch the precinct number
+            $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
 
-    // Merge the PDFs
-    $finalPdf = new Fpdi();
-    foreach ($pdfPaths as $path) {
-        $pageCount = $finalPdf->setSourceFile($path);
-        for ($i = 1; $i <= $pageCount; $i++) {
-            $tplIdx = $finalPdf->importPage($i);
-            $finalPdf->addPage();
-            $finalPdf->useTemplate($tplIdx);
+            // Generate a PDF for the current precinct
+            $pdfPath = storage_path("app/public/voters_profiles_precinct_{$precinct->precinct}.pdf");
+            $pdf = PDF::loadView('admin.pages.votersProfile.voters_profile_pdf', [
+                'voters_profiles' => $voters_profiles,
+                'precinct_number' => $precinctNumber, // Pass the precinct number
+            ]);
+            $pdf->save($pdfPath);
+            $pdfPaths[] = $pdfPath;
         }
+
+        // Merge the PDFs
+        $finalPdf = new Fpdi();
+        foreach ($pdfPaths as $path) {
+            $pageCount = $finalPdf->setSourceFile($path);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tplIdx = $finalPdf->importPage($i);
+                $finalPdf->addPage();
+                $finalPdf->useTemplate($tplIdx);
+            }
+        }
+
+        // Output the final merged PDF
+        $finalPdfPath = storage_path('app/public/voters_profiles_final.pdf');
+        $finalPdf->Output($finalPdfPath, 'F');
+
+        // Clean up temporary files
+        foreach ($pdfPaths as $path) {
+            unlink($path);
+        }
+
+        return response()->download($finalPdfPath)->deleteFileAfterSend(true);
     }
-
-    // Output the final merged PDF
-    $finalPdfPath = storage_path('app/public/voters_profiles_final.pdf');
-    $finalPdf->Output($finalPdfPath, 'F');
-
-    // Clean up temporary files
-    foreach ($pdfPaths as $path) {
-        unlink($path);
-    }
-
-    return response()->download($finalPdfPath)->deleteFileAfterSend(true);
-}
 
 
 
