@@ -35,6 +35,12 @@
     </style>
 </head>
 <body>
+    <div style="text-align: center;">
+        <span style="display: block;">Province: <b>{{$voters_profile->barangays->cities->provinces->name}}</b></span>
+        <span style="display: block;">City/Municipality: <b>{{$voters_profile->barangays->cities->name}}</b></span>
+        <span style="display: block;">Barangay: <b>{{$voters_profile->barangays->name}}</b></span>
+        <h4>LIST OF VOTERS (PRECINCT LEVEL)</h4>
+    </div>       
     @yield('content')
 </body>
 </html>

@@ -8,7 +8,7 @@
                 <tr>
                     <th>No.</th>
                     <th>Voter's Name</th>
-                    <th>Barangay</th>
+                    <th>Voter's Address</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,7 +16,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
-                        <td>{{ $voters_profile->barangays->name }}</td>
+                        <td>{{ $voters_profile->barangays->name ?? ''}} {{ $voters_profile->puroks->name ?? ''}} {{ $voters_profile->sitios->name ?? ''}}</td>
                     </tr>
                 @endforeach
             </tbody>
