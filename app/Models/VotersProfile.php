@@ -48,5 +48,10 @@ class VotersProfile extends Model
     {
         return $this->hasMany(Tagging::class, 'successor');
     }
+
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'events_tagging', 'profile_id', 'event_id');
+    }
 }
 

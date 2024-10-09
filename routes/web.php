@@ -15,6 +15,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\TaggingController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\VoteController;
+use App\Http\Controllers\EventController;
 
 
 /*
@@ -54,6 +55,7 @@ Route::middleware(['check.user'])->group(function () {
     Route::resource('tagging', TaggingController::class);
     Route::resource('candidates', CandidateController::class);
     Route::resource('votes', VoteController::class);
+    Route::resource('events', EventController::class);
 
     //Route for the Name List
     Route::get('namelist', [VotersProfileController::class, 'namelist'])->name('voter_profile.namelist');
@@ -96,7 +98,7 @@ Route::middleware(['check.user'])->group(function () {
     //Route for the Vote Comparison
     Route::get('votecomparison', [VotersProfileController::class, 'votecomparison'])->name('voters.votecomparison');
 
-    //Route for the Alliance Taggig
+    //Route for the Alliance Tagging
     Route::get('alliancetagging', [VotersProfileController::class, 'alliancetagging'])->name('voters.alliancetagging');
     Route::post('/voters-profile/update-alliance-status', [VotersProfileController::class, 'updateAllianceStatus'])->name('voters_profile.updateAllianceStatus');
 
@@ -105,6 +107,12 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('/barangaysummary/pdf', [VotersProfileController::class, 'downloadBarangaySummaryPdf'])->name('barangaysummary.pdf');
     Route::get('/precinctsummary/pdf', [VotersProfileController::class, 'downloadPrecinctSummaryPdf'])->name('precinctsummary.pdf');
     Route::get('/alliancetaggingsummary/pdf', [VotersProfileController::class, 'downloadAllianceTaggingSummaryPdf'])->name('alliancetaggingsummary.pdf');
+
+    //Route for the Events Tagging
+    Route::get('eventstagging', [EventController::class, 'eventstagging'])->name('voters.eventstagging');
+    Route::post('/voters-profile/tag-events', [EventController::class, 'tagEvents'])->name('voters_profile.tagEvents');
+    Route::get('eventstagging/{manageevent}', [EventController::class, 'manageevent'])->name('event.manageevent');
+    
 
 
 

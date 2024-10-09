@@ -9,6 +9,7 @@ use App\Models\Barangay;
 use App\Models\Precinct;
 use App\Models\Tagging;
 use App\Models\Candidate;
+use App\Models\Event;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use PDF;
@@ -933,6 +934,11 @@ class VotersProfileController extends Controller
 
         return $pdf->download('alliance_tagging_summary.pdf');
     }
+
+
+
+    
+
 
 
 }
