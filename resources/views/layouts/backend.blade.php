@@ -159,6 +159,7 @@
                           <li><a class="dropdown-item" href="{{ route('precinct.index') }}">Precinct</a></li>
                           <li><a class="dropdown-item" href="{{ route('group.index') }}">Group</a></li>
                           <li><a class="dropdown-item" href="{{ route('voters_profile.index') }}">Voters Profile</a></li>
+                          <li><a class="dropdown-item" href="{{ route('events.index') }}">Events</a></li>
                         </ul>
                     </div>
                     
@@ -173,6 +174,7 @@
                           <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
                           <li><a class="dropdown-item" href="{{ route('voters.alliancetagging') }}">Alliance Tagging</a></li>
                           <li><a class="dropdown-item" href="{{ route('voters.alliancetaggingsummary') }}">Alliance Tagging Summary</a></li>
+                          <li><a class="dropdown-item" href="{{ route('voters.eventstagging') }}">Events Tagging</a></li>
                         </ul>
                     </div>
 
