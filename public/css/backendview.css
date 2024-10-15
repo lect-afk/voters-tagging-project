@@ -1,7 +1,52 @@
 /* Hide scrollbar but retain functionality */
 html, body {
-  overflow-y: scroll;
-  scrollbar-width: none; /* Firefox */
+  margin: 0; /* Remove default body margins */
+  padding: 0; /* Remove default body padding */
+  width: 100%; /* Ensure full width */
+  height: 100%; /* Ensure full height */
+}
+
+.sidebar {
+  width: 60px; /* Adjust the width as necessary */
+  background-color: #343a40;
+  color: #FCFCFD;
+  display: flex;
+  flex-direction: column;
+  height: 100vh auto;
+  min-height: 600px;
+}
+
+.sidebar_a {
+  color: #FCFCFD;
+  text-align: center;
+  margin: 10px 0; /* Add margin between links */
+  text-decoration: none;
+}
+
+.sidebar_dropdown {
+  color: #393e41;
+  text-align: center;
+  margin: 10px 0; /* Add margin between links */
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  color: #FCFCFD; /* Change color on hover */
+}
+
+.icon-hover i {
+  transition: color 0.3s ease;
+}
+
+.icon-hover:hover i {
+  color: #FCFCFD; /* Change this to your desired hover color */
+}
+
+
+.main-content {
+  flex: 1; /* Allow the main content to take the remaining space */
+  padding: 20px; /* Optional: Add padding to main content */
+  background-color: #f8f9fa; /* Light background for main content */
 }
 
 html::-webkit-scrollbar, body::-webkit-scrollbar {
@@ -23,13 +68,26 @@ h1, h2, h3, h4, h5, h6 {
     color: #efefd0;
 }
 
+.navbar{
+    margin: 0; /* Remove default body margins */
+    padding: 0; /* Remove default body padding */
+    width: 100%; /* Ensure full width */
+    height: 60px; /* Ensure full height */
+}
+
+.topbar{
+    width: 100%;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
 a {
     text-decoration: none;       
     color: #efefd0;             
 }
 
 a:hover {
-    color: #393e41;             
+    color: #FCFCFD;             
 }
 
 .a_alternate {
@@ -72,7 +130,7 @@ a:hover {
 }
 
 .button:hover {
-    color: #393e41;
+    color: #FCFCFD;
 }
 
 .button-30 {
@@ -165,31 +223,40 @@ a:hover {
     }
   }
   
-  .dropdown-menu {
-    display: none; /* Hide the menu by default */
-  }
+.dropdown-menu {
+  display: none; /* Hide the menu by default */
+}
   
-  .dropdown-menu.show {
-    display: block; /* Show the menu when the class 'show' is added */
-  }
+.dropdown-menu.show {
+  display: block; /* Show the menu when the class 'show' is added */
+}
 
-  .card {
-    border-radius: 0.5rem;
+.card {
+  border-radius: 0.1rem; /* Rounded corners */
+  border: 1px solid #e5e5e5; /* Black border */
+  background-color: #FCFCFD; /* White background */
+  box-shadow: none; /* Remove shadow for minimalism */
+  transition: transform 0.2s; /* Smooth scaling effect */
 }
 
 .card-header {
-    background-color: #004e89;
-    color: #FCFCFD;
-    font-size: 1.5rem;
-    font-weight: bold;
+  background-color: #FCFCFD; /* White header background */
+  color: #393e41; /* Black text */
+  font-size: 1.5rem; /* Font size */
+  font-weight: bold; /* Bold text */
+  border-bottom: 1px solid #e5e5e5; /* Thin bottom border for separation */
 }
 
 .card-body {
-    padding: 2rem;
-    background-color: #FCFCFD;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    border-radius: 5px;
+  padding: 2rem; /* Padding for the card body */
+  background-color: #FCFCFD; /* White background */
+  color: #393e41; /* Black text */
 }
+
+/* Hover effect for the card */
+/* .card:hover {
+  transform: scale(1.02);
+} */
 
 .menu_offcanvas{
     background-color: #004e89;
@@ -263,6 +330,10 @@ a:hover {
   width: 50%;
 }
 
+.dashboard_card{
+  height: 600px;
+}
+
 /* Mobile devices (up to 767px) */
 @media (max-width: 767px) {
     .navbar-brand {
@@ -294,6 +365,10 @@ a:hover {
 
     .table th, .table td {
       font-size: 12px;
+    }
+    
+    .card {
+      margin: 0.5rem 0; /* Space around the card on small screens */
     }
 }
 
