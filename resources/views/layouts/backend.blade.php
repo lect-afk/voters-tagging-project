@@ -63,6 +63,7 @@
                 <a class="sidebar_a" href="{{ route('precinct.index') }}" title="Precinct"><i class="fa-solid fa-map-pin"></i></a>
                 <a class="sidebar_a" href="{{ route('group.index') }}" title="Group"><i class="fa-solid fa-people-group"></i></a>
                 <a class="sidebar_a" href="{{ route('voters_profile.index') }}" title="Voters Profile"><i class="fa-solid fa-id-card"></i></a>
+                <a class="sidebar_a" href="{{ route('events.index') }}" title="Event"><i class="fa-solid fa-calendar-day"></i></a>
                 <div class="dropdown dropend d-flex flex-column sidebar_dropdown">
                     <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="TAGGING"><i class="fa-solid fa-users-gear"></i></a>
                     <ul class="dropdown-menu">
@@ -71,6 +72,7 @@
                         <li><a class="dropdown-item" href="{{ route('voters.precinctsummary') }}">Precinct Summary</a></li>
                         <li><a class="dropdown-item" href="{{ route('voters.alliancetagging') }}">Alliance Tagging</a></li>
                         <li><a class="dropdown-item" href="{{ route('voters.alliancetaggingsummary') }}">Alliance Tagging Summary</a></li>
+                        <li><a class="dropdown-item" href="{{ route('voters.eventstagging') }}">Events Tagging</a></li>
                     </ul>
                 </div>
 
