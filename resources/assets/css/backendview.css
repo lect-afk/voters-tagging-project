@@ -4,48 +4,77 @@ html, body {
   padding: 0; /* Remove default body padding */
   width: 100%; /* Ensure full width */
   height: 100%; /* Ensure full height */
+  overflow: hidden;
+}
+
+.dashboard_card_body{
+  height: 600px;
+  overflow-y: auto;
 }
 
 .sidebar {
-  width: 60px; /* Adjust the width as necessary */
-  background-color: #343a40;
-  color: #FCFCFD;
+  width: 60px;
   display: flex;
   flex-direction: column;
   height: 100vh auto;
-  min-height: 600px;
 }
 
 .sidebar_a {
-  color: #FCFCFD;
+  color: #004e89;
   text-align: center;
-  margin: 10px 0; /* Add margin between links */
+  padding: 10px;
   text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+.sidebar_a:hover {
+  background-color: rgba(0, 78, 137, 0.1); /* Light background with the main color */
+  color: #004e89;
+}
+
 
 .sidebar_dropdown {
   color: #393e41;
   text-align: center;
-  margin: 10px 0; /* Add margin between links */
   text-decoration: none;
 }
 
-.sidebar a:hover {
-  color: #FCFCFD; /* Change color on hover */
+/* .sidebar a:hover {
+  color: #004e89;
+} */
+
+
+.icon-hover {
+  color: #004e89;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.icon-hover i {
-  transition: color 0.3s ease;
+.icon-hover:hover {
+  background-color: rgba(0, 78, 137, 0.1); /* Light background with the main color */
+  color: #004e89; 
 }
 
-.icon-hover:hover i {
-  color: #FCFCFD; /* Change this to your desired hover color */
+.top-icon-hover {
+  color: #004e89;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 20px;
+}
+
+.top-icon-hover:hover {
+  background-color: rgba(0, 78, 137, 0.1); /* Light background with the main color */
+  color: #004e89; 
 }
 
 
 .main-content {
   flex: 1; /* Allow the main content to take the remaining space */
-  padding: 20px; /* Optional: Add padding to main content */
+  padding-right: 20px;
   background-color: #f8f9fa; /* Light background for main content */
 }
 
@@ -64,8 +93,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar, .sidebar {
     font-family: 'Nunito', sans-serif;
-    background-color: #004e89;
-    color: #efefd0;
+    background-color: #f8f9fa;
+    color: #004e89;
 }
 
 .navbar{
@@ -83,7 +112,7 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
     text-decoration: none;       
-    color: #efefd0;             
+    color: #004e89;             
 }
 
 a:hover {
@@ -198,10 +227,10 @@ a:hover {
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
-  .dropdown-item:hover {
+  /* .dropdown-item:hover {
     background-color: #004e89;
     color: #efefd0;
-  }
+  } */
   
   .dropdown-item:not(:last-child) {
     border-bottom: 1px solid #ccc;
@@ -232,8 +261,8 @@ a:hover {
 }
 
 .card {
-  border-radius: 0.1rem; /* Rounded corners */
-  border: 1px solid #e5e5e5; /* Black border */
+  border-radius: 5px; /* Rounded corners */
+  border: 1px solid #dddddd; /* Black border */
   background-color: #FCFCFD; /* White background */
   box-shadow: none; /* Remove shadow for minimalism */
   transition: transform 0.2s; /* Smooth scaling effect */
@@ -330,10 +359,6 @@ a:hover {
   width: 50%;
 }
 
-.dashboard_card{
-  height: 600px;
-}
-
 /* Mobile devices (up to 767px) */
 @media (max-width: 767px) {
     .navbar-brand {
@@ -407,6 +432,10 @@ a:hover {
 
   .card {
       margin: 0.5rem 0;
+  }
+
+  .dashboard_card{
+    height: 700px;
   }
 
 }
