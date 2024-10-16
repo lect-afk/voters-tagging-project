@@ -1,7 +1,6 @@
 @extends('layouts.backend')
 
 @section('content')
-<div class="container">
     <div class="row">
         <!-- Left Side Content -->
         <div class="col-md-6 mb-3">
@@ -116,5 +115,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection

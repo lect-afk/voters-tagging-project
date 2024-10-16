@@ -13,60 +13,57 @@
         -moz-appearance: textfield;
     }
 </style>
-    <div class="container my-5">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h2>Create Votes</h2>
-            </div>
-            <div class="card-body">
-                <div class="form-group mb-4">
-                    <label>Position</label>
-                    <select id="position" class="form-control" required>
-                        <option disabled selected value="">Select</option>
-                        <option value="Councilor">Councilor</option>
-                        <option value="Vice-Mayor">Vice-Mayor</option>
-                        <option value="Mayor">Mayor</option>
-                        <option value="Board Member">Board Member</option>
-                        <option value="Congressman">Congressman</option>
-                        <option value="Vice-Governor">Vice-Governor</option>
-                        <option value="Governor">Governor</option>
-                    </select>
-                </div>
-                <form action="{{ route('votes.store') }}" method="POST">
-                    @csrf
-                    <div class="form-group mb-4">
-                        <label for="candidate">Candidate</label>
-                        <select name="candidate_id" id="candidates" class="form-control" required>
-                            <option disabled selected value="">Select</option>
-                            {{-- Candidate options will be dynamically inserted here --}}
-                        </select>
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="precinct">Precinct</label>
-                        <select name="precinct" id="precinct" class="form-control" required>
-                            <option disabled selected value="">Select</option>
-                            @foreach ($precincts as $precinct)
-                                <option value="{{ $precinct->id }}">{{ $precinct->number }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="actual_votes">Actual Votes</label>
-                        <input type="number" name="actual_votes" id="actual_votes" class="form-control" required min="1" pattern="[1-9][0-9]*">
-                    </div>
-                    <button type="submit" class="button-index">
-                        <i class="fa-solid fa-pen-to-square fa-md"></i>
-                        <span class="fw-semibold ms-2">Submit</span>
-                    </button>
-                    <a href="{{ route('votes.index') }}" class="button-index">
-                        <i class="fa-solid fa-ban fa-md"></i>
-                        <span class="fw-semibold ms-2">Cancel</span>
-                    </a>
-                </form>
-            </div>
-        </div>
+<div class="card dashboard_card">
+    <div class="card-header">
+        <h5>Create Votes</h5>
     </div>
-
+    <div class="card-body dashboard_card_body">
+        <div class="form-group mb-4">
+            <label>Position</label>
+            <select id="position" class="form-control" required>
+                <option disabled selected value="">Select</option>
+                <option value="Councilor">Councilor</option>
+                <option value="Vice-Mayor">Vice-Mayor</option>
+                <option value="Mayor">Mayor</option>
+                <option value="Board Member">Board Member</option>
+                <option value="Congressman">Congressman</option>
+                <option value="Vice-Governor">Vice-Governor</option>
+                <option value="Governor">Governor</option>
+            </select>
+        </div>
+        <form action="{{ route('votes.store') }}" method="POST">
+            @csrf
+            <div class="form-group mb-4">
+                <label for="candidate">Candidate</label>
+                <select name="candidate_id" id="candidates" class="form-control" required>
+                    <option disabled selected value="">Select</option>
+                    {{-- Candidate options will be dynamically inserted here --}}
+                </select>
+            </div>
+            <div class="form-group mb-4">
+                <label for="precinct">Precinct</label>
+                <select name="precinct" id="precinct" class="form-control" required>
+                    <option disabled selected value="">Select</option>
+                    @foreach ($precincts as $precinct)
+                        <option value="{{ $precinct->id }}">{{ $precinct->number }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group mb-4">
+                <label for="actual_votes">Actual Votes</label>
+                <input type="number" name="actual_votes" id="actual_votes" class="form-control" required min="1" pattern="[1-9][0-9]*">
+            </div>
+            <button type="submit" class="button-index">
+                <i class="fa-solid fa-pen-to-square fa-md"></i>
+                <span class="fw-semibold ms-2">Submit</span>
+            </button>
+            <a href="{{ route('votes.index') }}" class="button-index">
+                <i class="fa-solid fa-ban fa-md"></i>
+                <span class="fw-semibold ms-2">Cancel</span>
+            </a>
+        </form>
+    </div>
+</div>
 <script>
     const candidates = @json($candidates);
 

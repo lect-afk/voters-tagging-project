@@ -32,16 +32,16 @@
         <nav class="navbar navbar-expand-md">
             <div class="topbar d-flex justify-content-between">
                 <div class="d-flex align-items-center">
-                    <img class="me-3" src="{{ asset('/image/DMlogo02.png') }}" alt="Logo" class="logo-image" style="height: 30px; width: auto;">
+                    <img class="me-3" src="{{ asset('/image/DMlogo02.png') }}" alt="Logo" class="logo-image" style="height: 35px; width: auto;">
                     <a class="navbar-brand" href="{{ route('dashboard') }}">
-                        <span class="button">VotersTagging</span>
+                        <span style="color: #6c757d;" class="fs-3">VotersTagging</span>
                     </a>
                 </div>
 
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center me-3">
                     <ul class="navbar-nav ms-auto">
                         <div class="dropdown dropstart">
-                            <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="LOCATION"><i class="fa-solid fa-map fa-lg"></i></a>
+                            <a class="top-icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="LOCATION"><i class="fa-solid fa-map fa-lg"></i></a>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="{{ route('province.index') }}">Province</a></li>
                               <li><a class="dropdown-item" href="{{ route('legislative_district.index') }}">District</a></li>
@@ -60,12 +60,21 @@
         
         <div class="d-flex">
             <div class="sidebar">
-                <a class="sidebar_a" href="{{ route('precinct.index') }}" title="Precinct"><i class="fa-solid fa-map-pin"></i></a>
-                <a class="sidebar_a" href="{{ route('group.index') }}" title="Group"><i class="fa-solid fa-people-group"></i></a>
-                <a class="sidebar_a" href="{{ route('voters_profile.index') }}" title="Voters Profile"><i class="fa-solid fa-id-card"></i></a>
-                <a class="sidebar_a" href="{{ route('events.index') }}" title="Event"><i class="fa-solid fa-calendar-day"></i></a>
+                <a class="sidebar_a" href="{{ route('voters_profile.index') }}" title="Voters Profile"><i class="fa-solid fa-id-card fa-lg"></i></a>
+                <a class="sidebar_a" href="{{ route('precinct.index') }}" title="Precinct"><i class="fa-solid fa-map-pin fa-lg"></i></a>
+                <a class="sidebar_a" href="{{ route('group.index') }}" title="Group"><i class="fa-solid fa-people-group fa-lg"></i></a>
+                <a class="sidebar_a" href="{{ route('events.index') }}" title="Event"><i class="fa-solid fa-calendar-day fa-lg"></i></a>
+
+                {{-- <div class="dropdown dropend d-flex flex-column sidebar_dropdown">
+                    <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="EVENT"><i class="fa-solid fa-calendar-day fa-lg"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('events.index') }}">Create Event</a></li>
+                        <li><a class="dropdown-item" href="{{ route('voters.eventstagging') }}">Events Tagging</a></li>
+                    </ul>
+                </div> --}}
+
                 <div class="dropdown dropend d-flex flex-column sidebar_dropdown">
-                    <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="TAGGING"><i class="fa-solid fa-users-gear"></i></a>
+                    <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="TAGGING"><i class="fa-solid fa-users-gear fa-lg"></i></a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('voter_profile.namelist') }}">Manage Leaders</a></li>
                         <li><a class="dropdown-item" href="{{ route('voters.barangaysummary') }}">Barangay Summary</a></li>
@@ -77,7 +86,7 @@
                 </div>
 
                 <div class="dropdown dropend d-flex flex-column sidebar_dropdown">
-                    <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="ELECTION"><i class="fa-solid fa-user-tie"></i></a>
+                    <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="ELECTION"><i class="fa-solid fa-user-tie fa-lg"></i></a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('candidates.index') }}">Manage Candidates</a></li>
                         <li><a class="dropdown-item" href="{{ route('votes.index') }}">Manage Votes</a></li>
@@ -86,7 +95,7 @@
                 </div>
 
                 <div class="d-flex flex-column mt-4 sidebar_dropdown">
-                    <a class="" href="" data-bs-toggle="modal" data-bs-target="#logoutModal" title="Logout">
+                    <a class="icon-hover" href="" data-bs-toggle="modal" data-bs-target="#logoutModal" title="Logout">
                         <i class="fa-solid fa-right-from-bracket fa-lg"></i>
                     </a>
                 </div>

@@ -1,10 +1,11 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container my-5">
+<div class="card dashboard_card">
+    <div class="card-header">
         <div class="row mb-3">
             <div class="col-12">
-                <h1>Votes</h1>
+                <h5>Votes</h5>
             </div>
         </div>
 
@@ -22,20 +23,21 @@
             <div class="col-12 col-md-10">
                 <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
             </div>
-            <div class="col-6 col-md-1">
+            <div class="col-6 col-md-1 d-flex">
                 <button class="button-index w-100" type="submit">
                     <i class="fa-solid fa-magnifying-glass fa-md"></i>
                     <span class="fw-semibold ms-2">Search</span>
                 </button>
             </div>
-            <div class="col-6 col-md-1">
+            <div class="col-6 col-md-1 d-flex">
                 <a href="{{ route('votes.create') }}" class="button-index w-100">
                     <i class="fa-solid fa-circle-plus fa-md"></i>
                     <span class="fw-semibold ms-2">Add</span>
                 </a>
             </div>
         </form>
-
+    </div>
+    <div class="card-body dashboard_card_body">
         <div class="table-responsive">
             <table class="table mt-2 table-light table-hover">
                 <thead class="thead-dark">
@@ -84,4 +86,5 @@
             {{ $votes->appends(['query' => request('query')])->links('admin.pages.partials.pagination') }}
         </div>
     </div>
+</div>
 @endsection

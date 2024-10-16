@@ -1,10 +1,11 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container my-5">
+<div class="card dashboard_card">
+    <div class="card-header">
         <div class="row mb-3">
             <div class="col-12">
-                <h1>Barangay Summary</h1>
+                <h5>Barangay Summary</h5>
             </div>
             <!-- Add Spinner HTML -->
             <div id="loadingSpinner" style="display: none;">
@@ -22,14 +23,15 @@
                     <span class="fw-semibold ms-2">Search</span>
                 </button>
             </div>
-            <div class="col-12 col-md-2">
+            <div class="col-12 col-md-2 d-flex">
                 <a id="pdfDownloadButton" href="{{ route('barangaysummary.pdf', request()->all()) }}" class="button-index w-100" data-filename="barangay_summary.pdf">
                     <i class="fa-solid fa-file-pdf fa-md"></i>
                     <span class="fw-semibold ms-2">Download</span>
                 </a>
             </div>
         </form>
-        
+    </div>
+    <div class="card-body dashboard_card_body">
         <div class="table-responsive">
             <table class="table mt-2 table-light table-hover">
                 <thead class="table-dark">
@@ -58,9 +60,10 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center mb-5">
             {{ $barangays->appends(['query' => request('query')])->links('admin.pages.partials.pagination') }}
         </div>
     </div>
-    <script src="{{ asset('js/spinner.js') }}"></script>
+</div>
+<script src="{{ asset('js/spinner.js') }}"></script>
 @endsection
