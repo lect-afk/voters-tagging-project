@@ -1,10 +1,11 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container my-5">
+<div class="card dashboard_card">
+    <div class="card-header">
         <div class="row mb-3">
             <div class="col-12 col-md-6">
-                <h1>List Of Leaders</h1>
+                <h5>List Of Leaders</h5>
             </div>
         </div>
         <form class="row g-2" method="GET" action="{{ route('leaders.search') }}" role="search">
@@ -22,13 +23,15 @@
                     <option value="Regional" {{ request('leader') == 'Regional' ? 'selected' : '' }}>Regional Leader</option>
                 </select>
             </div>
-            <div class="col-12 col-md-2">
+            <div class="col-12 col-md-2 d-flex">
                 <button class="button-index w-100" type="submit">
                     <i class="fa-solid fa-magnifying-glass fa-md"></i>
                     <span class="fw-semibold ms-2">Search</span>
                 </button>
             </div>
         </form>
+    </div>
+    <div class="card-body dashboard_card_body">
         <div class="table-responsive">
             <table class="table mt-2 table-light table-hover">
                 <thead class="table-dark">
@@ -43,9 +46,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center mb-5">
             {{ $leaders->appends(['query' => request('query'), 'leader' => request('leader')])->links('admin.pages.partials.pagination') }}
         </div>
     </div>
-    
+</div>
 @endsection

@@ -1,12 +1,11 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3 order-md-1 order-2">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card dashboard_card">
+                    <div class="card-body dashboard_card_body">
                         <h5 class="card-title">
                             <span class="fw-semibold">Subordinates Navigation</span>
                         </h5>
@@ -33,8 +32,8 @@
                         <p>{{ $message }}</p>
                     </div>
                 @endif
-                <div class="card mt-3">
-                    <div class="card-body">
+                <div class="card dashboard_card">
+                    <div class="card-body dashboard_card_body">
                         <h1 class="mb-4">{{ $manageleader->firstname }} {{ $manageleader->middlename }} {{ $manageleader->lastname }}'s subordinates</h1>
                         <div class="row">
                             @foreach ($successors as $successor)
@@ -113,7 +112,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <script>
         $(document).ready(function() {

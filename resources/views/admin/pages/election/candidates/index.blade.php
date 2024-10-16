@@ -1,10 +1,11 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container my-5">
+<div class="card dashboard_card">
+    <div class="card-header">
         <div class="row mb-3">
             <div class="col-12">
-                <h1>Candidates</h1>
+                <h5>Candidates</h5>
             </div>
         </div>
 
@@ -35,7 +36,8 @@
                 </a>
             </div>
         </form>
-
+    </div>
+    <div class="card-body dashboard_card_body">
         <div class="table-responsive">
             <table class="table mt-2 table-light table-hover">
                 <thead class="thead-dark">
@@ -106,4 +108,5 @@
             {{ $candidates->appends(['query' => request('query')])->links('admin.pages.partials.pagination') }}
         </div>
     </div>
+</div>
 @endsection

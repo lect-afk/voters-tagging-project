@@ -1,18 +1,23 @@
 @extends('layouts.backend')
 
 @section('content')
-<div class="container">
-    <div style="overflow-x: auto; white-space: nowrap;">
-        <div id="chart_div" style="min-width: 1000px; height: 1000px;"></div>
-    </div>
-</div>
-
 <style>
     #chart_div {
         position: relative;
         height: 1000px;
     }
 </style>
+
+<div class="card dashboard_card">
+    <div class="card-header">
+      <h5>Hierarchy</h5>
+    </div>
+    <div class="card-body dashboard_card_body">
+        <div style="overflow-x: auto; white-space: nowrap;">
+            <div id="chart_div" style="min-width: 1000px; height: 1000px;"></div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/echarts@latest/dist/echarts.min.js"></script>
 <script>

@@ -47,19 +47,19 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2 d-flex">
                     <button class="button-index w-100" type="submit">
                         <i class="fa-solid fa-magnifying-glass fa-md"></i>
                         <span class="fw-semibold ms-2">Search</span>
                     </button>
                 </div>
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2 d-flex">
                     <a href="{{ route('voters_profile.create') }}" class="button-index w-100">
                         <i class="fa-solid fa-circle-plus fa-md"></i>
                         <span class="fw-semibold ms-2">Add</span>
                     </a>
                 </div>
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-2 d-flex">
                     <a id="pdfDownloadButton" href="{{ route('voters_profile.pdf', request()->all()) }}" class="button-index w-100" data-filename="voters_profiles.pdf">
                         <i class="fa-solid fa-file-pdf fa-md"></i>
                         <span class="fw-semibold ms-2">Download</span>
@@ -85,7 +85,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center mb-5">
                 {{ $voters_profiles->appends([
                     'query' => request('query'),
                     'leader' => request('leader'),

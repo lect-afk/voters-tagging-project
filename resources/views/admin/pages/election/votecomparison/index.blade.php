@@ -1,10 +1,11 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container my-5">
+<div class="card dashboard_card">
+    <div class="card-header">
         <div class="row mb-3">
             <div class="col-12">
-                <h1>Vote Comparison</h1>
+                <h5>Vote Comparison</h5>
             </div>
         </div>
 
@@ -42,7 +43,8 @@
                 </button>
             </div>
         </form>
-
+    </div>
+    <div class="card-body dashboard_card_body">
         <div class="table-responsive">
             <table class="table mt-2 table-light table-hover">
                 <thead class="table-dark">
@@ -68,15 +70,16 @@
             </table>
         </div>
         @if($precincts->isNotEmpty() && $precincts instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center mb-5">
                 {{ $precincts->appends([
                     'position' => request('position'),
                     'candidate_id' => request('candidate_id'),
                     'barangay' => request('barangay')
                 ])->links('admin.pages.partials.pagination') }}
             </div>
-        @endif       
+        @endif  
     </div>
+</div>
 <script>
     const candidates = @json($candidates);
 

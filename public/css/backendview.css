@@ -16,7 +16,7 @@ html, body {
   width: 60px;
   display: flex;
   flex-direction: column;
-  height: 100vh auto;
+  height: 1000vh;
 }
 
 .sidebar_a {
