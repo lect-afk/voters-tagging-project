@@ -863,14 +863,24 @@ class VotersProfileController extends Controller
                 ->where('alliances_status', 'Green')
                 ->count();
 
-            // Count Red Voters
-            $hardcore = VotersProfile::where('barangay', $barangay->id)
-                ->where('alliances_status', 'Red')
+            // Count Yellow Voters
+            $prospectiveally = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Yellow')
                 ->count();
 
-            // Count Yellow Voters
-            $undecided = VotersProfile::where('barangay', $barangay->id)
-                ->where('alliances_status', 'Yellow')
+            // Count Brown(Orange) Voters
+            $unlikelyally = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Orange')
+                ->count();
+            
+            // Count None(Gray) Voters
+            $nonparticipant = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'None')
+                ->count();
+
+            // Count Red Voters
+            $nonsupporter = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Red')
                 ->count();
 
             // Count Total Voters
@@ -879,8 +889,10 @@ class VotersProfileController extends Controller
             return [
                 'barangay' => $barangay->name,
                 'allied' => $allied,
-                'hardcore' => $hardcore,
-                'undecided' => $undecided,
+                'prospectiveally' => $prospectiveally,
+                'unlikelyally' => $unlikelyally,
+                'nonparticipant' => $nonparticipant,
+                'nonsupporter' => $nonsupporter,
                 'total' => $totalVotersCount,
             ];
         });
@@ -903,19 +915,29 @@ class VotersProfileController extends Controller
         ->paginate(50);
 
         $barangay->getCollection()->transform(function($barangay) {
-            // Count Green Voters
+            // Count Blue(Green) Voters
             $allied = VotersProfile::where('barangay', $barangay->id)
                 ->where('alliances_status', 'Green')
                 ->count();
 
-            // Count Red Voters
-            $hardcore = VotersProfile::where('barangay', $barangay->id)
-                ->where('alliances_status', 'Red')
+            // Count Yellow Voters
+            $prospectiveally = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Yellow')
                 ->count();
 
-            // Count Yellow Voters
-            $undecided = VotersProfile::where('barangay', $barangay->id)
-                ->where('alliances_status', 'Yellow')
+            // Count Brown(Orange) Voters
+            $unlikelyally = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Orange')
+                ->count();
+            
+            // Count None(Gray) Voters
+            $nonparticipant = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'None')
+                ->count();
+
+            // Count Red Voters
+            $nonsupporter = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Red')
                 ->count();
 
             // Count Total Voters
@@ -924,8 +946,10 @@ class VotersProfileController extends Controller
             return [
                 'barangay' => $barangay->name,
                 'allied' => $allied,
-                'hardcore' => $hardcore,
-                'undecided' => $undecided,
+                'prospectiveally' => $prospectiveally,
+                'unlikelyally' => $unlikelyally,
+                'nonparticipant' => $nonparticipant,
+                'nonsupporter' => $nonsupporter,
                 'total' => $totalVotersCount,
             ];
         });

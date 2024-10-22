@@ -326,13 +326,13 @@ a:hover {
 }
 
 .buttonAT_orange{
-  background-color: #fb8500;
+  background-color: #99582a;
   font-weight: bolder;
 }
 
 .buttonAT_orange:hover{
-  color: #fb8500;
-  border: 2px solid #fb8500;
+  color: #99582a;
+  border: 2px solid #99582a;
 }
 
 .buttonAT_red{

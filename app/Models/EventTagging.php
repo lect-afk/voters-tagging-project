@@ -19,8 +19,14 @@ class EventTagging extends Model
     /**
      * Get the profile that owns the event tagging.
      */
-    public function votersProfiles()
+    public function votersProfile()
     {
-        return $this->belongsToMany(VotersProfile::class, 'events_tagging', 'event_id', 'profile_id');
+        return $this->belongsTo(VotersProfile::class, 'profile_id');
     }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
+
 }
