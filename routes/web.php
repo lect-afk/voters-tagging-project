@@ -112,7 +112,8 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('eventstagging', [EventController::class, 'eventstagging'])->name('voters.eventstagging');
     Route::post('/voters-profile/tag-events', [EventController::class, 'tagEvents'])->name('voters_profile.tagEvents');
     Route::get('eventstagging/{manageevent}', [EventController::class, 'manageevent'])->name('event.manageevent');
-    
+    Route::get('events-attended-overview', [EventController::class, 'eventoverview'])->name('voters.eventoverview');
+    Route::get('/eventstaggingsummary/pdf', [EventController::class, 'downloadEventOverviewPdf'])->name('eventstaggingsummary.pdf');
 
 
 

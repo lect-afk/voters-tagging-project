@@ -64,8 +64,10 @@
             <tr>
                 <th>Barangay</th>
                 <th>Allied</th>
-                <th>Hard Core</th>
-                <th>Undecided</th>
+                <th>Prospective Ally</th>
+                <th>Tentative Ally</th>
+                <th>Non-Participant</th>
+                <th>Non-Supporter</th>
             </tr>
         </thead>
         <tbody>
@@ -79,13 +81,17 @@
                         {{ $item['allied'] }} / {{ $item['total'] }} 
                         ({{ number_format($percentage, 1) }}%)
                     </td>
+                    <td>{{ $item['prospectiveally'] }} / {{ $item['total'] }}
+                        ({{ number_format(($item['prospectiveally'] / $item['total']) * 100, 1) }}%)</td>
+                    <td>{{ $item['unlikelyally'] }} / {{ $item['total'] }}
+                        ({{ number_format(($item['unlikelyally'] / $item['total']) * 100, 1) }}%)</td>
                     <td>
-                        {{ $item['hardcore'] }} / {{ $item['total'] }}
-                        ({{ number_format(($item['hardcore'] / $item['total']) * 100, 1) }}%)
+                        {{ $item['nonparticipant'] }} / {{ $item['total'] }}
+                        ({{ number_format(($item['nonparticipant'] / $item['total']) * 100, 1) }}%)
                     </td>
                     <td>
-                        {{ $item['undecided'] }} / {{ $item['total'] }}
-                        ({{ number_format(($item['undecided'] / $item['total']) * 100, 1) }}%)
+                        {{ $item['nonsupporter'] }} / {{ $item['total'] }}
+                        ({{ number_format(($item['nonsupporter'] / $item['total']) * 100, 1) }}%)
                     </td>
                 </tr>
             @endforeach

@@ -37,11 +37,11 @@
         </form>
     
         <div class="col-12 col-md-5 d-flex flex-wrap justify-content-between gap-2">
-            <button type="button" class="btn btn-sm buttonAT_blue flex-fill" onclick="updateAllianceStatus('Green')">BLUE</button>
-            <button type="button" class="btn btn-sm buttonAT_none flex-fill" onclick="updateAllianceStatus('None')">NONE</button>
-            <button type="button" class="btn btn-sm buttonAT_yellow flex-fill" onclick="updateAllianceStatus('Yellow')">YELLOW</button>
-            <button type="button" class="btn btn-sm buttonAT_orange flex-fill" onclick="updateAllianceStatus('Orange')">ORANGE</button>
-            <button type="button" class="btn btn-sm buttonAT_red flex-fill" onclick="updateAllianceStatus('Red')">RED</button>
+            <button type="button" class="btn btn-sm buttonAT_blue flex-fill" onclick="updateAllianceStatus('Green')">Allied</button>
+            <button type="button" class="btn btn-sm buttonAT_yellow flex-fill" onclick="updateAllianceStatus('Yellow')">Prospective Ally</button>
+            <button type="button" class="btn btn-sm buttonAT_orange flex-fill" onclick="updateAllianceStatus('Orange')">Unlikely Ally</button>
+            <button type="button" class="btn btn-sm buttonAT_none flex-fill" onclick="updateAllianceStatus('None')">Non-participant</button>
+            <button type="button" class="btn btn-sm buttonAT_red flex-fill" onclick="updateAllianceStatus('Red')">Non-supporter</button>
         </div>
     </div>
     <div class="card-body dashboard_card_body">
@@ -70,7 +70,7 @@
                                         $backgroundColor = '#ffd60a'; 
                                         break;
                                     case 'Orange':
-                                        $backgroundColor = '#fb8500'; 
+                                        $backgroundColor = '#99582a'; 
                                         break;
                                     case 'Red':
                                         $backgroundColor = '#d00000'; 

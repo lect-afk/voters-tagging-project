@@ -63,15 +63,15 @@
                 <a class="sidebar_a" href="{{ route('voters_profile.index') }}" title="Voters Profile"><i class="fa-solid fa-id-card fa-lg"></i></a>
                 <a class="sidebar_a" href="{{ route('precinct.index') }}" title="Precinct"><i class="fa-solid fa-map-pin fa-lg"></i></a>
                 <a class="sidebar_a" href="{{ route('group.index') }}" title="Group"><i class="fa-solid fa-people-group fa-lg"></i></a>
-                <a class="sidebar_a" href="{{ route('events.index') }}" title="Event"><i class="fa-solid fa-calendar-day fa-lg"></i></a>
+                {{-- <a class="sidebar_a" href="{{ route('events.index') }}" title="Event"><i class="fa-solid fa-calendar-day fa-lg"></i></a> --}}
 
-                {{-- <div class="dropdown dropend d-flex flex-column sidebar_dropdown">
+                <div class="dropdown dropend d-flex flex-column sidebar_dropdown">
                     <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="EVENT"><i class="fa-solid fa-calendar-day fa-lg"></i></a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('events.index') }}">Create Event</a></li>
-                        <li><a class="dropdown-item" href="{{ route('voters.eventstagging') }}">Events Tagging</a></li>
+                        <li><a class="dropdown-item" href="{{ route('voters.eventoverview') }}">Events Attendees</a></li>
                     </ul>
-                </div> --}}
+                </div>
 
                 <div class="dropdown dropend d-flex flex-column sidebar_dropdown">
                     <a class="icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="TAGGING"><i class="fa-solid fa-users-gear fa-lg"></i></a>

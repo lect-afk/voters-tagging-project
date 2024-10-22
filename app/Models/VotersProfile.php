@@ -51,7 +51,14 @@ class VotersProfile extends Model
 
     public function events()
     {
-        return $this->belongsToMany(Event::class, 'events_tagging', 'profile_id', 'event_id');
+        return $this->hasMany(Event::class);
     }
+
+    public function eventtaggings()
+    {
+        return $this->hasMany(EventTagging::class, 'profile_id');
+    }
+
+
 }
 
