@@ -32,6 +32,7 @@ class VotersProfileController extends Controller
             ->when($query, function($queryBuilder) use ($query) {
                 return $queryBuilder->where(function($queryBuilder) use ($query) {
                     $queryBuilder->where('firstname', 'like', "%$query%")
+                                ->orWhere('middlename', 'like', "%$query%")
                                 ->orWhere('lastname', 'like', "%$query%");
                 });
             })
