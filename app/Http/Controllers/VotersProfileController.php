@@ -178,7 +178,7 @@ class VotersProfileController extends Controller
             'barangay' => 'required|exists:barangay,id',
             'precinct' => 'nullable|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional,Cluster',
-            'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
+            'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red,White',
         ]);
 
         VotersProfile::create($request->all());
@@ -245,7 +245,7 @@ class VotersProfileController extends Controller
             'barangay' => 'required|exists:barangay,id',
             'precinct' => 'nullable|exists:precinct,id',
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional,Cluster',
-            'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red',
+            'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red,White',
         ]);
 
         $votersProfile->update($request->all());
@@ -836,7 +836,7 @@ class VotersProfileController extends Controller
     public function updateAllianceStatus(Request $request)
     {
         $request->validate([
-            'alliance_status' => 'required|in:None,Green,Yellow,Orange,Red',
+            'alliance_status' => 'required|in:None,Green,Yellow,Orange,Red,White',
             'selected_profiles' => 'required|array',
             'selected_profiles.*' => 'exists:voters_profile,id',
         ]);
@@ -883,6 +883,11 @@ class VotersProfileController extends Controller
                 ->where('alliances_status', 'Red')
                 ->count();
 
+            // Count White Voters
+            $inc = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'White')
+                ->count();
+
             // Count Total Voters
             $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
 
@@ -893,6 +898,7 @@ class VotersProfileController extends Controller
                 'unlikelyally' => $unlikelyally,
                 'nonparticipant' => $nonparticipant,
                 'nonsupporter' => $nonsupporter,
+                'inc' => $inc,
                 'total' => $totalVotersCount,
             ];
         });
@@ -940,6 +946,11 @@ class VotersProfileController extends Controller
                 ->where('alliances_status', 'Red')
                 ->count();
 
+            // Count White Voters
+            $inc = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'White')
+                ->count();
+
             // Count Total Voters
             $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
 
@@ -950,6 +961,7 @@ class VotersProfileController extends Controller
                 'unlikelyally' => $unlikelyally,
                 'nonparticipant' => $nonparticipant,
                 'nonsupporter' => $nonsupporter,
+                'inc' => $inc,
                 'total' => $totalVotersCount,
             ];
         });

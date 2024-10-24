@@ -42,6 +42,7 @@
             <button type="button" class="btn btn-sm buttonAT_orange flex-fill" onclick="updateAllianceStatus('Orange')">Unlikely Ally</button>
             <button type="button" class="btn btn-sm buttonAT_none flex-fill" onclick="updateAllianceStatus('None')">Non-participant</button>
             <button type="button" class="btn btn-sm buttonAT_red flex-fill" onclick="updateAllianceStatus('Red')">Non-supporter</button>
+            <button type="button" class="btn btn-sm buttonAT_white flex-fill" onclick="updateAllianceStatus('White')">Unilateral</button>
         </div>
     </div>
     <div class="card-body dashboard_card_body">
@@ -75,6 +76,9 @@
                                     case 'Red':
                                         $backgroundColor = '#d00000'; 
                                         break;
+                                    case 'White':
+                                        $backgroundColor = '#e0fbfc'; 
+                                        break;
                                 }
                             @endphp
                             <tr>
@@ -82,7 +86,7 @@
                                     <input class="form-check-input" type="checkbox" name="selected_profiles[]" value="{{ $voters_profile->id }}">
                                 </td>
                                 <td class="align-middle">{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
-                                <td class="align-middle">{{ $voters_profile->barangays->name }}</td>
+                                <td class="align-middle">{{ $voters_profile->barangays->name }} {{ $voters_profile->alliances_status }}</td>
                                 <td class="align-middle">
                                     <div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div>
                                 </td>
