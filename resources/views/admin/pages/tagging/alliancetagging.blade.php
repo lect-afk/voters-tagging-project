@@ -36,7 +36,7 @@
             </div>
         </form>
     
-        <div class="col-12 col-md-5 d-flex flex-wrap justify-content-between gap-2">
+        <div class="col-12 col-md-9 d-flex flex-wrap justify-content-between gap-2">
             <button type="button" class="btn btn-sm buttonAT_blue flex-fill" onclick="updateAllianceStatus('Green')">Allied</button>
             <button type="button" class="btn btn-sm buttonAT_yellow flex-fill" onclick="updateAllianceStatus('Yellow')">Prospective Ally</button>
             <button type="button" class="btn btn-sm buttonAT_orange flex-fill" onclick="updateAllianceStatus('Orange')">Unlikely Ally</button>
