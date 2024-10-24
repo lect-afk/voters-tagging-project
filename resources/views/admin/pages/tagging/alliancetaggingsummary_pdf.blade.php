@@ -68,6 +68,7 @@
                 <th>Tentative Ally</th>
                 <th>Non-Participant</th>
                 <th>Non-Supporter</th>
+                <th>Unilateral</th>
             </tr>
         </thead>
         <tbody>
@@ -92,6 +93,10 @@
                     <td>
                         {{ $item['nonsupporter'] }} / {{ $item['total'] }}
                         ({{ number_format(($item['nonsupporter'] / $item['total']) * 100, 1) }}%)
+                    </td>
+                    <td>
+                        {{ $item['inc'] }} / {{ $item['total'] }}
+                        ({{ number_format(($item['inc'] / $item['total']) * 100, 1) }}%)
                     </td>
                 </tr>
             @endforeach
