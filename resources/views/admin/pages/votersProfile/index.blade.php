@@ -8,11 +8,11 @@
                     <h5>Voters Profiles</h5>
                 </div>
                 <!-- Add Spinner HTML -->
-                <div id="loadingSpinner" style="display: none;">
+                <div id="loadingSpinner" class="col-12" style="display: none;">
                     <i class="fas fa-spinner fa-spin"></i> Your PDF is being generated. Please wait and refrain from making any actions until it's finished.
                 </div>
             </div>
-    
+
             @if ($message = Session::get('success'))
                 <div class="alert alert-success">
                     <p>{{ $message }}</p>
@@ -22,7 +22,7 @@
                     <p>{{ $message }}</p>
                 </div>
             @endif
-    
+
             <form class="row g-2 mb-3" method="GET" action="{{ route('voters_profile.index') }}" role="search">
                 <div class="col-12 col-md-2">
                     <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">

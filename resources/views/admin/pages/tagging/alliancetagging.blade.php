@@ -54,9 +54,9 @@
                     <thead class="thead-dark">
                         <tr>
                             <th></th>
+                            <th>Alliance Status</th>
                             <th>Full Name</th>
                             <th>Barangay</th>
-                            <th>Alliance Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,11 +85,11 @@
                                 <td class="align-middle">
                                     <input class="form-check-input" type="checkbox" name="selected_profiles[]" value="{{ $voters_profile->id }}">
                                 </td>
-                                <td class="align-middle">{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
-                                <td class="align-middle">{{ $voters_profile->barangays->name }} {{ $voters_profile->alliances_status }}</td>
                                 <td class="align-middle">
                                     <div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div>
                                 </td>
+                                <td class="align-middle">{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
+                                <td class="align-middle">{{ $voters_profile->barangays->name }}</td>
                             </tr>
                         @endforeach
                     </tbody>
