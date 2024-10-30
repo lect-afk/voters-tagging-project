@@ -29,34 +29,29 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md">
-            <div class="topbar d-flex justify-content-between">
+        
+            <div class="topbar d-flex justify-content-between mb-1 mt-1">
                 <div class="d-flex align-items-center">
-                    <img class="me-3" src="{{ asset('/image/DMlogo02.png') }}" alt="Logo" class="logo-image" style="height: 35px; width: auto;">
+                    <img class="me-3 dm-logo" src="{{ asset('/image/DMlogo02.png') }}" alt="Logo" class="logo-image" style="height: 35px; width: auto;">
                     <a class="navbar-brand" href="{{ route('dashboard') }}">
                         <span style="color: #6c757d;" class="fs-3">VotersTagging</span>
                     </a>
                 </div>
 
-                <div class="d-flex align-items-center me-3">
-                    <ul class="navbar-nav ms-auto">
-                        <div class="dropdown dropstart">
-                            <a class="top-icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="LOCATION"><i class="fa-solid fa-map fa-lg"></i></a>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="{{ route('province.index') }}">Province</a></li>
-                              <li><a class="dropdown-item" href="{{ route('legislative_district.index') }}">District</a></li>
-                              <li><a class="dropdown-item" href="{{ route('city.index') }}">City</a></li>
-                              <li><a class="dropdown-item" href="{{ route('barangay.index') }}">Barangay</a></li>
-                              <li><a class="dropdown-item" href="{{ route('purok.index') }}">Purok</a></li>
-                              <li><a class="dropdown-item" href="{{ route('sitio.index') }}">Sitio</a></li>
-                            </ul>
-                        </div>
-
-                        
-                    </ul>
+                <div class="d-flex align-items-center me-4">
+                    <div class="dropdown dropstart">
+                        <a class="top-icon-hover" role="button" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="LOCATION"><i class="fa-solid fa-map fa-lg"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('province.index') }}">Province</a></li>
+                            <li><a class="dropdown-item" href="{{ route('legislative_district.index') }}">District</a></li>
+                            <li><a class="dropdown-item" href="{{ route('city.index') }}">City</a></li>
+                            <li><a class="dropdown-item" href="{{ route('barangay.index') }}">Barangay</a></li>
+                            <li><a class="dropdown-item" href="{{ route('purok.index') }}">Purok</a></li>
+                            <li><a class="dropdown-item" href="{{ route('sitio.index') }}">Sitio</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </nav>
         
         <div class="d-flex">
             <div class="sidebar">
