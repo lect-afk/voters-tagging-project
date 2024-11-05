@@ -43,6 +43,7 @@
             <button type="button" class="btn btn-sm buttonAT_none flex-fill" onclick="updateAllianceStatus('None')">Non-participant</button>
             <button type="button" class="btn btn-sm buttonAT_red flex-fill" onclick="updateAllianceStatus('Red')">Non-supporter</button>
             <button type="button" class="btn btn-sm buttonAT_white flex-fill" onclick="updateAllianceStatus('White')">Unilateral</button>
+            <button type="button" class="btn btn-sm buttonAT_black flex-fill" onclick="updateAllianceStatus('Black')">Unidentified</button>
         </div>
     </div>
     <div class="card-body dashboard_card_body">
@@ -78,6 +79,9 @@
                                         break;
                                     case 'White':
                                         $backgroundColor = '#e0fbfc'; 
+                                        break;
+                                    case 'Black':
+                                        $backgroundColor = '#353535'; 
                                         break;
                                 }
                             @endphp

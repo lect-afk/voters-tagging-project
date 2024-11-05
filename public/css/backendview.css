@@ -22,7 +22,7 @@ html, body {
 .sidebar_a {
   color: #004e89;
   text-align: center;
-  margin: 10px;
+  padding: 10px;
   text-decoration: none;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -277,12 +277,22 @@ a:hover {
 
 .buttonAT_white{
   color: #393e41;
-  border: 1px solid #e0fbfc;
+  border: 1px solid #d1f5f7;
 }
 
 .buttonAT_white:hover{
   color: #393e41;
-  background-color: #e0fbfc;
+  background-color: #c3fafc;
+}
+
+.buttonAT_black{
+  color: #353535;
+  border: 1px solid #353535;
+}
+
+.buttonAT_black:hover{
+  color: #FCFCFD;
+  background-color: #353535;
 }
 
 /* Add responsive design for mobile devices */
@@ -347,4 +357,54 @@ a:hover {
     .card-body {
         padding: 10px;
     }
+
+    body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    tbody{
+      font-size: 8px;
+    }
+
+    thead{
+      font-size: 9px;
+    }
+
+    .btn-custom{
+      font-size: 8px;
+    }
+    
+    h1 {
+        font-size: 2em; /* 32px */
+    }
+    
+    h2 {
+        font-size: 1.75em; /* 28px */
+    }
+    
+    h3 {
+        font-size: 1.5em; /* 24px */
+    }
+    
+    h4 {
+        font-size: 1.25em; /* 20px */
+    }
+    
+    h5 {
+        font-size: 1.125em; /* 18px */
+    }
+    
+    h6 {
+        font-size: 1em; /* 16px */
+    }
+    
+    small {
+        font-size: 0.875em; /* 14px */
+    }
+    
+    button, nav a {
+        font-size: 1em; /* 16px */
+    }
+  
 }

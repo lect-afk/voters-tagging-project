@@ -69,6 +69,7 @@
                 <th>Non-Participant</th>
                 <th>Non-Supporter</th>
                 <th>Unilateral</th>
+                <th>Unidentified</th>
             </tr>
         </thead>
         <tbody>
@@ -97,6 +98,10 @@
                     <td>
                         {{ $item['inc'] }} / {{ $item['total'] }}
                         ({{ number_format(($item['inc'] / $item['total']) * 100, 1) }}%)
+                    </td>
+                    <td>
+                        {{ $item['unidentified'] }} / {{ $item['total'] }}
+                        ({{ number_format(($item['unidentified'] / $item['total']) * 100, 1) }}%)
                     </td>
                 </tr>
             @endforeach
