@@ -54,12 +54,13 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Barangay</th>
-                        <th>Allied</th>
+                        <th>Allies</th>
                         <th>Prospective Ally</th>
                         <th>Tentative Ally</th>
                         <th>Non-Participant</th>
                         <th>Non-Supporter</th>
                         <th>Unilateral</th>
+                        <th>Unidentified</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,25 +70,29 @@
                         @endphp
                         <tr>
                             <td>{{ $item['barangay'] }}</td>
-                            <td class="{{ $percentage < 50 ? 'text-danger' : '' }}">
+                            <td style="background-color: #0466c84D" class="{{ $percentage < $item['nonsupporter'] ? 'text-danger' : '' }}">
                                 {{ $item['allied'] }} / {{ $item['total'] }} 
                                 ({{ number_format($percentage, 1) }}%)
                             </td>
-                            <td>{{ $item['prospectiveally'] }} / {{ $item['total'] }}
+                            <td style="background-color: #ffd60a4D">{{ $item['prospectiveally'] }} / {{ $item['total'] }}
                                 ({{ number_format(($item['prospectiveally'] / $item['total']) * 100, 1) }}%)</td>
-                            <td>{{ $item['unlikelyally'] }} / {{ $item['total'] }}
+                            <td style="background-color: #99582a80">{{ $item['unlikelyally'] }} / {{ $item['total'] }}
                                 ({{ number_format(($item['unlikelyally'] / $item['total']) * 100, 1) }}%)</td>
-                            <td>
+                            <td style="background-color: #6c757dCC">
                                 {{ $item['nonparticipant'] }} / {{ $item['total'] }}
                                 ({{ number_format(($item['nonparticipant'] / $item['total']) * 100, 1) }}%)
                             </td>
-                            <td>
+                            <td style="background-color: #d0000080">
                                 {{ $item['nonsupporter'] }} / {{ $item['total'] }}
                                 ({{ number_format(($item['nonsupporter'] / $item['total']) * 100, 1) }}%)
                             </td>
-                            <td>
+                            <td style="background-color: #e0fbfc4D">
                                 {{ $item['inc'] }} / {{ $item['total'] }}
                                 ({{ number_format(($item['inc'] / $item['total']) * 100, 1) }}%)
+                            </td>
+                            <td style="background-color: #35353580">
+                                {{ $item['unidentified'] }} / {{ $item['total'] }}
+                                ({{ number_format(($item['unidentified'] / $item['total']) * 100, 1) }}%)
                             </td>
                         </tr>
                     @endforeach

@@ -837,7 +837,7 @@ class VotersProfileController extends Controller
     public function updateAllianceStatus(Request $request)
     {
         $request->validate([
-            'alliance_status' => 'required|in:None,Green,Yellow,Orange,Red,White',
+            'alliance_status' => 'required|in:None,Green,Yellow,Orange,Red,White,Black',
             'selected_profiles' => 'required|array',
             'selected_profiles.*' => 'exists:voters_profile,id',
         ]);
@@ -889,6 +889,11 @@ class VotersProfileController extends Controller
                 ->where('alliances_status', 'White')
                 ->count();
 
+            // Count Black Voters
+            $unidentified = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Black')
+                ->count();
+
             // Count Total Voters
             $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
 
@@ -900,6 +905,7 @@ class VotersProfileController extends Controller
                 'nonparticipant' => $nonparticipant,
                 'nonsupporter' => $nonsupporter,
                 'inc' => $inc,
+                'unidentified' => $unidentified,
                 'total' => $totalVotersCount,
             ];
         });
@@ -952,6 +958,11 @@ class VotersProfileController extends Controller
                 ->where('alliances_status', 'White')
                 ->count();
 
+            // Count Black Voters
+            $unidentified = VotersProfile::where('barangay', $barangay->id)
+                ->where('alliances_status', 'Black')
+                ->count();
+
             // Count Total Voters
             $totalVotersCount = VotersProfile::where('barangay', $barangay->id)->count();
 
@@ -963,6 +974,7 @@ class VotersProfileController extends Controller
                 'nonparticipant' => $nonparticipant,
                 'nonsupporter' => $nonsupporter,
                 'inc' => $inc,
+                'unidentified' => $unidentified,
                 'total' => $totalVotersCount,
             ];
         });
