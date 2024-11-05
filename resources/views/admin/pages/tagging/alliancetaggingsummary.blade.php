@@ -90,7 +90,7 @@
                                 {{ $item['inc'] }} / {{ $item['total'] }}
                                 ({{ number_format(($item['inc'] / $item['total']) * 100, 1) }}%)
                             </td>
-                            <td style="background-color: #35353580">
+                            <td style="background-color: #353535; color: #FCFCFD;">
                                 {{ $item['unidentified'] }} / {{ $item['total'] }}
                                 ({{ number_format(($item['unidentified'] / $item['total']) * 100, 1) }}%)
                             </td>
