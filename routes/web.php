@@ -40,6 +40,7 @@ Route::get('/', function () {
 
 Route::middleware(['check.user'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/api/barangay-data', [AdminController::class, 'getBarangayData']);
 
     //Route for CRUDE
     Route::resource('barangay', BarangayController::class);
