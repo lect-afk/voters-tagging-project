@@ -295,33 +295,70 @@ a:hover {
   background-color: #353535;
 }
 
+.offcanvas_menu{
+  display: none;
+}
+
 /* Add responsive design for mobile devices */
 @media (max-width: 768px) {
     html, body {
       overflow: visible;
     }
 
+    .offcanvas_menu{
+      display:block;
+    }
+
     .dm-logo{
       margin: none;
+      display: none;
     }
 
     .sidebar {
       height: auto;
+      display: none;
+    }
+
+    .sidebar_mobile {
+      /* width: 60px; */
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      font-family: 'Nunito', sans-serif;
+      background-color: #f8f9fa;
+      color: #004e89;
+    }
+    
+    .sidebar_mobile_a {
+      color: #004e89;
+      text-align: center;
+      padding: 10px;
+      text-decoration: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .sidebar_mobile_a:hover {
+      background-color: rgba(0, 78, 137, 0.1); /* Light background with the main color */
+      color: #004e89;
+    }
+    
+    .sidebar_mobile_dropdown {
+      color: #004e89;
+      text-align: center;
+      text-decoration: none;
     }
 
     .topbar{
-        margin-left: 8px;
+        margin-left: 10px;
         margin-right: 0px;
-    }
-
-    .dashboard_card {
-        margin: 10px;
     }
 
     .dashboard_card{
       height: auto;
-      width: 300px;
+      width: 100%;
       overflow-y: auto;
+      margin: 10px;
+      
     }
 
     .table-responsive {
