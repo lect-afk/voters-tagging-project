@@ -225,6 +225,12 @@ a:hover {
     color: #FCFCFD;
 }
 
+.dropdown-item:hover {
+  background-color: #004e89;
+  color: #FCFCFD;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .buttonAT_blue{
   color: #393e41;
   border: 1px solid #0466c8;

@@ -23,14 +23,24 @@
             <!-- Main Content -->
             <div class="col-md-9 order-md-2 order-1">
                 
-                @if ($message = Session::get('success'))
-                    <div class="alert alert-success mt-2">
-                        <p>{{ $message }}</p>
+                @if ($message = Session::get('success') ?? Session::get('error'))
+                    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header {{ Session::get('success') ? 'bg-success' : 'bg-danger' }} text-white">
+                                <strong class="mr-auto">{{ Session::get('success') ? 'Success' : 'Error' }}</strong>
+                            </div>
+                            <div class="toast-body">
+                                {{ $message }}
+                            </div>
+                        </div>
                     </div>
-                @elseif ($message = Session::get('error'))
-                    <div class="alert alert-danger mt-2">
-                        <p>{{ $message }}</p>
-                    </div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $('.toast').toast({ delay: 5000 });
+                            $('.toast').toast('show');
+                        });
+                    </script>
                 @endif
                 <div class="card dashboard_card">
                     <div class="card-body dashboard_card_body">
