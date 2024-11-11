@@ -20,7 +20,7 @@
             </select>
         </div>
     
-        <canvas id="barangayChart" width="400" height="200"></canvas>
+        <canvas id="barangayChart" class="w-100" height="400px"></canvas>
     </div>
   </div>
 </div>
