@@ -4,7 +4,7 @@ document.getElementById('pdfDownloadButton').addEventListener('click', function(
     var filename = this.getAttribute('data-filename'); // Get the filename from data attribute
     
     // Show the spinner
-    document.getElementById('loadingSpinner').style.display = 'block';
+    document.getElementById('loadingSpinner').style.display = 'flex';
 
     // Use fetch to download the PDF
     fetch(url)
