@@ -6,9 +6,12 @@
         <div class="row mb-3">
             <div class="col-12 col-md-6">
                 <h5>Alliance Tagging</h5>
-            </div>
+            </div> 
         </div>
-    
+        <!-- Add Spinner HTML -->
+        <div id="loadingSpinner" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> Your PDF is being generated. Please wait and refrain from making any actions until it's finished.
+        </div>
         @if ($message = Session::get('success') ?? Session::get('error'))
             <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050;">
                 <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -38,13 +41,32 @@
                     @endforeach
                 </select>
             </div>
+            <div class="col-12 col-md-3">
+                <select name="alliances_status" class="form-control"> <!-- Corrected input name -->
+                    <option value="" {{ request('alliances_status') == '' ? 'selected' : '' }}>All Alliance Status</option>
+                    <option value="Green" {{ request('alliances_status') == 'Green' ? 'selected' : '' }}>Allied</option>
+                    <option value="Yellow" {{ request('alliances_status') == 'Yellow' ? 'selected' : '' }}>Prospective Ally</option>
+                    <option value="Orange" {{ request('alliances_status') == 'Orange' ? 'selected' : '' }}>Unlikely Ally</option>
+                    <option value="None" {{ request('alliances_status') == 'None' ? 'selected' : '' }}>Non-participant</option>
+                    <option value="Red" {{ request('alliances_status') == 'Red' ? 'selected' : '' }}>Non-supporter</option>
+                    <option value="White" {{ request('alliances_status') == 'White' ? 'selected' : '' }}>Unilateral</option>
+                    <option value="Black" {{ request('alliances_status') == 'Black' ? 'selected' : '' }}>Unidentified</option>
+                </select>
+            </div>
             <div class="col-12 col-md-1 d-flex">
                 <button class="button-index w-100" type="submit">
                     <i class="fa-solid fa-magnifying-glass fa-md"></i>
                     <span class="fw-semibold ms-2">Search</span>
                 </button>
             </div>
+            <div class="col-12 col-md-2 d-flex">
+                <a id="pdfDownloadButton" href="{{ route('alliancetagging.pdf', request()->all()) }}" class="button-index w-100" data-filename="alliancetagging.pdf">
+                    <i class="fa-solid fa-file-pdf fa-md"></i>
+                    <span class="fw-semibold ms-2">Download</span>
+                </a>
+            </div>
         </form>
+        
     
         <div class="col-12 col-md-9 d-flex flex-wrap justify-content-between gap-2">
             <button type="button" class="btn btn-sm buttonAT_blue flex-fill" onclick="updateAllianceStatus('Green')">Allied</button>
@@ -111,7 +133,8 @@
             </div>
             <div class="d-flex justify-content-center mb-5">
                 {{ $voters_profiles->appends([
-                    'precinct' => request('precinct')
+                    'precinct' => request('precinct'),
+                    'alliances_status' => request('alliances_status')
                 ])->links('admin.pages.partials.pagination') }}
             </div>
                     
@@ -124,4 +147,5 @@
         document.getElementById('allianceForm').submit();
     }
 </script>
+<script src="{{ asset('js/spinner.js') }}"></script>
 @endsection

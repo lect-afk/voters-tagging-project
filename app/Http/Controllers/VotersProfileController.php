@@ -821,18 +821,85 @@ class VotersProfileController extends Controller
     {
         $precinct = Precinct::all();
         $precinctId = $request->input('precinct');
+        $allianceStatus = $request->input('alliances_status'); // Corrected input name
 
         $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
             ->when($precinctId, function($queryBuilder) use ($precinctId) {
                 return $queryBuilder->where('precinct', $precinctId);
+            })
+            ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
+                return $queryBuilder->where('alliances_status', $allianceStatus); // Corrected column name
             })
             ->orderBy('lastname', 'asc')
             ->orderBy('id', 'asc')
             ->paginate(50);
 
         return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct'))
-            ->with('precinctId', $precinctId);
+            ->with('precinctId', $precinctId)
+            ->with('allianceStatus', $allianceStatus); // Corrected variable name
     }
+
+    public function downloadAllianceTaggingPdf(Request $request)
+{
+    ini_set('max_execution_time', 3600); // 1 hour
+    ini_set('memory_limit', '5G'); // or higher if needed
+
+    $precinctId = $request->input('precinct');
+    $allianceStatus = $request->input('alliances_status'); // Corrected input name
+
+    // Define paths for temporary PDFs
+    $pdfPaths = [];
+
+    // Fetch voters' profiles based on the filters in chunks to avoid memory issues
+    VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+        ->when($precinctId, function($queryBuilder) use ($precinctId) {
+            return $queryBuilder->where('precinct', $precinctId);
+        })
+        ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
+            return $queryBuilder->where('alliances_status', $allianceStatus); // Corrected column name
+        })
+        ->orderBy('lastname', 'asc')
+        ->orderBy('id', 'asc')
+        ->chunk(1000, function($voters_profiles) use (&$pdfPaths) {
+            // Fetch the precinct number for the current chunk
+            $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
+
+            // Generate a PDF for the current chunk
+            $pdfPath = storage_path('app/public/voters_profiles_chunk_' . uniqid() . '.pdf');
+            $pdf = PDF::loadView('admin.pages.tagging.alliance_tagging_pdf', [
+                'voters_profiles' => $voters_profiles,
+                'precinct_number' => $precinctNumber, // Pass the precinct number
+                'alliance_status' => request('alliances_status'), // Pass the alliance status
+            ]);
+            $pdf->save($pdfPath);
+            $pdfPaths[] = $pdfPath;
+        });
+
+    // Merge the PDFs
+    $finalPdf = new \setasign\Fpdi\Fpdi();
+    foreach ($pdfPaths as $path) {
+        $pageCount = $finalPdf->setSourceFile($path);
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $tplIdx = $finalPdf->importPage($i);
+            $finalPdf->addPage();
+            $finalPdf->useTemplate($tplIdx);
+        }
+    }
+
+    // Output the final merged PDF
+    $finalPdfPath = storage_path('app/public/voters_profiles_alliance_tagging_final.pdf');
+    $finalPdf->Output($finalPdfPath, 'F');
+
+    // Clean up temporary files
+    foreach ($pdfPaths as $path) {
+        unlink($path);
+    }
+
+    return response()->download($finalPdfPath)->deleteFileAfterSend(true);
+}
+
+
+
 
     public function updateAllianceStatus(Request $request)
     {
