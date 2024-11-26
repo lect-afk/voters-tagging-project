@@ -117,6 +117,9 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('events-attended-overview', [EventController::class, 'eventoverview'])->name('voters.eventoverview');
     Route::get('/eventstaggingsummary/pdf', [EventController::class, 'downloadEventOverviewPdf'])->name('eventstaggingsummary.pdf');
 
+    //Route for the Color History
+    Route::get('colorhistory', [VotersProfileController::class, 'colorhistory'])->name('voters.colorhistory');
+    Route::post('/color-history/update-remarks', [VotersProfileController::class, 'updateRemarks'])->name('colorhistory.updateRemarks');
 
 
 

@@ -10,6 +10,7 @@ use App\Models\Precinct;
 use App\Models\Tagging;
 use App\Models\Candidate;
 use App\Models\Event;
+use App\Models\ColorHistory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use PDF;
@@ -33,7 +34,11 @@ class VotersProfileController extends Controller
                 return $queryBuilder->where(function($queryBuilder) use ($query) {
                     $queryBuilder->where('firstname', 'like', "%$query%")
                                 ->orWhere('middlename', 'like', "%$query%")
-                                ->orWhere('lastname', 'like', "%$query%");
+                                ->orWhere('lastname', 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename, ' ', lastname)"), 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename)"), 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', "%$query%");
+
                 });
             })
             ->when($barangayId, function($queryBuilder) use ($barangayId) {
@@ -182,7 +187,14 @@ class VotersProfileController extends Controller
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red,White',
         ]);
 
-        VotersProfile::create($request->all());
+        $votersProfile = VotersProfile::create($request->all());
+
+        // Create the ColorHistory record
+        ColorHistory::create([
+            'profile_id' => $votersProfile->id,
+            'new_tag' => $request->alliances_status,
+        ]);
+
         return redirect()->route('voters_profile.index')->with('success', 'Voters Profile created successfully.');
     }
 
@@ -248,6 +260,16 @@ class VotersProfileController extends Controller
             'leader' => 'required|in:None,Purok,Barangay,Municipal,District,Provincial,Regional,Cluster',
             'alliances_status' => 'required|in:None,Green,Yellow,Orange,Red,White',
         ]);
+
+        // Check if the alliance status has changed
+        if ($votersProfile->alliances_status != $request->alliances_status) {
+            // Create the ColorHistory record
+            ColorHistory::create([
+                'profile_id' => $votersProfile->id,
+                'old_tag' => $votersProfile->alliances_status,
+                'new_tag' => $request->alliances_status,
+            ]);
+        }
 
         $votersProfile->update($request->all());
         return redirect()->route('voters_profile.index')->with('success', 'Voters Profile updated successfully.');
@@ -821,7 +843,7 @@ class VotersProfileController extends Controller
     {
         $precinct = Precinct::all();
         $precinctId = $request->input('precinct');
-        $allianceStatus = $request->input('alliances_status'); // Corrected input name
+        $allianceStatus = $request->input('alliances_status');
 
         $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
             ->when($precinctId, function($queryBuilder) use ($precinctId) {
@@ -836,7 +858,7 @@ class VotersProfileController extends Controller
 
         return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct'))
             ->with('precinctId', $precinctId)
-            ->with('allianceStatus', $allianceStatus); // Corrected variable name
+            ->with('allianceStatus', $allianceStatus);
     }
 
     public function downloadAllianceTaggingPdf(Request $request)
@@ -845,7 +867,7 @@ class VotersProfileController extends Controller
     ini_set('memory_limit', '5G'); // or higher if needed
 
     $precinctId = $request->input('precinct');
-    $allianceStatus = $request->input('alliances_status'); // Corrected input name
+    $allianceStatus = $request->input('alliances_status');
 
     // Define paths for temporary PDFs
     $pdfPaths = [];
@@ -856,7 +878,7 @@ class VotersProfileController extends Controller
             return $queryBuilder->where('precinct', $precinctId);
         })
         ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
-            return $queryBuilder->where('alliances_status', $allianceStatus); // Corrected column name
+            return $queryBuilder->where('alliances_status', $allianceStatus);
         })
         ->orderBy('lastname', 'asc')
         ->orderBy('id', 'asc')
@@ -1052,6 +1074,43 @@ class VotersProfileController extends Controller
     }
 
 
+    public function colorhistory(Request $request)
+    {
+        $precinct = Precinct::all();
+        $precinctId = $request->input('precinct');
+        $allianceStatus = $request->input('alliances_status');
+
+        $color_histories = ColorHistory::with(['profile'])
+            ->when($precinctId, function($queryBuilder) use ($precinctId) {
+                return $queryBuilder->where('precinct', $precinctId);
+            })
+            ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
+                return $queryBuilder->where('alliances_status', $allianceStatus);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(50);
+
+        return view('admin.pages.tagging.color_history', compact('color_histories', 'precinct'))
+            ->with('precinctId', $precinctId)
+            ->with('allianceStatus', $allianceStatus);
+    }
+
+    public function updateRemarks(Request $request)
+    {
+        $request->validate([
+            'remarks' => 'required|in:Candidate Behavior and Scandals,Policy Changes,
+            Social Issues,Party Allegiance and Identity,Media Influence,Endorsements and Alliances,
+            Campaign Effectiveness,Personal Experience,Strategic Voting,Financial Incentives,
+            Promises of Personal Gain,Threats and Coercion,Development Projects and Local Investments,None',
+            'selected_profiles' => 'required|array',
+            'selected_profiles.*' => 'exists:color_history,id',
+        ]);
+
+        ColorHistory::whereIn('id', $request->selected_profiles)
+            ->update(['remarks' => $request->remarks]);
+
+        return redirect()->back()->with('success', 'Remarks updated successfully.');
+    }
 
     
 

@@ -59,6 +59,11 @@ class VotersProfile extends Model
         return $this->hasMany(EventTagging::class, 'profile_id');
     }
 
+    public function colorHistories()
+    {
+        return $this->hasMany(ColorHistory::class, 'profile_id');
+    }
+
 
 }
 
