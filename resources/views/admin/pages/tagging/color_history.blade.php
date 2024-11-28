@@ -31,34 +31,38 @@
                 });
             </script>
         @endif
-    
 
-        
-    
-        <div class="col-12 col-md-9">
-            <select class="form-select" onchange="updateRemarks(this.value)">
-                <option selected disabled value="">Select Remarks</option>
-                <option value="None">None</option>
-                <option value="Candidate Behavior and Scandals">Candidate Behavior and Scandals</option>
-                <option value="Policy Changes">Policy Changes</option>
-                <option value="Social Issues">Social Issues</option>
-                <option value="Party Allegiance and Identity">Party Allegiance and Identity</option>
-                <option value="Media Influence">Media Influence</option>
-                <option value="Endorsements and Alliances">Endorsements and Alliances</option>
-                <option value="Campaign Effectiveness">Campaign Effectiveness</option>
-                <option value="Personal Experience">Personal Experience</option>
-                <option value="Strategic Voting">Strategic Voting</option>
-                <option value="Financial Incentives">Financial Incentives</option>
-                <option value="Promises of Personal Gain">Promises of Personal Gain</option>
-                <option value="Threats and Coercion">Threats and Coercion</option>
-                <option value="Development Projects and Local Investments">Development Projects and Local Investments</option>
-            </select>
+        <div class="col-12 col-md-6">
+            <div class="d-flex align-items-center">
+                <select class="form-select me-2" onchange="updateRemarks(this.value)">
+                    <option selected disabled value="">Select Remarks</option>
+                    <option value="None">None</option>
+                    <option value="Candidate Behavior and Scandals">Candidate Behavior and Scandals</option>
+                    <option value="Policy Changes">Policy Changes</option>
+                    <option value="Social Issues">Social Issues</option>
+                    <option value="Party Allegiance and Identity">Party Allegiance and Identity</option>
+                    <option value="Media Influence">Media Influence</option>
+                    <option value="Endorsements and Alliances">Endorsements and Alliances</option>
+                    <option value="Campaign Effectiveness">Campaign Effectiveness</option>
+                    <option value="Personal Experience">Personal Experience</option>
+                    <option value="Strategic Voting">Strategic Voting</option>
+                    <option value="Financial Incentives">Financial Incentives</option>
+                    <option value="Promises of Personal Gain">Promises of Personal Gain</option>
+                    <option value="Threats and Coercion">Threats and Coercion</option>
+                    <option value="Development Projects and Local Investments">Development Projects and Local Investments</option>
+                </select>
+                <button class="button-index w-25" type="button" data-bs-toggle="modal" data-bs-target="#notesModal">
+                    <i class="fa-solid fa-floppy-disk fa-md"></i>
+                    <span class="fw-semibold ms-2">Save</span>
+                </button>
+            </div>
         </div>
     </div>
     <div class="card-body dashboard_card_body">
         <form id="colorHistoryForm" method="POST" action="{{ route('colorhistory.updateRemarks') }}">
             @csrf
             <input type="hidden" name="remarks" id="remarks">
+            <input type="hidden" name="notes" id="notesInput">
             <div class="table-responsive">
                 <table class="table mt-2 table-light table-hover">
                     <thead class="thead-dark">
@@ -185,17 +189,49 @@
                 </table>
             </div>
             <div class="d-flex justify-content-center mb-5">
-                
+                {{ $color_histories->appends([
+                    'precinct' => request('precinct'),
+                    'alliances_status' => request('alliances_status')
+                ])->links('admin.pages.partials.pagination') }}
             </div>
                     
         </form>
     </div>
 </div>
+
+<!-- Notes Modal -->
+<div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="notesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notesModalLabel">Add Notes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" id="notesTextarea" rows="5" placeholder="Enter your notes here..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveNotes()">Save Notes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function updateRemarks(status) {
         document.getElementById('remarks').value = status;
+    }
+
+    function saveNotes() {
+        let notes = document.getElementById('notesTextarea').value;
+        document.getElementById('notesInput').value = notes;
         document.getElementById('colorHistoryForm').submit();
     }
+
+    // Display the loading spinner when form is submitted
+    $('#colorHistoryForm').on('submit', function() {
+        $('#loadingSpinner').show();
+    });
 </script>
-<script src="{{ asset('js/spinner.js') }}"></script>
 @endsection
