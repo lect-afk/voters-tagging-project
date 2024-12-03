@@ -1096,53 +1096,73 @@ class VotersProfileController extends Controller
     public function colorhistory(Request $request)
     {
         $precinct = Precinct::all();
+        $barangay = Barangay::all();
+        $query = $request->input('query');
+        $barangayId = $request->input('barangay');
         $precinctId = $request->input('precinct');
-        $allianceStatus = $request->input('alliances_status');
 
         $color_histories = ColorHistory::with(['profile'])
-            ->when($precinctId, function($queryBuilder) use ($precinctId) {
-                return $queryBuilder->where('precinct', $precinctId);
-            })
-            ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
-                return $queryBuilder->where('alliances_status', $allianceStatus);
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(50);
+        ->when($precinctId, function($queryBuilder) use ($precinctId) {
+            return $queryBuilder->whereHas('profile', function($queryBuilder) use ($precinctId) {
+                $queryBuilder->where('precinct', $precinctId);
+            });
+        })
+        ->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->whereHas('profile', function($queryBuilder) use ($query) {
+                $queryBuilder->where('firstname', 'like', "%$query%")
+                    ->orWhere('middlename', 'like', "%$query%")
+                    ->orWhere('lastname', 'like', "%$query%")
+                    ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename, ' ', lastname)"), 'like', "%$query%")
+                    ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename)"), 'like', "%$query%")
+                    ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', "%$query%");
+            });
+        })
+        ->when($barangayId, function($queryBuilder) use ($barangayId) {
+            return $queryBuilder->whereHas('profile', function($queryBuilder) use ($barangayId) {
+                $queryBuilder->where('barangay', $barangayId);
+            });
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(50);
 
-        return view('admin.pages.tagging.color_history', compact('color_histories', 'precinct'))
+        return view('admin.pages.tagging.color_history', compact('color_histories', 'precinct','barangay'))
             ->with('precinctId', $precinctId)
-            ->with('allianceStatus', $allianceStatus);
+            ->with('query', $query)
+            ->with('barangayId', $barangayId);
     }
 
     public function updateRemarks(Request $request)
-    {
-        $request->validate([
-            'remarks' => 'nullable|in:Candidate Behavior and Scandals,Policy Changes,
-            Social Issues,Party Allegiance and Identity,Media Influence,Endorsements and Alliances,
-            Campaign Effectiveness,Personal Experience,Strategic Voting,Financial Incentives,
-            Promises of Personal Gain,Threats and Coercion,Development Projects and Local Investments,None',
-            'selected_profiles' => 'required|array',
-            'selected_profiles.*' => 'exists:color_history,id',
-            'notes' => 'nullable|string',
-        ]);
+{
+    $request->validate([
+        'remarks' => 'nullable|in:Candidate Behavior and Scandals,Policy Changes,
+        Social Issues,Party Allegiance and Identity,Media Influence,Endorsements and Alliances,
+        Campaign Effectiveness,Personal Experience,Strategic Voting,Financial Incentives,
+        Promises of Personal Gain,Threats and Coercion,Development Projects and Local Investments,None',
+        'selected_profiles' => 'required|array',
+        'selected_profiles.*' => 'exists:color_history,id',
+        'notes' => 'nullable|string',
+    ]);
 
-        // Prepare the data for updating
-        $updateData = [];
-        if ($request->filled('remarks')) {
-            $updateData['remarks'] = $request->remarks;
-        }
-        if ($request->filled('notes')) {
-            $updateData['notes'] = $request->notes;
-        }
-
-        // Only update if there is data to update
-        if (!empty($updateData)) {
-            ColorHistory::whereIn('id', $request->selected_profiles)
-                ->update($updateData);
-        }
-
-        return redirect()->back()->with('success', 'Remarks and/or notes updated successfully.');
+    // Prepare the data for updating
+    $updateData = [];
+    if ($request->filled('remarks')) {
+        $updateData['remarks'] = $request->remarks;
     }
+    
+    // Check if 'notes' is present in the request
+    if ($request->has('notes')) {
+        $updateData['notes'] = $request->notes ?: null; // Set 'notes' to null if empty
+    }
+
+    // Only update if there is data to update
+    if (!empty($updateData)) {
+        ColorHistory::whereIn('id', $request->selected_profiles)
+            ->update($updateData);
+    }
+
+    return redirect()->back()->with('success', 'Remarks and/or notes updated successfully.');
+}
+
 
 
     

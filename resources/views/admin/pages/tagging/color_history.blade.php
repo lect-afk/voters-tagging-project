@@ -5,7 +5,7 @@
     <div class="card-header">
         <div class="row mb-3">
             <div class="col-12 col-md-6">
-                <h5>Color History</h5>
+                <h5>Tagging History</h5>
             </div> 
         </div>
         <!-- Add Spinner HTML -->
@@ -31,6 +31,34 @@
                 });
             </script>
         @endif
+        
+        <form class="row g-2 mb-3" method="GET" action="{{ route('voters.colorhistory') }}" role="search">
+            <div class="col-12 col-md-2">
+                <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
+            </div>
+            <div class="col-12 col-md-2">
+                <select name="precinct" class="form-control">
+                    <option value="" {{ request('precinct') == '' ? 'selected' : '' }}>All Precinct</option>
+                    @foreach ($precinct as $precinct)
+                        <option value="{{ $precinct->id }}" {{ request('precinct') == $precinct->id ? 'selected' : '' }}>{{ $precinct->number }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <select name="barangay" class="form-control">
+                    <option value="" {{ request('barangay') == '' ? 'selected' : '' }}>All Barangays</option>
+                    @foreach ($barangay as $b)
+                        <option value="{{ $b->id }}" {{ request('barangay') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-12 col-md-2 d-flex">
+                <button class="button-index w-100" type="submit">
+                    <i class="fa-solid fa-magnifying-glass fa-md"></i>
+                    <span class="fw-semibold ms-2">Search</span>
+                </button>
+            </div>
+        </form>
 
         <div class="col-12 col-md-6">
             <div class="d-flex align-items-center">
@@ -52,8 +80,8 @@
                     <option value="Development Projects and Local Investments">Development Projects and Local Investments</option>
                 </select>
                 <button class="button-index w-25" type="button" data-bs-toggle="modal" data-bs-target="#notesModal">
-                    <i class="fa-solid fa-floppy-disk fa-md"></i>
-                    <span class="fw-semibold ms-2">Save</span>
+                    <i class="fa-solid fa-pen-nib fa-md"></i>
+                    <span class="fw-semibold ms-2">Modify</span>
                 </button>
             </div>
         </div>
@@ -71,8 +99,8 @@
                             <th>Full Name</th>
                             <th>Brgy / Precinct</th>
                             <th>Alliance Changes</th>
-                            <th>Created at</th>
-                            <th>Updated at</th>
+                            <th>Remarks</th>
+                            <th>Notes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -181,8 +209,8 @@
                                     <i class="fa-solid fa-right-long fa-sm"></i> 
                                     <span style="color: {{ $newFontColor }};">{{ $newAllianceStatus }}</span>
                                 </td>
-                                <td class="align-middle">{{ $color_history->created_at }}</td>
-                                <td class="align-middle">{{ $color_history->updated_at }}</td>
+                                <td class="align-middle">{{ $color_history->remarks }}</td>
+                                <td class="align-middle">{{ $color_history->notes }}</td>
                             </tr>
                         @endforeach
                     </tbody>                    
@@ -191,9 +219,10 @@
             <div class="d-flex justify-content-center mb-5">
                 {{ $color_histories->appends([
                     'precinct' => request('precinct'),
-                    'alliances_status' => request('alliances_status')
+                    'query' => request('query'),
+                    'barangay' => request('barangay')
                 ])->links('admin.pages.partials.pagination') }}
-            </div>
+            </div>            
                     
         </form>
     </div>
