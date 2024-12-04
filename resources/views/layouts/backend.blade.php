@@ -80,7 +80,7 @@
                         <li><a class="dropdown-item" href="{{ route('voters.alliancetagging') }}">Alliance Tagging</a></li>
                         <li><a class="dropdown-item" href="{{ route('voters.alliancetaggingsummary') }}">Alliance Tagging Summary</a></li>
                         <li><a class="dropdown-item" href="{{ route('voters.eventstagging') }}">Events Tagging</a></li>
-                        <li><a class="dropdown-item" href="{{ route('voters.colorhistory') }}">Color History</a></li>
+                        <li><a class="dropdown-item" href="{{ route('voters.colorhistory') }}">Tagging History</a></li>
                     </ul>
                 </div>
 

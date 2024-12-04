@@ -58,33 +58,32 @@
                     <span class="fw-semibold ms-2">Search</span>
                 </button>
             </div>
-        </form>
-
-        <div class="col-12 col-md-6">
-            <div class="d-flex align-items-center">
-                <select class="form-select me-2" onchange="updateRemarks(this.value)">
-                    <option selected disabled value="">Select Remarks</option>
-                    <option value="None">None</option>
-                    <option value="Candidate Behavior and Scandals">Candidate Behavior and Scandals</option>
-                    <option value="Policy Changes">Policy Changes</option>
-                    <option value="Social Issues">Social Issues</option>
-                    <option value="Party Allegiance and Identity">Party Allegiance and Identity</option>
-                    <option value="Media Influence">Media Influence</option>
-                    <option value="Endorsements and Alliances">Endorsements and Alliances</option>
-                    <option value="Campaign Effectiveness">Campaign Effectiveness</option>
-                    <option value="Personal Experience">Personal Experience</option>
-                    <option value="Strategic Voting">Strategic Voting</option>
-                    <option value="Financial Incentives">Financial Incentives</option>
-                    <option value="Promises of Personal Gain">Promises of Personal Gain</option>
-                    <option value="Threats and Coercion">Threats and Coercion</option>
-                    <option value="Development Projects and Local Investments">Development Projects and Local Investments</option>
-                </select>
-                <button class="button-index w-25" type="button" data-bs-toggle="modal" data-bs-target="#notesModal">
-                    <i class="fa-solid fa-pen-nib fa-md"></i>
-                    <span class="fw-semibold ms-2">Modify</span>
-                </button>
+            <div class="col-12 col-md-4">
+                <div class="d-flex align-items-center">
+                    <select class="form-select me-2" onchange="updateRemarks(this.value)">
+                        <option selected disabled value="">Select Remarks</option>
+                        <option value="None">None</option>
+                        <option value="Candidate Behavior and Scandals">Candidate Behavior and Scandals</option>
+                        <option value="Policy Changes">Policy Changes</option>
+                        <option value="Social Issues">Social Issues</option>
+                        <option value="Party Allegiance and Identity">Party Allegiance and Identity</option>
+                        <option value="Media Influence">Media Influence</option>
+                        <option value="Endorsements and Alliances">Endorsements and Alliances</option>
+                        <option value="Campaign Effectiveness">Campaign Effectiveness</option>
+                        <option value="Personal Experience">Personal Experience</option>
+                        <option value="Strategic Voting">Strategic Voting</option>
+                        <option value="Financial Incentives">Financial Incentives</option>
+                        <option value="Promises of Personal Gain">Promises of Personal Gain</option>
+                        <option value="Threats and Coercion">Threats and Coercion</option>
+                        <option value="Development Projects and Local Investments">Development Projects and Local Investments</option>
+                    </select>
+                    <button class="button-index w-25" type="button" data-bs-toggle="modal" data-bs-target="#notesModal">
+                        <i class="fa-solid fa-pen-nib fa-md"></i>
+                        <span class="fw-semibold ms-2">Modify</span>
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
     <div class="card-body dashboard_card_body">
         <form id="colorHistoryForm" method="POST" action="{{ route('colorhistory.updateRemarks') }}">
