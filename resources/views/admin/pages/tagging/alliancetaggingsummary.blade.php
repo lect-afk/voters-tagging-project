@@ -54,7 +54,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Barangay</th>
-                        <th>Allies</th>
+                        <th>Ally</th>
                         <th>Prospective Ally</th>
                         <th>Tentative Ally</th>
                         <th>Non-Participant</th>

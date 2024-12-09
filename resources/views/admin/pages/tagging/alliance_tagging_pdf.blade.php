@@ -32,30 +32,29 @@
 </head>
 <body>
     <h1>Alliance Tagging Report</h1>
-    <p>Precinct: {{ $precinct_number }}</p>
+    <p>Precinct: {{ $voters_profiles->first()->barangays->name ?? 'Unknown' }} {{ $precinct_number }}</p>
     <p>Alliance Status:
         @if ($alliance_status == 'Green')
-        Allied
+            Ally
         @elseif ($alliance_status == 'Yellow')
-        Prospective Ally
+            Prospective Ally
         @elseif ($alliance_status == 'Orange')
-        Unlikely Ally
+            Unlikely Ally
         @elseif ($alliance_status == 'None')
-        Non-participant
+            Non-participant
         @elseif ($alliance_status == 'Red')
-        Non-supporter
+            Non-supporter
         @elseif ($alliance_status == 'White')
-        Unilateral
+            Unilateral
         @elseif ($alliance_status == 'Black')
-        Unidentified
+            Unidentified
         @endif
     </p>
     <table>
         <thead>
             <tr>
-                {{-- <th>Alliance Status</th> --}}
+                <th>ID</th>
                 <th>Full Name</th>
-                <th>Barangay</th>
             </tr>
         </thead>
         <tbody>
@@ -84,12 +83,8 @@
                     }
                 @endphp
                 <tr>
-                    {{-- <td>
-                        <div class="status-circle" style="background-color: {{ $backgroundColor }};"></div>
-                    </td> --}}
+                    <td>{{ $voters_profile->id }}</td>
                     <td>{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
-                    <td>{{ $voters_profile->barangays->name }}</td>
-                </tr>
             @endforeach
         </tbody>
     </table>

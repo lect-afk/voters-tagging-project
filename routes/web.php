@@ -124,7 +124,9 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('tagging-history', [VotersProfileController::class, 'colorhistory'])->name('voters.colorhistory');
     Route::post('/tagging-history/update-remarks', [VotersProfileController::class, 'updateRemarks'])->name('colorhistory.updateRemarks');
 
-
+    //Route for the Candidate Tagging
+    Route::get('candidate-tagging', [CandidateController::class, 'candidatetagging'])->name('voters.candidatetagging');
+    Route::post('/candidate-tagging/update-voted-candidate', [CandidateController::class, 'updatevoterCandidate'])->name('voters.updatevoterCandidate');
 
 
 

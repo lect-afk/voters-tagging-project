@@ -7,6 +7,18 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\LegislativeDistrict;
 use App\Models\Province;
+use App\Models\VotersProfile;
+use App\Models\Sitio;
+use App\Models\Purok;
+use App\Models\Barangay;
+use App\Models\Precinct;
+use App\Models\Tagging;
+use App\Models\Event;
+use App\Models\ColorHistory;
+use App\Models\CandidateTagging;
+use Illuminate\Support\Facades\DB;
+use PDF;
+use setasign\Fpdi\Fpdi;
 
 class CandidateController extends Controller
 {
@@ -93,5 +105,87 @@ class CandidateController extends Controller
         $city = City::where('district', $districtID)->get();
         return response()->json($city);
     }
+
+    public function candidatetagging(Request $request)
+    {
+        $precinct = Precinct::all();
+        $candidate = Candidate::all();
+        $barangay = Barangay::all();
+        $query = $request->input('query');
+        $barangayId = $request->input('barangay');
+        $precinctId = $request->input('precinct');
+
+        $candidate_taggings = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts', 'candidateTaggings.candidate'])
+        ->when($query, function($queryBuilder) use ($query) {
+            return $queryBuilder->whereHas('profile', function($queryBuilder) use ($query) {
+                $queryBuilder->where('firstname', 'like', "%$query%")
+                    ->orWhere('middlename', 'like', "%$query%")
+                    ->orWhere('lastname', 'like', "%$query%")
+                    ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename, ' ', lastname)"), 'like', "%$query%")
+                    ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename)"), 'like', "%$query%")
+                    ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', "%$query%");
+            });
+        })
+        ->when($barangayId, function($queryBuilder) use ($barangayId) {
+            return $queryBuilder->where('barangay', $barangayId);
+        })
+        ->when($precinctId, function($queryBuilder) use ($precinctId) {
+            return $queryBuilder->where('precinct', $precinctId);
+        })
+        ->orderBy('lastname', 'asc')
+        ->orderBy('id', 'asc')
+        ->paginate(50);
+
+        return view('admin.pages.tagging.candidatetaggings', compact('candidate_taggings', 'precinct','barangay','candidate'))
+            ->with('precinctId', $precinctId)
+            ->with('query', $query)
+            ->with('barangayId', $barangayId);
+    }
+
+    public function updatevoterCandidate(Request $request)
+    {
+        $request->validate([
+            'candidate' => 'required|exists:candidates,id',
+            'selected_profiles' => 'required|array',
+            'selected_profiles.*' => 'exists:voters_profile,id',
+        ]);
+
+        $candidateId = $request->candidate;
+
+        // Fetch the candidate's position
+        $candidate = Candidate::find($candidateId);
+        $candidatePosition = $candidate->position;
+
+        // Fetch the selected profiles
+        $selectedProfiles = VotersProfile::whereIn('id', $request->selected_profiles)->get();
+
+        foreach ($selectedProfiles as $votersProfile) {
+            // Check if there is an existing CandidateTagging for the profile with the same position
+            $existingTagging = CandidateTagging::where('profile_id', $votersProfile->id)
+                ->whereHas('candidate', function ($query) use ($candidatePosition) {
+                    $query->where('position', $candidatePosition);
+                })
+                ->first();
+
+            if ($existingTagging) {
+                // Update the existing CandidateTagging
+                $existingTagging->update([
+                    'candidate_id' => $candidateId,
+                    'color_tag' => $votersProfile->alliances_status
+                ]);
+            } else {
+                // Create a new CandidateTagging
+                CandidateTagging::create([
+                    'profile_id' => $votersProfile->id,
+                    'candidate_id' => $candidateId,
+                    'color_tag' => $votersProfile->alliances_status
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Candidate Tagging successfully updated.');
+    }
+
+
 
 }

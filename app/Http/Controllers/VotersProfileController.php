@@ -842,6 +842,8 @@ class VotersProfileController extends Controller
     public function alliancetagging(Request $request)
     {
         $precinct = Precinct::all();
+        $barangay = Barangay::all();
+        $barangayId = $request->input('barangay');
         $precinctId = $request->input('precinct');
         $allianceStatus = $request->input('alliances_status');
 
@@ -849,111 +851,139 @@ class VotersProfileController extends Controller
             ->when($precinctId, function($queryBuilder) use ($precinctId) {
                 return $queryBuilder->where('precinct', $precinctId);
             })
-            ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
-                return $queryBuilder->where('alliances_status', $allianceStatus); // Corrected column name
-            })
-            ->orderBy('lastname', 'asc')
-            ->orderBy('id', 'asc')
-            ->paginate(50);
-
-        return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct'))
-            ->with('precinctId', $precinctId)
-            ->with('allianceStatus', $allianceStatus);
-    }
-
-    public function downloadAllianceTaggingPdf(Request $request)
-    {
-        ini_set('max_execution_time', 3600); // 1 hour
-        ini_set('memory_limit', '5G'); // or higher if needed
-
-        $precinctId = $request->input('precinct');
-        $allianceStatus = $request->input('alliances_status');
-
-        // Define paths for temporary PDFs
-        $pdfPaths = [];
-
-        // Fetch voters' profiles based on the filters in chunks to avoid memory issues
-        VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
-            ->when($precinctId, function($queryBuilder) use ($precinctId) {
-                return $queryBuilder->where('precinct', $precinctId);
+            ->when($barangayId, function($queryBuilder) use ($barangayId) {
+                return $queryBuilder->where('barangay', $barangayId);
             })
             ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
                 return $queryBuilder->where('alliances_status', $allianceStatus);
             })
             ->orderBy('lastname', 'asc')
             ->orderBy('id', 'asc')
-            ->chunk(1000, function($voters_profiles) use (&$pdfPaths) {
-                // Fetch the precinct number for the current chunk
-                $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
+            ->paginate(50);
 
-                // Generate a PDF for the current chunk
-                $pdfPath = storage_path('app/public/voters_profiles_chunk_' . uniqid() . '.pdf');
-                $pdf = PDF::loadView('admin.pages.tagging.alliance_tagging_pdf', [
-                    'voters_profiles' => $voters_profiles,
-                    'precinct_number' => $precinctNumber, // Pass the precinct number
-                    'alliance_status' => request('alliances_status'), // Pass the alliance status
-                ]);
-                $pdf->save($pdfPath);
-                $pdfPaths[] = $pdfPath;
-            });
-
-        // Merge the PDFs
-        $finalPdf = new \setasign\Fpdi\Fpdi();
-        foreach ($pdfPaths as $path) {
-            $pageCount = $finalPdf->setSourceFile($path);
-            for ($i = 1; $i <= $pageCount; $i++) {
-                $tplIdx = $finalPdf->importPage($i);
-                $finalPdf->addPage();
-                $finalPdf->useTemplate($tplIdx);
-            }
-        }
-
-        // Output the final merged PDF
-        $finalPdfPath = storage_path('app/public/voters_profiles_alliance_tagging_final.pdf');
-        $finalPdf->Output($finalPdfPath, 'F');
-
-        // Clean up temporary files
-        foreach ($pdfPaths as $path) {
-            unlink($path);
-        }
-
-        return response()->download($finalPdfPath)->deleteFileAfterSend(true);
+        return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct','barangay'))
+            ->with('precinctId', $precinctId)
+            ->with('allianceStatus', $allianceStatus)
+            ->with('barangayId', $barangayId);
     }
+
+    public function downloadAllianceTaggingPdf(Request $request)
+{
+    ini_set('max_execution_time', 3600); // 1 hour
+    ini_set('memory_limit', '5G'); // or higher if needed
+
+    $precinctId = $request->input('precinct');
+    $allianceStatus = $request->input('alliances_status');
+    $barangayId = $request->input('barangay'); // Retrieve barangay filter
+
+    // Define paths for temporary PDFs
+    $pdfPaths = [];
+
+    // Get distinct precinct numbers
+    $precincts = VotersProfile::select('precinct')
+        ->when($precinctId, function ($queryBuilder) use ($precinctId) {
+            return $queryBuilder->where('precinct', $precinctId);
+        })
+        ->when($allianceStatus, function ($queryBuilder) use ($allianceStatus) {
+            return $queryBuilder->where('alliances_status', $allianceStatus);
+        })
+        ->when($barangayId, function ($queryBuilder) use ($barangayId) {
+            return $queryBuilder->where('barangay', $barangayId);
+        })
+        ->groupBy('precinct')
+        ->orderBy('precinct', 'asc')
+        ->get();
+
+    // Process each precinct
+    foreach ($precincts as $precinct) {
+        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+            ->when($precinctId, function ($queryBuilder) use ($precinctId) {
+                return $queryBuilder->where('precinct', $precinctId);
+            })
+            ->when($allianceStatus, function ($queryBuilder) use ($allianceStatus) {
+                return $queryBuilder->where('alliances_status', $allianceStatus);
+            })
+            ->when($barangayId, function ($queryBuilder) use ($barangayId) {
+                return $queryBuilder->where('barangay', $barangayId);
+            })
+            ->where('precinct', $precinct->precinct)
+            ->orderBy('lastname', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        // Fetch the precinct number for the current chunk
+        $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
+
+        // Generate a PDF for the current chunk
+        $pdfPath = storage_path('app/public/voters_profiles_precinct_' . $precinct->precinct . '.pdf');
+        $pdf = PDF::loadView('admin.pages.tagging.alliance_tagging_pdf', [
+            'voters_profiles' => $voters_profiles,
+            'precinct_number' => $precinctNumber,
+            'alliance_status' => $allianceStatus,
+        ]);
+        $pdf->save($pdfPath);
+        $pdfPaths[] = $pdfPath;
+    }
+
+    // Merge the PDFs
+    $finalPdf = new \setasign\Fpdi\Fpdi();
+    foreach ($pdfPaths as $path) {
+        $pageCount = $finalPdf->setSourceFile($path);
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $tplIdx = $finalPdf->importPage($i);
+            $finalPdf->addPage();
+            $finalPdf->useTemplate($tplIdx);
+        }
+    }
+
+    // Output the final merged PDF
+    $finalPdfPath = storage_path('app/public/voters_profiles_alliance_tagging_final.pdf');
+    $finalPdf->Output($finalPdfPath, 'F');
+
+    // Clean up temporary files
+    foreach ($pdfPaths as $path) {
+        unlink($path);
+    }
+
+    return response()->download($finalPdfPath)->deleteFileAfterSend(true);
+}
+
+
 
 
 
 
     public function updateAllianceStatus(Request $request)
-{
-    $request->validate([
-        'alliance_status' => 'required|in:None,Green,Yellow,Orange,Red,White,Black',
-        'selected_profiles' => 'required|array',
-        'selected_profiles.*' => 'exists:voters_profile,id',
-    ]);
+    {
+        $request->validate([
+            'alliance_status' => 'required|in:None,Green,Yellow,Orange,Red,White,Black',
+            'selected_profiles' => 'required|array',
+            'selected_profiles.*' => 'exists:voters_profile,id',
+        ]);
 
-    $newAllianceStatus = $request->alliance_status;
+        $newAllianceStatus = $request->alliance_status;
 
-    // Fetch the selected profiles
-    $selectedProfiles = VotersProfile::whereIn('id', $request->selected_profiles)->get();
+        // Fetch the selected profiles
+        $selectedProfiles = VotersProfile::whereIn('id', $request->selected_profiles)->get();
 
-    foreach ($selectedProfiles as $votersProfile) {
-        // Check if the alliance status has changed
-        if ($votersProfile->alliances_status != $newAllianceStatus) {
-            // Create the ColorHistory record
-            ColorHistory::create([
-                'profile_id' => $votersProfile->id,
-                'old_tag' => $votersProfile->alliances_status,
-                'new_tag' => $newAllianceStatus,
-            ]);
+        foreach ($selectedProfiles as $votersProfile) {
+            // Check if the alliance status has changed
+            if ($votersProfile->alliances_status != $newAllianceStatus) {
+                // Create the ColorHistory record
+                ColorHistory::create([
+                    'profile_id' => $votersProfile->id,
+                    'old_tag' => $votersProfile->alliances_status,
+                    'new_tag' => $newAllianceStatus,
+                ]);
 
-            // Update the alliance status
-            $votersProfile->alliances_status = $newAllianceStatus;
-            $votersProfile->save();
+                // Update the alliance status
+                $votersProfile->alliances_status = $newAllianceStatus;
+                $votersProfile->save();
+            }
         }
-    }
 
-    return redirect()->back()->with('success', 'Alliance status updated successfully.');
-}
+        return redirect()->back()->with('success', 'Alliance status updated successfully.');
+    }
 
 
     public function alliancetaggingsummary(Request $request)
@@ -1132,36 +1162,36 @@ class VotersProfileController extends Controller
     }
 
     public function updateRemarks(Request $request)
-{
-    $request->validate([
-        'remarks' => 'nullable|in:Candidate Behavior and Scandals,Policy Changes,
-        Social Issues,Party Allegiance and Identity,Media Influence,Endorsements and Alliances,
-        Campaign Effectiveness,Personal Experience,Strategic Voting,Financial Incentives,
-        Promises of Personal Gain,Threats and Coercion,Development Projects and Local Investments,None',
-        'selected_profiles' => 'required|array',
-        'selected_profiles.*' => 'exists:color_history,id',
-        'notes' => 'nullable|string',
-    ]);
+    {
+        $request->validate([
+            'remarks' => 'nullable|in:Candidate Behavior and Scandals,Policy Changes,
+            Social Issues,Party Allegiance and Identity,Media Influence,Endorsements and Alliances,
+            Campaign Effectiveness,Personal Experience,Strategic Voting,Financial Incentives,
+            Promises of Personal Gain,Threats and Coercion,Development Projects and Local Investments,None',
+            'selected_profiles' => 'required|array',
+            'selected_profiles.*' => 'exists:color_history,id',
+            'notes' => 'nullable|string',
+        ]);
 
-    // Prepare the data for updating
-    $updateData = [];
-    if ($request->filled('remarks')) {
-        $updateData['remarks'] = $request->remarks;
-    }
-    
-    // Check if 'notes' is present in the request
-    if ($request->has('notes')) {
-        $updateData['notes'] = $request->notes ?: null; // Set 'notes' to null if empty
-    }
+        // Prepare the data for updating
+        $updateData = [];
+        if ($request->filled('remarks')) {
+            $updateData['remarks'] = $request->remarks;
+        }
+        
+        // Check if 'notes' is present in the request
+        if ($request->has('notes')) {
+            $updateData['notes'] = $request->notes ?: null; // Set 'notes' to null if empty
+        }
 
-    // Only update if there is data to update
-    if (!empty($updateData)) {
-        ColorHistory::whereIn('id', $request->selected_profiles)
-            ->update($updateData);
-    }
+        // Only update if there is data to update
+        if (!empty($updateData)) {
+            ColorHistory::whereIn('id', $request->selected_profiles)
+                ->update($updateData);
+        }
 
-    return redirect()->back()->with('success', 'Remarks and/or notes updated successfully.');
-}
+        return redirect()->back()->with('success', 'Remarks and/or notes updated successfully.');
+    }
 
 
 
