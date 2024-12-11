@@ -5,7 +5,7 @@
     <div class="card-header">
         <div class="row mb-3">
             <div class="col-12 col-md-6">
-                <h5>Candidate Tagging</h5>
+                <h5>Group Tagging</h5>
             </div> 
         </div>
         <!-- Add Spinner HTML -->
@@ -32,7 +32,7 @@
             </script>
         @endif
         
-        <form class="row g-2 mb-3" method="GET" action="{{ route('voters.candidatetagging') }}" role="search">
+        <form class="row g-2 mb-3" method="GET" action="{{ route('voters.grouptagging') }}" role="search">
             <div class="col-12 col-md-2">
                 <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
             </div>
@@ -60,13 +60,13 @@
             </div>
             <div class="col-12 col-md-4">
                 <div class="d-flex align-items-center">
-                    <select class="form-select me-2" id="candidateSelect" onchange="updatevoterCandidate(this.value)">
-                        <option selected disabled value="">Select Candidate</option>
-                        @foreach ($candidate as $candidate)
-                            <option value="{{ $candidate->id }}" {{ request('candidate') == $candidate->id ? 'selected' : '' }}>{{ $candidate->fullname }}</option>
+                    <select class="form-select me-2" id="groupSelect" onchange="updatevoterGroup(this.value)">
+                        <option selected disabled value="">Select Group</option>
+                        @foreach ($groups as $group)
+                            <option value="{{ $group->id }}" {{ request('group') == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
                         @endforeach
                     </select>
-                    <button type="button" class="button-index w-25" onclick="submitcandidateTaggingForm()">
+                    <button type="button" class="button-index w-25" onclick="submitgroupTaggingForm()">
                         <i class="fa-solid fa-pen-nib fa-md"></i>
                         <span class="fw-semibold ms-2">Modify</span>
                     </button>
@@ -75,25 +75,25 @@
         </form>
     </div>
     <div class="card-body dashboard_card_body">
-        <form id="candidateTaggingForm" method="POST" action="{{ route('voters.updatevoterCandidate') }}">
+        <form id="groupTaggingForm" method="POST" action="{{ route('voters.connectvoterGroup') }}">
             @csrf
-            <input type="hidden" name="candidate" id="candidate">
+            <input type="hidden" name="group" id="group">
             <div class="table-responsive">
                 <table class="table mt-2 table-light table-hover">
                     <thead class="thead-dark">
                         <tr>
                             <th></th>
-                            <th>Full Name</th>
+                            <th>Fullname</th>
                             <th>Brgy / Precinct</th>
-                            <th>Candidates</th>
+                            <th>Group</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($candidate_taggings as $candidate_tagging)
+                        @foreach ($group_taggings as $group_tagging)
                             @php
                                 // Determine the font color
                                 $FontColor = '#6c757d'; 
-                                switch ($candidate_tagging->alliances_status) {
+                                switch ($group_tagging->color_tag) {
                                     case 'Green':
                                         $FontColor = '#0466c8'; 
                                         break;
@@ -116,7 +116,7 @@
 
                                 // Determine the Alliance status
                                 $AllianceStatus = 'Non-participant'; 
-                                    switch ($candidate_tagging->alliances_status) {
+                                    switch ($group_tagging->color_tag) {
                                         case 'Green':
                                             $AllianceStatus = 'Allied'; 
                                             break;
@@ -140,17 +140,18 @@
 
                             <tr>
                                 <td class="align-middle">
-                                    <input class="form-check-input" type="checkbox" name="selected_profiles[]" value="{{ $candidate_tagging->id }}">
+                                    <input class="form-check-input" type="checkbox" name="selected_profiles[]" value="{{ $group_tagging->id }}">
                                 </td>
-                                <td class="align-middle">{{ $candidate_tagging->lastname }} {{ $candidate_tagging->firstname }} {{ $candidate_tagging->middlename }}</td>
-                                <td class="align-middle">{{ $candidate_tagging->barangays->name }} / {{ $candidate_tagging->precincts->number }}</td>
+                                <td class="align-middle">{{ $group_tagging->lastname }} {{ $group_tagging->firstname }} {{ $group_tagging->middlename }}</td>
+                                <td class="align-middle">{{ $group_tagging->barangays->name }} / {{ $group_tagging->precincts->number }}</td>
                                 <td class="align-middle">
-                                    <!-- Display all associated candidate names -->
-                                    @foreach($candidate_tagging->candidateTaggings as $tag)
-                                    <span style="color: {{ $FontColor }};">{{ $AllianceStatus }}</span>
-                                    <i class="fa-solid fa-right-long fa-sm"></i> 
-                                    (<b>{{ $tag->candidate->position }}</b>) {{ $tag->candidate->fullname }}<br>
-                                    @endforeach
+                                    @if($group_tagging->groupTaggings->isNotEmpty())
+                                        @foreach($group_tagging->groupTaggings as $tagging)
+                                            {{ $tagging->group->name }}<br>
+                                        @endforeach
+                                    @else
+                                        No Group
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -158,7 +159,7 @@
                 </table>
             </div>
             <div class="d-flex justify-content-center mb-5">
-                {{ $candidate_taggings->appends([
+                {{ $group_taggings->appends([
                     'precinct' => request('precinct'),
                     'query' => request('query'),
                     'barangay' => request('barangay')
@@ -169,16 +170,16 @@
 </div>
 
 <script>
-    function updatevoterCandidate(status) {
-        document.getElementById('candidate').value = status;
+    function updatevoterGroup(status) {
+        document.getElementById('group').value = status;
     }
 
-    function submitcandidateTaggingForm() {
-        document.getElementById('candidateTaggingForm').submit();
+    function submitgroupTaggingForm() {
+        document.getElementById('groupTaggingForm').submit();
     }
 
     // Display the loading spinner when form is submitted
-    $('#candidateTaggingForm').on('submit', function() {
+    $('#groupTaggingForm').on('submit', function() {
         $('#loadingSpinner').show();
     });
 </script>

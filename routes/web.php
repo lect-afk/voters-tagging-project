@@ -128,7 +128,9 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('candidate-tagging', [CandidateController::class, 'candidatetagging'])->name('voters.candidatetagging');
     Route::post('/candidate-tagging/update-voted-candidate', [CandidateController::class, 'updatevoterCandidate'])->name('voters.updatevoterCandidate');
 
-
+    //Route for the Group Tagging
+    Route::get('group-tagging', [GroupController::class, 'grouptagging'])->name('voters.grouptagging');
+    Route::post('/group-tagging/connect-voter-group', [GroupController::class, 'connectvoterGroup'])->name('voters.connectvoterGroup');
 
 
 });
