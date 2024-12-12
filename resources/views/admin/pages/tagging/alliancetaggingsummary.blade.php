@@ -54,7 +54,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Barangay</th>
-                        <th>Allies</th>
+                        <th>Ally</th>
                         <th>Prospective Ally</th>
                         <th>Tentative Ally</th>
                         <th>Non-Participant</th>
@@ -70,7 +70,7 @@
                         @endphp
                         <tr>
                             <td>{{ $item['barangay'] }}</td>
-                            <td style="background-color: #0466c84D" class="{{ $percentage < $item['nonsupporter'] ? 'text-danger' : '' }}">
+                            <td style="background-color: #0466c84D" class="{{ $item['allied'] < $item['nonsupporter']+$item['unlikelyally'] ? 'text-danger' : '' }}">
                                 {{ $item['allied'] }} / {{ $item['total'] }} 
                                 ({{ number_format($percentage, 1) }}%)
                             </td>

@@ -30,4 +30,9 @@ class Candidate extends Model
     {
         return $this->hasMany(Vote::class);
     }
+
+    public function candidateTaggings()
+    {
+        return $this->hasMany(CandidateTagging::class, 'candidate_id');
+    }
 }

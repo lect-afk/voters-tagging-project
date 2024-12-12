@@ -149,13 +149,10 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <form action="{{ route('voters_profile.destroy', $voters_profile->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="dropdown-item" type="submit" class="icon-link" title="Delete">
-                                                        <i class="fas fa-trash"></i> Delete
-                                                    </button>
-                                                </form>
+                                                <!-- Trigger the modal with the delete button -->
+                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-id="{{ $voters_profile->id }}">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
                                             </li>
                                         </ul>
                                     </div>
@@ -217,5 +214,41 @@
             </div>
         </div>
     </div>
+
+    <!-- Confirmation Modal for Deletion -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this voter profile?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteForm" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var voterId = button.getAttribute('data-id');
+                var form = document.getElementById('deleteForm');
+                form.action = '/voters_profile/' + voterId;
+            });
+        });
+    </script>
+
     <script src="{{ asset('js/spinner.js') }}"></script>
 @endsection

@@ -32,6 +32,9 @@ use App\Http\Controllers\EventController;
 Auth::routes(['register' => false]);
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect('/dashboard');
+    }
     return view('auth.login');
 });
 
@@ -117,10 +120,17 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('events-attended-overview', [EventController::class, 'eventoverview'])->name('voters.eventoverview');
     Route::get('/eventstaggingsummary/pdf', [EventController::class, 'downloadEventOverviewPdf'])->name('eventstaggingsummary.pdf');
 
+    //Route for the Color History
+    Route::get('tagging-history', [VotersProfileController::class, 'colorhistory'])->name('voters.colorhistory');
+    Route::post('/tagging-history/update-remarks', [VotersProfileController::class, 'updateRemarks'])->name('colorhistory.updateRemarks');
 
+    //Route for the Candidate Tagging
+    Route::get('candidate-tagging', [CandidateController::class, 'candidatetagging'])->name('voters.candidatetagging');
+    Route::post('/candidate-tagging/update-voted-candidate', [CandidateController::class, 'updatevoterCandidate'])->name('voters.updatevoterCandidate');
 
-
-
+    //Route for the Group Tagging
+    Route::get('group-tagging', [GroupController::class, 'grouptagging'])->name('voters.grouptagging');
+    Route::post('/group-tagging/connect-voter-group', [GroupController::class, 'connectvoterGroup'])->name('voters.connectvoterGroup');
 
 
 });

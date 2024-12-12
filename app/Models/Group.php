@@ -15,5 +15,10 @@ class Group extends Model
     {
         return $this->belongsToMany(VotersProfile::class, 'voters_group', 'group_id', 'voter_id');
     }
+
+    public function groupTaggings()
+    {
+        return $this->hasMany(GroupTagging::class, 'group_id');
+    }
 }
 
