@@ -636,12 +636,10 @@ class VotersProfileController extends Controller
             ];
         });
 
-        $pdf = PDF::loadView('admin.pages.tagging.barangaysummary_pdf', compact('barangays', 'query'));
+        $pdf = PDF::loadView('admin.pages.tagging.barangaysummary_pdf', compact('barangays'))->with('query', $query);
 
         return $pdf->download('barangay_summary.pdf');
     }
-
-
 
     public function precinctsummary(Request $request)
     {
@@ -837,8 +835,6 @@ class VotersProfileController extends Controller
             ->with('barangay_id', $barangay_id);
     }
 
-
-
     public function alliancetagging(Request $request)
     {
         $precinct = Precinct::all();
@@ -846,6 +842,7 @@ class VotersProfileController extends Controller
         $barangayId = $request->input('barangay');
         $precinctId = $request->input('precinct');
         $allianceStatus = $request->input('alliances_status');
+        $query = $request->input('query');
 
         $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
             ->when($precinctId, function($queryBuilder) use ($precinctId) {
@@ -853,6 +850,16 @@ class VotersProfileController extends Controller
             })
             ->when($barangayId, function($queryBuilder) use ($barangayId) {
                 return $queryBuilder->where('barangay', $barangayId);
+            })
+            ->when($query, function($queryBuilder) use ($query) {
+                return $queryBuilder->where(function($queryBuilder) use ($query) {
+                    $queryBuilder->where('firstname', 'like', "%$query%")
+                                ->orWhere('middlename', 'like', "%$query%")
+                                ->orWhere('lastname', 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename, ' ', lastname)"), 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename)"), 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', "%$query%");
+                });
             })
             ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
                 return $queryBuilder->where('alliances_status', $allianceStatus);
@@ -862,41 +869,27 @@ class VotersProfileController extends Controller
             ->paginate(50);
 
         return view('admin.pages.tagging.alliancetagging', compact('voters_profiles', 'precinct','barangay'))
+            ->with('query', $query)
             ->with('precinctId', $precinctId)
             ->with('allianceStatus', $allianceStatus)
             ->with('barangayId', $barangayId);
     }
 
     public function downloadAllianceTaggingPdf(Request $request)
-{
-    ini_set('max_execution_time', 3600); // 1 hour
-    ini_set('memory_limit', '5G'); // or higher if needed
+    {
+        ini_set('max_execution_time', 3600); // 1 hour
+        ini_set('memory_limit', '5G'); // or higher if needed
 
-    $precinctId = $request->input('precinct');
-    $allianceStatus = $request->input('alliances_status');
-    $barangayId = $request->input('barangay'); // Retrieve barangay filter
+        $precinctId = $request->input('precinct');
+        $allianceStatus = $request->input('alliances_status');
+        $barangayId = $request->input('barangay'); // Retrieve barangay filter
+        $query = $request->input('query'); // Retrieve the search query
 
-    // Define paths for temporary PDFs
-    $pdfPaths = [];
+        // Define paths for temporary PDFs
+        $pdfPaths = [];
 
-    // Get distinct precinct numbers
-    $precincts = VotersProfile::select('precinct')
-        ->when($precinctId, function ($queryBuilder) use ($precinctId) {
-            return $queryBuilder->where('precinct', $precinctId);
-        })
-        ->when($allianceStatus, function ($queryBuilder) use ($allianceStatus) {
-            return $queryBuilder->where('alliances_status', $allianceStatus);
-        })
-        ->when($barangayId, function ($queryBuilder) use ($barangayId) {
-            return $queryBuilder->where('barangay', $barangayId);
-        })
-        ->groupBy('precinct')
-        ->orderBy('precinct', 'asc')
-        ->get();
-
-    // Process each precinct
-    foreach ($precincts as $precinct) {
-        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+        // Get distinct precinct numbers
+        $precincts = VotersProfile::select('precinct')
             ->when($precinctId, function ($queryBuilder) use ($precinctId) {
                 return $queryBuilder->where('precinct', $precinctId);
             })
@@ -906,52 +899,84 @@ class VotersProfileController extends Controller
             ->when($barangayId, function ($queryBuilder) use ($barangayId) {
                 return $queryBuilder->where('barangay', $barangayId);
             })
-            ->where('precinct', $precinct->precinct)
-            ->orderBy('lastname', 'asc')
-            ->orderBy('id', 'asc')
+            ->when($query, function ($queryBuilder) use ($query) {
+                return $queryBuilder->where(function($queryBuilder) use ($query) {
+                    $queryBuilder->where('firstname', 'like', "%$query%")
+                                ->orWhere('middlename', 'like', "%$query%")
+                                ->orWhere('lastname', 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename, ' ', lastname)"), 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename)"), 'like', "%$query%")
+                                ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', "%$query%");
+                });
+            })
+            ->groupBy('precinct')
+            ->orderBy('precinct', 'asc')
             ->get();
 
-        // Fetch the precinct number for the current chunk
-        $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
+        // Process each precinct
+        foreach ($precincts as $precinct) {
+            $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+                ->when($precinctId, function ($queryBuilder) use ($precinctId) {
+                    return $queryBuilder->where('precinct', $precinctId);
+                })
+                ->when($allianceStatus, function ($queryBuilder) use ($allianceStatus) {
+                    return $queryBuilder->where('alliances_status', $allianceStatus);
+                })
+                ->when($barangayId, function ($queryBuilder) use ($barangayId) {
+                    return $queryBuilder->where('barangay', $barangayId);
+                })
+                ->when($query, function ($queryBuilder) use ($query) {
+                    return $queryBuilder->where(function($queryBuilder) use ($query) {
+                        $queryBuilder->where('firstname', 'like', "%$query%")
+                                    ->orWhere('middlename', 'like', "%$query%")
+                                    ->orWhere('lastname', 'like', "%$query%")
+                                    ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename, ' ', lastname)"), 'like', "%$query%")
+                                    ->orWhere(DB::raw("CONCAT(firstname, ' ', middlename)"), 'like', "%$query%")
+                                    ->orWhere(DB::raw("CONCAT(firstname, ' ', lastname)"), 'like', "%$query%");
+                    });
+                })
+                ->where('precinct', $precinct->precinct)
+                ->orderBy('lastname', 'asc')
+                ->orderBy('id', 'asc')
+                ->get();
 
-        // Generate a PDF for the current chunk
-        $pdfPath = storage_path('app/public/voters_profiles_precinct_' . $precinct->precinct . '.pdf');
-        $pdf = PDF::loadView('admin.pages.tagging.alliance_tagging_pdf', [
-            'voters_profiles' => $voters_profiles,
-            'precinct_number' => $precinctNumber,
-            'alliance_status' => $allianceStatus,
-        ]);
-        $pdf->save($pdfPath);
-        $pdfPaths[] = $pdfPath;
-    }
+            // Fetch the precinct number for the current chunk
+            $precinctNumber = $voters_profiles->first()->precincts->number ?? 'Unknown';
 
-    // Merge the PDFs
-    $finalPdf = new \setasign\Fpdi\Fpdi();
-    foreach ($pdfPaths as $path) {
-        $pageCount = $finalPdf->setSourceFile($path);
-        for ($i = 1; $i <= $pageCount; $i++) {
-            $tplIdx = $finalPdf->importPage($i);
-            $finalPdf->addPage();
-            $finalPdf->useTemplate($tplIdx);
+            // Generate a PDF for the current chunk
+            $pdfPath = storage_path('app/public/voters_profiles_precinct_' . $precinct->precinct . '.pdf');
+            $pdf = PDF::loadView('admin.pages.tagging.alliance_tagging_pdf', [
+                'voters_profiles' => $voters_profiles,
+                'precinct_number' => $precinctNumber,
+                'alliance_status' => $allianceStatus,
+                'query' => $query, // Pass the search query to the PDF view
+            ]);
+            $pdf->save($pdfPath);
+            $pdfPaths[] = $pdfPath;
         }
+
+        // Merge the PDFs
+        $finalPdf = new \setasign\Fpdi\Fpdi();
+        foreach ($pdfPaths as $path) {
+            $pageCount = $finalPdf->setSourceFile($path);
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $tplIdx = $finalPdf->importPage($i);
+                $finalPdf->addPage();
+                $finalPdf->useTemplate($tplIdx);
+            }
+        }
+
+        // Output the final merged PDF
+        $finalPdfPath = storage_path('app/public/voters_profiles_alliance_tagging_final.pdf');
+        $finalPdf->Output($finalPdfPath, 'F');
+
+        // Clean up temporary files
+        foreach ($pdfPaths as $path) {
+            unlink($path);
+        }
+
+        return response()->download($finalPdfPath)->deleteFileAfterSend(true);
     }
-
-    // Output the final merged PDF
-    $finalPdfPath = storage_path('app/public/voters_profiles_alliance_tagging_final.pdf');
-    $finalPdf->Output($finalPdfPath, 'F');
-
-    // Clean up temporary files
-    foreach ($pdfPaths as $path) {
-        unlink($path);
-    }
-
-    return response()->download($finalPdfPath)->deleteFileAfterSend(true);
-}
-
-
-
-
-
 
     public function updateAllianceStatus(Request $request)
     {
@@ -984,7 +1009,6 @@ class VotersProfileController extends Controller
 
         return redirect()->back()->with('success', 'Alliance status updated successfully.');
     }
-
 
     public function alliancetaggingsummary(Request $request)
     {
@@ -1122,7 +1146,6 @@ class VotersProfileController extends Controller
         return $pdf->download('alliance_tagging_summary.pdf');
     }
 
-
     public function colorhistory(Request $request)
     {
         $precinct = Precinct::all();
@@ -1192,13 +1215,4 @@ class VotersProfileController extends Controller
 
         return redirect()->back()->with('success', 'Remarks and/or notes updated successfully.');
     }
-
-
-
-    
-
-
-
 }
-
-

@@ -4,8 +4,9 @@
     <div class="card dashboard_card">
         <div class="card-header">
             <div class="row mb-3">
-                <div class="col-12 col-md-6">
+                <div class="col d-flex align-items-center justify-content-between">
                     <h5>Event Overview</h5>
+                    <p class="justify-content-end">Search Results: {{ $eventoverviews->total() }} ({{ $eventoverviews->count() }})</p>
                 </div>
                 <!-- Add Spinner HTML -->
                 <div id="loadingSpinner" style="display: none;">

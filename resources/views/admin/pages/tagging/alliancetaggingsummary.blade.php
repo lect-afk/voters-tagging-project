@@ -4,8 +4,9 @@
 <div class="card dashboard_card">
     <div class="card-header">
         <div class="row mb-3 align-items-center">
-            <div class="col-12 col-md-6">
+            <div class="col d-flex align-items-center justify-content-between">
                 <h5>Alliance Tagging Summary</h5>
+                <p>Search Results: {{ $barangay->total() }} ({{ $barangay->count() }})</p>
             </div>
             <!-- Add Spinner HTML -->
             <div id="loadingSpinner" style="display: none;">
@@ -15,8 +16,20 @@
                 @php
                     $totalAllied = 0;
                     $totalVotes = 0;
+                    $totalProspective = 0;
+                    $totalTentative = 0;
+                    $totalNonParticipant = 0;
+                    $totalNonSupporter = 0;
+                    $totalUnilateral = 0;
+                    $totalUnidentified = 0;
                     foreach ($barangay as $item) {
                         $totalAllied += $item['allied'];
+                        $totalProspective += $item['prospectiveally'];
+                        $totalTentative += $item['unlikelyally'];
+                        $totalNonParticipant += $item['nonparticipant'];
+                        $totalNonSupporter += $item['nonsupporter'];
+                        $totalUnilateral += $item['inc'];
+                        $totalUnidentified += $item['unidentified'];
                         $totalVotes += $item['total'];
                     }
                     $totalPercentage = ($totalAllied / $totalVotes) * 100;
@@ -97,6 +110,18 @@
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td style="background-color: #0466c84D"><strong>{{ $totalAllied }}</strong> / <strong>{{ $totalVotes }}</strong></td>
+                        <td style="background-color: #ffd60a4D"><strong>{{ $totalProspective }}</strong> / <strong>{{ $totalVotes }}</strong></td>
+                        <td style="background-color: #99582a80"><strong>{{ $totalTentative }}</strong> / <strong>{{ $totalVotes }}</strong></td>
+                        <td style="background-color: #6c757dCC"><strong>{{ $totalNonParticipant }}</strong> / <strong>{{ $totalVotes }}</strong></td>
+                        <td style="background-color: #d0000080"><strong>{{ $totalNonSupporter }}</strong> / <strong>{{ $totalVotes }}</strong></td>
+                        <td style="background-color: #e0fbfc4D"><strong>{{ $totalUnilateral }}</strong> / <strong>{{ $totalVotes }}</strong></td>
+                        <td style="background-color: #353535; color: #FCFCFD;"><strong>{{ $totalUnidentified }}</strong> / <strong>{{ $totalVotes }}</strong></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         <div class="d-flex justify-content-center mb-5">

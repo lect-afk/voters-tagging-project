@@ -4,8 +4,9 @@
 <div class="card dashboard_card">
     <div class="card-header">
         <div class="row mb-3">
-            <div class="col-12 col-md-6">
+            <div class="col d-flex align-items-center justify-content-between">
                 <h5>Alliance Tagging</h5>
+                <p class="justify-content-end">Search Results: {{ $voters_profiles->total() }}</p>
             </div> 
         </div>
         <!-- Add Spinner HTML -->
@@ -33,7 +34,10 @@
         @endif
     
         <form class="row g-2 mb-3" method="GET" action="" role="search">
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
+                <input id="searchInput" name="query" class="form-control" type="search" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
+            </div>
+            <div class="col-12 col-md-2">
                 <select name="precinct" class="form-control">
                     <option value="" {{ request('precinct') == '' ? 'selected' : '' }}>All Precinct</option>
                     @foreach ($precinct as $precinct)
@@ -41,7 +45,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
                 <select name="alliances_status" class="form-control">
                     <option value="" {{ request('alliances_status') == '' ? 'selected' : '' }}>All Alliance Status</option>
                     <option value="Green" {{ request('alliances_status') == 'Green' ? 'selected' : '' }}>Ally</option>
@@ -141,6 +145,7 @@
             </div>
             <div class="d-flex justify-content-center mb-5">
                 {{ $voters_profiles->appends([
+                    'query' => request('query'),
                     'precinct' => request('precinct'),
                     'alliances_status' => request('alliances_status'),
                     'barangay' => request('barangay')

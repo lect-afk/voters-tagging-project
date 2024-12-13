@@ -4,8 +4,9 @@
 <div class="card dashboard_card">
     <div class="card-header">
         <div class="row mb-3">
-            <div class="col-12 col-md-6">
+            <div class="col d-flex align-items-center justify-content-between">
                 <h5>Tagging History</h5>
+                <p>Search Results: {{ $color_histories->total() }} ({{ $color_histories->count() }})</p>
             </div> 
         </div>
         <!-- Add Spinner HTML -->

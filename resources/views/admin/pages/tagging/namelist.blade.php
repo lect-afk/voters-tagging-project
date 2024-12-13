@@ -4,8 +4,9 @@
 <div class="card dashboard_card">
     <div class="card-header">
         <div class="row mb-3">
-            <div class="col-12 col-md-6">
+            <div class="col d-flex align-items-center justify-content-between">
                 <h5>List Of Leaders</h5>
+                <p class="justify-content-end">Search Results: {{ $leaders->total() }} ({{ $leaders->count() }})</p>
             </div>
         </div>
         <form class="row g-2" method="GET" action="{{ route('leaders.search') }}" role="search">
