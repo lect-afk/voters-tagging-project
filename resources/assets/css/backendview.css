@@ -252,7 +252,20 @@ a:hover {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.buttonAT_blue{
+.buttonAT_blue,
+.buttonAT_yellow,
+.buttonAT_orange,
+.buttonAT_none,
+.buttonAT_red,
+.buttonAT_white,
+.buttonAT_black {
+  padding: 10px 15px; /* Increase padding */
+  border-radius: 5px; /* Add border radius */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+  font-weight: 600; /* Increase font weight */
+}
+
+.buttonAT_blue {
   color: #393e41;
   border: 1px solid #0466c8;
 }
