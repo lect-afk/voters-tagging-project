@@ -83,6 +83,7 @@
                 <table class="table mt-2 table-light table-hover">
                     <thead class="thead-dark">
                         <tr>
+                            <th>ID#</th>
                             <th>Alliance Status</th>
                             <th>Full Name</th>
                             <th>Barangay</th>
@@ -111,6 +112,7 @@
                                 }
                             @endphp
                             <tr>
+                                <td class="align-middle">{{ $voters_profile->id }}</td>
                                 <td class="align-middle"><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
                                 <td class="align-middle">{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
                                 <td class="align-middle">{{ $voters_profile->barangays->name }}</td>
