@@ -203,7 +203,10 @@
                                     <input class="form-check-input" type="checkbox" name="selected_profiles[]" value="{{ $color_history->id }}">
                                 </td>
                                 <td class="align-middle">{{ $color_history->profile->lastname }} {{ $color_history->profile->firstname }} {{ $color_history->profile->middlename }}</td>
-                                <td class="align-middle">{{ $color_history->profile->barangays->name }} / {{ $color_history->profile->precincts->number }}</td>
+                                <td class="align-middle">
+                                    {{ $color_history->profile->barangays ? $color_history->profile->barangays->name : 'none' }} / 
+                                    {{ $color_history->profile->precincts ? $color_history->profile->precincts->number : 'none' }}
+                                </td>
                                 <td class="align-middle">
                                     <span style="color: {{ $oldFontColor }};">{{ $oldAllianceStatus }}</span>
                                     <i class="fa-solid fa-right-long fa-sm"></i> 
