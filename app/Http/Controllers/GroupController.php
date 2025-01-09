@@ -86,7 +86,8 @@ class GroupController extends Controller
         $query = $request->input('query');
         $barangayId = $request->input('barangay');
         $precinctId = $request->input('precinct');
-        
+        $groupId = $request->input('group_filter');
+        $allianceStatus = $request->input('alliance_status');
 
         $group_taggings = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts', 'groupTaggings.group', 'groupTaggings.group.groupTaggings'])
         ->when($query, function($queryBuilder) use ($query) {
@@ -105,6 +106,23 @@ class GroupController extends Controller
         ->when($precinctId, function($queryBuilder) use ($precinctId) {
             return $queryBuilder->where('precinct', $precinctId);
         })
+        ->when($groupId, function($queryBuilder) use ($groupId) {
+            return $queryBuilder->whereHas('groupTaggings', function($query) use ($groupId) {
+                $query->where('group_id', $groupId);
+            });
+        })
+        ->when($allianceStatus, function($queryBuilder) use ($allianceStatus) {
+            $colorMap = [
+                'Allied' => 'Green',
+                'Prospective Ally' => 'Yellow',
+                'Unlikely Ally' => 'Orange',
+                'Non-supporter' => 'Red',
+                'Unilateral' => 'White',
+                'Unidentified' => 'Black',
+                'Non-participant' => 'None'
+            ];
+            return $queryBuilder->where('alliances_status', $colorMap[$allianceStatus] ?? $allianceStatus);
+        })
         ->orderBy('lastname', 'asc')
         ->orderBy('id', 'asc')
         ->paginate(50);
@@ -112,6 +130,8 @@ class GroupController extends Controller
         return view('admin.pages.tagging.grouptaggings', compact('group_taggings', 'precinct','barangay','groups'))
             ->with('precinctId', $precinctId)
             ->with('query', $query)
+            ->with('groupId', $groupId)
+            ->with('allianceStatus', $allianceStatus)
             ->with('barangayId', $barangayId);
     }
 
