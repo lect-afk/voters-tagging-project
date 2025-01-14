@@ -41,6 +41,7 @@ Route::get('/', function () {
 
 
 
+
 Route::middleware(['check.user'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/api/barangay-data', [AdminController::class, 'getBarangayData']);
@@ -132,5 +133,14 @@ Route::middleware(['check.user'])->group(function () {
     Route::get('group-tagging', [GroupController::class, 'grouptagging'])->name('voters.grouptagging');
     Route::post('/group-tagging/connect-voter-group', [GroupController::class, 'connectvoterGroup'])->name('voters.connectvoterGroup');
 
+    //Route for tagging profiles to a leader
+    Route::post('/voters-profile/tag-profile', [VotersProfileController::class, 'tagProfile'])->name('voters_profile.tagProfile');
 
+    // Route for the Profile Tagging page
+    Route::get('profile-tagging', [VotersProfileController::class, 'showProfileTaggingPage'])->name('voters_profile.tagging');
+
+    // Route for tagging profiles to a leader
+    Route::post('/voters-profile/tag-profiles-to-leader', [VotersProfileController::class, 'tagProfilesToLeader'])->name('voters_profile.tagProfilesToLeader');
+
+    
 });

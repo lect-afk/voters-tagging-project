@@ -140,12 +140,6 @@ class VotersProfileController extends Controller
         return response()->download($finalPdfPath)->deleteFileAfterSend(true);
     }
 
-
-
-
-
-
-
     public function create()
     {
         $sitio = Sitio::all();
@@ -288,7 +282,6 @@ class VotersProfileController extends Controller
         return redirect()->route('voters_profile.index')->with('success', 'Leader updated successfully.');
     }
 
-
     public function destroy(VotersProfile $votersProfile)
     {
         $votersProfile->delete();
@@ -322,7 +315,6 @@ class VotersProfileController extends Controller
             ->with('query', $query)
             ->with('leader', $leader);
     }
-
 
     public function votersearch(Request $request)
     {
@@ -373,17 +365,6 @@ class VotersProfileController extends Controller
 
         return view('admin.pages.partials.addsubordinate', compact('manageleader', 'subordinates', 'successors', 'leaders', 'previousSubordinates'));
     }
-
-
-    // public function viewhierarchy(VotersProfile $viewhierarchy)
-    // {
-    //     $leaders = VotersProfile::all();
-    //     $successors = Tagging::with(['predecessors', 'successors'])
-    //     ->where('predecessor', '=', $viewhierarchy->id)->paginate(47);
-    //     $subordinates = VotersProfile::where('id', '!=', $viewhierarchy->id)
-    //     ->where('barangay', '=', $viewhierarchy->barangay)->get();
-    //     return view('admin.pages.tagging.hierarchy', compact('viewhierarchy','subordinates','successors','leaders'));
-    // }
 
     public function viewhierarchy(VotersProfile $viewhierarchy)
     {
@@ -475,27 +456,31 @@ class VotersProfileController extends Controller
         return redirect()->back()->with('success', 'Subordinate added successfully.');
     }
 
+    public function tagProfile(Request $request)
+    {
+        $request->validate([
+            'leader_id' => 'required|exists:voters_profile,id',
+            'profile_ids' => 'required|string',
+        ]);
 
-    // public function searchSuccessors(Request $request, VotersProfile $manageleader)
-    // {
-    //     try {
-    //         $query = $request->get('query');
-    //         $successors = Tagging::with(['predecessors', 'successors'])
-    //             ->where('predecessor', '=', $manageleader->id)
-    //             ->whereHas('successors', function($q) use ($query) {
-    //                 $q->where('firstname', 'LIKE', "%{$query}%")
-    //                 ->orWhere('middlename', 'LIKE', "%{$query}%")
-    //                 ->orWhere('lastname', 'LIKE', "%{$query}%");
-    //             })
-    //             ->paginate(47);
+        $leaderId = $request->leader_id;
+        $profileIds = explode(',', $request->profile_ids);
 
-    //         return response()->json($successors);
-    //     } catch (\Exception $e) {
-    //         Log::error('Error fetching successors: ' . $e->getMessage());
-    //         return response()->json(['error' => 'Internal Server Error'], 500);
-    //     }
-    // }
-    
+        // Fetch the leader profile
+        $leaderProfile = VotersProfile::find($leaderId);
+
+        // Fetch the selected profiles
+        $selectedProfiles = VotersProfile::whereIn('id', $profileIds)->get();
+
+        foreach ($selectedProfiles as $profile) {
+            // Tag the profile to the leader
+            $profile->leader_id = $leaderId;
+            $profile->save();
+        }
+
+        return redirect()->back()->with('success', 'Profiles tagged to leader successfully.');
+    }
+
     public function successorDestroy($id)
     {
         // Get the successor record to delete
@@ -1214,5 +1199,62 @@ class VotersProfileController extends Controller
         }
 
         return redirect()->back()->with('success', 'Remarks and/or notes updated successfully.');
+    }
+
+    public function showProfileTaggingPage(Request $request)
+    {
+        $query = $request->input('query');
+        $barangayId = $request->input('barangay');
+    
+        // Fetch all barangays
+        $barangay = Barangay::all();
+    
+        $voters_profiles = VotersProfile::with(['sitios', 'puroks', 'barangays', 'precincts'])
+            ->when($barangayId, function($queryBuilder) use ($barangayId) {
+                return $queryBuilder->where('barangay', $barangayId);
+            })
+            ->orderBy('lastname', 'asc')
+            ->paginate(25);
+    
+        // Fetch leaders based on the selected barangay
+        $leaders = VotersProfile::where('barangay', $barangayId)
+            ->where('leader', '!=', 'None') // Ensure leader is not "None"
+            ->get();
+    
+        return view('admin.pages.tagging.profiletagging', compact('voters_profiles', 'leaders', 'barangay'));
+    }
+
+    public function tagProfilesToLeader(Request $request)
+    {
+        $request->validate([
+            'leader_id' => 'required|exists:voters_profile,id',
+            'profile_ids' => 'required|string',
+        ]);
+
+        $leaderId = $request->leader_id;
+        $profileIds = explode(',', $request->profile_ids);
+
+        foreach ($profileIds as $profileId) {
+            // Create or update the connection
+            \DB::table('voter_leader_connections')->updateOrInsert(
+                ['voter_id' => $profileId, 'leader_id' => $leaderId],
+                ['created_at' => now(), 'updated_at' => now()]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Profiles successfully tagged to leader.');
+    }
+
+    public function searchLeaders(Request $request)
+    {
+        $query = $request->input('query');
+        $leaders = VotersProfile::where('leader', true)
+            ->where(function($q) use ($query) {
+                $q->where('firstname', 'like', "%$query%")
+                  ->orWhere('lastname', 'like', "%$query%");
+            })
+            ->get();
+    
+        return response()->json($leaders);
     }
 }
