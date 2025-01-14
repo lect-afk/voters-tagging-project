@@ -83,6 +83,7 @@
                         <li><a class="dropdown-item" href="{{ route('voters.colorhistory') }}">Tagging History</a></li>
                         <li><a class="dropdown-item" href="{{ route('voters.candidatetagging') }}">Candidate Tagging</a></li>
                         <li><a class="dropdown-item" href="{{ route('voters.grouptagging') }}">Group Tagging</a></li>
+                        <li><a class="dropdown-item" href="{{ route('voters_profile.tagging') }}">Profile Tagging</a></li>
                     </ul>
                 </div>
 
