@@ -53,7 +53,27 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-12 col-md-2 d-flex">
+            <div class="col-12 col-md-2">
+                <select name="group_filter" class="form-control">
+                    <option value="" {{ request('group_filter') == '' ? 'selected' : '' }}>All Groups</option>
+                    @foreach ($groups as $g)
+                        <option value="{{ $g->id }}" {{ request('group_filter') == $g->id ? 'selected' : '' }}>{{ $g->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <select name="alliance_status" class="form-control">
+                    <option value="" {{ request('alliance_status') == '' ? 'selected' : '' }}>All Alliance Status</option>
+                    <option value="Allied" {{ request('alliance_status') == 'Allied' ? 'selected' : '' }}>Allied</option>
+                    <option value="Prospective Ally" {{ request('alliance_status') == 'Prospective Ally' ? 'selected' : '' }}>Prospective Ally</option>
+                    <option value="Unlikely Ally" {{ request('alliance_status') == 'Unlikely Ally' ? 'selected' : '' }}>Unlikely Ally</option>
+                    <option value="Non-supporter" {{ request('alliance_status') == 'Non-supporter' ? 'selected' : '' }}>Non-supporter</option>
+                    <option value="Unilateral" {{ request('alliance_status') == 'Unilateral' ? 'selected' : '' }}>Unilateral</option>
+                    <option value="Unidentified" {{ request('alliance_status') == 'Unidentified' ? 'selected' : '' }}>Unidentified</option>
+                    <option value="Non-participant" {{ request('alliance_status') == 'Non-participant' ? 'selected' : '' }}>Non-participant</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
                 <button class="button-index w-100" type="submit">
                     <i class="fa-solid fa-magnifying-glass fa-md"></i>
                     <span class="fw-semibold ms-2">Search</span>
@@ -84,6 +104,7 @@
                     <thead class="thead-dark">
                         <tr>
                             <th></th>
+                            <th>Alliance Status</th>
                             <th>Fullname</th>
                             <th>Brgy / Precinct</th>
                             <th>Group</th>
@@ -92,57 +113,34 @@
                     <tbody>
                         @foreach ($group_taggings as $group_tagging)
                             @php
-                                // Determine the font color
-                                $FontColor = '#6c757d'; 
-                                switch ($group_tagging->color_tag) {
+                                $backgroundColor = '#6c757d'; 
+                                switch ($group_tagging->alliances_status) {
                                     case 'Green':
-                                        $FontColor = '#0466c8'; 
+                                        $backgroundColor = '#0466c8'; 
                                         break;
                                     case 'Yellow':
-                                        $FontColor = '#ffd60a'; 
+                                        $backgroundColor = '#ffd60a'; 
                                         break;
                                     case 'Orange':
-                                        $FontColor = '#99582a'; 
+                                        $backgroundColor = '#fb8500'; 
                                         break;
                                     case 'Red':
-                                        $FontColor = '#d00000'; 
+                                        $backgroundColor = '#d00000'; 
                                         break;
                                     case 'White':
-                                        $FontColor = '#e0fbfc'; 
+                                        $backgroundColor = '#e0fbfc'; 
                                         break;
                                     case 'Black':
-                                        $FontColor = '#353535'; 
+                                        $backgroundColor = '#353535'; 
                                         break;
                                 }
-
-                                // Determine the Alliance status
-                                $AllianceStatus = 'Non-participant'; 
-                                    switch ($group_tagging->color_tag) {
-                                        case 'Green':
-                                            $AllianceStatus = 'Allied'; 
-                                            break;
-                                        case 'Yellow':
-                                            $AllianceStatus = 'Prospective Ally'; 
-                                            break;
-                                        case 'Orange':
-                                            $AllianceStatus = 'Unlikely Ally'; 
-                                            break;
-                                        case 'Red':
-                                            $AllianceStatus = 'Non-supporter'; 
-                                            break;
-                                        case 'White':
-                                            $AllianceStatus = 'Unilateral'; 
-                                            break;
-                                        case 'Black':
-                                            $AllianceStatus = 'Unidentified'; 
-                                            break;
-                                    }
                             @endphp
 
                             <tr>
                                 <td class="align-middle">
                                     <input class="form-check-input" type="checkbox" name="selected_profiles[]" value="{{ $group_tagging->id }}">
                                 </td>
+                                <td class="align-middle"><div class="rounded-circle" style="width: 30px; height: 30px; background-color: {{ $backgroundColor }};"></div></td>
                                 <td class="align-middle">{{ $group_tagging->lastname }} {{ $group_tagging->firstname }} {{ $group_tagging->middlename }}</td>
                                 <td class="align-middle">{{ $group_tagging->barangays->name }} / {{ $group_tagging->precincts->number }}</td>
                                 <td class="align-middle">
@@ -163,7 +161,9 @@
                 {{ $group_taggings->appends([
                     'precinct' => request('precinct'),
                     'query' => request('query'),
-                    'barangay' => request('barangay')
+                    'barangay' => request('barangay'),
+                    'group_filter' => request('group_filter'),
+                    'alliance_status' => request('alliance_status')
                 ])->links('admin.pages.partials.pagination') }}
             </div>
         </form>
