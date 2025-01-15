@@ -20,7 +20,7 @@
             </select>
         </div>
     
-        <canvas id="barangayChart" class="w-100" height="400px"></canvas>
+        <canvas id="barangayChart" class="w-100" height="350px"></canvas>
     </div>
   </div>
 </div>
@@ -38,7 +38,13 @@ function fetchBarangayData(barangayId) {
               return;
           }
 
-          const ctx = document.getElementById('barangayChart').getContext('2d');
+          const canvas = document.getElementById('barangayChart');
+          const ctx = canvas.getContext('2d');
+
+          // Set canvas dimensions explicitly
+          canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+          canvas.height = 350 * window.devicePixelRatio;
+          ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
           // Destroy previous chart instance if it exists
           if (chart) {
@@ -114,7 +120,9 @@ function fetchBarangayData(barangayId) {
                       y: {
                           beginAtZero: true
                       }
-                  }
+                  },
+                  responsive: false, // Disable responsiveness to fix size
+                  maintainAspectRatio: false // Ensure height is respected
               }
           });
       });

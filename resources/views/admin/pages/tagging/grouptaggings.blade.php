@@ -122,7 +122,7 @@
                                         $backgroundColor = '#ffd60a'; 
                                         break;
                                     case 'Orange':
-                                        $backgroundColor = '#fb8500'; 
+                                        $backgroundColor = '#99582a'; 
                                         break;
                                     case 'Red':
                                         $backgroundColor = '#d00000'; 

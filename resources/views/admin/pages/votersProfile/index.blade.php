@@ -104,10 +104,16 @@
                                         $backgroundColor = '#ffd60a'; 
                                         break;
                                     case 'Orange':
-                                        $backgroundColor = '#fb8500'; 
+                                        $backgroundColor = '#99582a'; 
                                         break;
                                     case 'Red':
                                         $backgroundColor = '#d00000'; 
+                                        break;
+                                    case 'White':
+                                        $backgroundColor = '#e0fbfc'; 
+                                        break;
+                                    case 'Black':
+                                        $backgroundColor = '#353535'; 
                                         break;
                                 }
                             @endphp

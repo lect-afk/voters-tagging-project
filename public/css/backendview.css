@@ -339,6 +339,45 @@ a:hover {
   display: none;
 }
 
+/* Chart Styles */
+#barangayChart {
+    max-width: 100%;
+    height: 350px; /* Set a fixed height for the chart */
+}
+
+/* Dashboard Card Styles */
+.dashboard_card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.dashboard_card_body {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Container Styles */
+.container {
+    max-width: 100%;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+/* Form Group Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Select Styles */
+#barangay-select {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
 /* Add responsive design for mobile devices */
 @media (max-width: 768px) {
     html, body {
