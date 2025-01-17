@@ -53,7 +53,6 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Full Name</th>
             </tr>
         </thead>
@@ -83,7 +82,6 @@
                     }
                 @endphp
                 <tr>
-                    <td>{{ $voters_profile->id }}</td>
                     <td>{{ $voters_profile->lastname }} {{ $voters_profile->firstname }} {{ $voters_profile->middlename }}</td>
             @endforeach
         </tbody>

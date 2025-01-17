@@ -32,7 +32,6 @@
         
             <div class="topbar d-flex justify-content-between mb-1 mt-1">
                 <div class="d-flex align-items-center">
-                    <img class="me-3 dm-logo" src="{{ asset('/image/DMlogo02.png') }}" alt="Logo" class="logo-image" style="height: 35px; width: auto;">
                     <a class="icon-hover offcanvas_menu" href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">
                         <i class="fa-solid fa-bars fa-lg"></i>
                     </a>
@@ -115,7 +114,6 @@
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasMenuLabel">
-                <img class="me-3" src="{{ asset('/image/DMlogo02.png') }}" alt="Logo" class="logo-image" style="height: 35px; width: auto;">
                 Menu
             </h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>

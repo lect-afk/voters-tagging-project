@@ -3,8 +3,7 @@
 @section('content')
 <div class="login-wrapper d-flex">
     <div class="login-background">
-        <img src="{{ asset('/image/DMlogo02.png') }}" alt="Logo" style="max-width: 50%; height: auto;">
-        <h1><b>MAY</b> <b>OR</b>as para sa<b>NYO</b></h1>
+        <h1>BRAND NAME</h1>
     </div>
     <div class="divider"></div>
     <div class="login-form-container">
